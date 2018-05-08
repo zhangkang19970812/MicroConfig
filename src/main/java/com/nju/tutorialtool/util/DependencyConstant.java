@@ -42,7 +42,7 @@ public class DependencyConstant {
             case "eurekaServer":
                 res = "<dependency>\r\n" +
                         "\t\t\t<groupId>org.springframework.cloud</groupId>\r\n" +
-                        "\t\t\t<artifactId>spring-cloud-eureka-server</artifactId>\r\n" +
+                        "\t\t\t<artifactId>spring-cloud-starter-eureka-server</artifactId>\r\n" +
                         "\t\t</dependency>\r\n";
                 break;
             case "eurekaDiscovery":
