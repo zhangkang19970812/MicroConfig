@@ -11,6 +11,7 @@ import java.util.List;
 @Service
 public class CreateProjectService {
     public void createProject(ProjectInfo projectInfo) throws Exception {
+        // todo 可能需要修改File.separator
         PomXmlResourceFile pxrf = new PomXmlResourceFile(projectInfo.getBaseDir()+"/"+projectInfo.getArtifactId(), projectInfo.getGroupId(), projectInfo.getArtifactId(), projectInfo.getDependencies());
         pxrf.generate();
 

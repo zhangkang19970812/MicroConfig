@@ -14,7 +14,8 @@ public class CreateProjectController {
     private CreateProjectService createProjectService;
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public void createProject(@RequestBody ProjectInfo projectInfo) throws Exception {
+    public boolean createProject(@RequestBody ProjectInfo projectInfo) throws Exception {
         createProjectService.createProject(projectInfo);
+        return true;
     }
 }
