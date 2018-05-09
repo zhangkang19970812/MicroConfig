@@ -8,6 +8,9 @@ public class ProjectInfo {
     private String artifactId;
     private List<String> dependencies;
 
+    public ProjectInfo() {
+    }
+
     public ProjectInfo(String baseDir, String groupId, String artifactId, List<String> dependencies) {
         this.baseDir = baseDir;
         this.groupId = groupId;
