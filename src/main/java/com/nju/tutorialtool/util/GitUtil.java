@@ -41,7 +41,6 @@ public class GitUtil {
 //            git.add().addFilepattern("pets").call();
             //提交
             git.commit().setMessage("").call();
-            //推送到远程
             git.push().call();
         } catch (Exception e) {
             e.printStackTrace();
