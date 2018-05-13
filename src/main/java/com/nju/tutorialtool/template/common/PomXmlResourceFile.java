@@ -2,7 +2,6 @@ package com.nju.tutorialtool.template.common;
 
 
 import com.nju.tutorialtool.base.ResourceFile;
-import com.nju.tutorialtool.util.DependencyConstant;
 
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class PomXmlResourceFile extends ResourceFile {
 				"		   <groupId>org.springframework.boot</groupId>\r\n" +
 				"		   <artifactId>spring-boot-starter-actuator</artifactId>\r\n" +
 				"	   </dependency>\r\n" +
-				"     " + DependencyConstant.getDependencies(dependencies) +
+				DependencyConstant.getDependencies(dependencies) +
 				"  </dependencies>\r\n" +
 				"  <dependencyManagement>\r\n" +
 				"	   <dependencies>\r\n" +

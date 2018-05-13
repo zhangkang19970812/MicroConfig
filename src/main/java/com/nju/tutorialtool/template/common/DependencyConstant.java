@@ -1,4 +1,4 @@
-package com.nju.tutorialtool.util;
+package com.nju.tutorialtool.template.common;
 
 import java.util.List;
 
@@ -88,7 +88,7 @@ public class DependencyConstant {
     public static String getDependencies(List<String> list) {
         StringBuilder res = new StringBuilder();
         for (String name: list) {
-            res.append(getDependency(name));
+            res.append("      " + getDependency(name));
         }
         return res.toString();
     }

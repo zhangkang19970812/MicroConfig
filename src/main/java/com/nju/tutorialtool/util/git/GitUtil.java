@@ -1,4 +1,4 @@
-package com.nju.tutorialtool.util;
+package com.nju.tutorialtool.util.git;
 
 import org.eclipse.jgit.api.Git;
 import org.slf4j.Logger;

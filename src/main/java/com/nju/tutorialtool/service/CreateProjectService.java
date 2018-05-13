@@ -1,12 +1,10 @@
 package com.nju.tutorialtool.service;
 
-import com.nju.tutorialtool.controller.ProjectInfo;
+import com.nju.tutorialtool.model.ProjectInfo;
 import com.nju.tutorialtool.template.common.PomXmlResourceFile;
 import com.nju.tutorialtool.template.spring.ApplicationClassFile;
 import com.nju.tutorialtool.template.spring.ApplicationYmlResourceFile;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class CreateProjectService {
