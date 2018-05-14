@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
  */
 public class FindControllers {
     static List<File> applications=new ArrayList<>();
+    static List<File> vos=new ArrayList<>();
     /**
      * 因为递归方法难以返回数据
      */
@@ -25,11 +26,15 @@ public class FindControllers {
         getAllFiles(url);
         String pattern=".*Controller\\.java";
         String apattern=".*Application\\.java";
+        String vpattern=".*VO\\.java";
+
         for(File f:controllerFiles){
             if(Pattern.matches(pattern,f.getName())){
                 files.add(f);
             }else if(Pattern.matches(apattern,f.getName())){
                 applications.add(f);
+            }else if(Pattern.matches(vpattern,f.getName())){
+                vos.add(f);
             }
         }
 //        for(File f1:applications){
