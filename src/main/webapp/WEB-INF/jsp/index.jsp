@@ -1,21 +1,11 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: Shenmiu
-  Date: 08/05/2018
-
---%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
 <html>
 <head>
-    <title>项目创建</title>
-
+    <title>HystrixAdding</title>
     <!-- Normalize -->
     <link href="${pageContext.request.contextPath}/css/normalize.css" rel="stylesheet">
     <!-- Bootstrap -->
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
-
 </head>
 <body>
 
@@ -49,7 +39,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        Maven项目创建
+                        Add Hystrix
                     </h3>
                 </div>
                 <div class="panel-body">
@@ -60,47 +50,9 @@
                                 <input id="basedir-input" type="text" class="form-control"/>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">GroupId:</label>
-                            <div class="col-md-8">
-                                <input id="group-id-input" type="text" class="form-control"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">ArtifactId:</label>
-                            <div class="col-md-8">
-                                <input id="artifact-id-input" type="text" class="form-control"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Dependencies:</label>
-                            <div class="col-md-8">
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox1" value="eurekaServer"> eurekaServer
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox2" value="eurekaDiscovery"> eurekaDiscovery
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox3" value="zuul"> zuul
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox5" value="hystrix"> hystrix
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox6" value="configServer"> configServer
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox7" value="configClient"> configClient
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="inlineCheckbox8" value="rabbitMQ"> rabbitMQ
-                                </label>
-                            </div>
-                        </div>
                     </form>
-                    <button id="create-btn" type="button" class="col-md-2 col-md-offset-5 btn btn-default">
-                        创建项目
+                    <button id="add-btn" type="button" class="col-md-2 col-md-offset-5 btn btn-default">
+                        Add
                     </button>
                 </div>
             </div>
@@ -115,36 +67,25 @@
 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 <script>
 
-    $("#create-btn").on("click", function () {
-        let dependencies = [];
-        $("#create-form input[type=checkbox]:checked").each(function () { //由于复选框一般选中的是多个,所以可以循环输出选中的值
-            dependencies.push($(this).val());
-        });
-        let projectInfo = {
-            baseDir: $("#basedir-input").val(),
-            groupId: $("#group-id-input").val(),
-            artifactId: $("#artifact-id-input").val(),
-            dependencies: dependencies
-        };
-
-        console.log(JSON.stringify(projectInfo));
-
+    $("#add-btn").on("click", function () {
+        let baseDir= $("#basedir-input").val();
+        console.log(JSON.stringify(baseDir));
         $.ajax({
-            url: "${pageContext.request.contextPath}/createProject/create",
+            url: "${pageContext.request.contextPath}/addHystrix/add",
             method: "post",
-            data: JSON.stringify(projectInfo),
+            data: JSON.stringify(baseDir),
             contentType: "application/json;charset=UTF-8",
             processData: false,
             success: function (data) {
                 if (data === true) {
-                    alert("创建项目成功");
+                    alert("添加熔断成功");
                 }
                 else {
-                    alert("创建项目失败");
+                    alert("添加熔断失败");
                 }
             },
             error: function () {
-                alert("创建项目失败");
+                alert("添加熔断失败");
             }
         });
     });
