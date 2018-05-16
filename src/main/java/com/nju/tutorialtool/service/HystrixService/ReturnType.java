@@ -1,5 +1,6 @@
 package com.nju.tutorialtool.service.HystrixService;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -11,12 +12,22 @@ import java.util.regex.Pattern;
  * @Date 2018/5/12
  */
 public class ReturnType {
+    //这里需要寻找VO文件
     public static String getFallbackReturns(String type) {
         String code="return new "+type+"(";
         RandomAccessFile raf= null;
-        try {
-            raf = new RandomAccessFile(type,"rw");
-        } catch (FileNotFoundException e) {
+
+        for(File file:FindControllers.vos){
+            if((file.getName().substring(0,file.getName().indexOf('.'))).equals(type)){
+                try {
+                    raf=new RandomAccessFile(file,"r");
+                } catch (FileNotFoundException e) {
+                    return "return null;";
+                }
+                break;
+            }
+        }
+        if(raf==null){
             return "return null;";
         }
         String line=null;
