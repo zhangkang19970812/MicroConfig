@@ -21,8 +21,20 @@ public class CreateProjectController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public boolean createProject(@RequestBody ProjectInfo projectInfo) throws Exception {
+    public boolean createProject(@RequestBody ProjectInfo projectInfo) {
         createProjectService.createProject(projectInfo);
+        return true;
+    }
+
+    @RequestMapping(value = "/eurekaServer", method = RequestMethod.POST)
+    public boolean createEurekaServer(@RequestBody ProjectInfo projectInfo) {
+        createProjectService.createEurekaServer(projectInfo);
+        return true;
+    }
+
+    @RequestMapping(value = "/eurekaClient", method = RequestMethod.POST)
+    public boolean createEurekaClient(@RequestBody ProjectInfo projectInfo) {
+        createProjectService.createEurekaServer(projectInfo);
         return true;
     }
 }
