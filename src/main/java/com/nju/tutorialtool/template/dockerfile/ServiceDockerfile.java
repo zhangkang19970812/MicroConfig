@@ -3,7 +3,7 @@ package com.nju.tutorialtool.template.dockerfile;
 import com.nju.tutorialtool.base.DockerFile;
 
 public class ServiceDockerfile extends DockerFile {
-    public ServiceDockerfile(String fileDir, String port) {
+     public ServiceDockerfile(String fileDir, String port) {
         super(fileDir);
         String projectName = getProjectName(fileDir);
         String instructions = "FROM ewolff/docker-java\r\n" +

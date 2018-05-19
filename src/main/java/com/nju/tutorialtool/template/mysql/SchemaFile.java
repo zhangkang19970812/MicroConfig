@@ -1,6 +1,7 @@
 package com.nju.tutorialtool.template.mysql;
 
 import com.nju.tutorialtool.base.SqlFile;
+import com.nju.tutorialtool.model.Column;
 import com.nju.tutorialtool.model.Table;
 
 import java.util.List;
@@ -17,11 +18,11 @@ public class SchemaFile extends SqlFile {
         sql.append("create database `" + database + "` default character set utf8 collate utf8_general_ci;\r\n" +
                    "use " + database + ";\r\n");
         for (Table table : tables) {
-            Map<String, String> columns = table.getColumns();
+           List<Column> columnList = table.getColumnList();
             sql.append("DROP TABLE IF EXISTS `" + table.getTableName() + "`;\r\n" +
                        "CREATE TABLE `account` (\r\n");
-            for (Map.Entry<String, String> entry : columns.entrySet()) {
-                sql.append("`"+ entry.getKey() +"` " + entry.getValue() + ",\r\n");
+            for (Column column : columnList) {
+                sql.append("`"+ column.getName() +"` " + column.getType() + ",\r\n");
             }
             sql.append("PRIMARY KEY (`" + table.getPrimary_key() + "`)\r\n" +
                        ") ENGINE=InnoDB;");

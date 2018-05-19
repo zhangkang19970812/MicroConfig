@@ -39,6 +39,10 @@ public class ApplicationClassFile extends JavaFile {
 						classAnnotations.add("EnableDiscoveryClient");
 					}
 					break;
+				case "hystrix":
+					imports.add("import org.springframework.cloud.netflix.hystrix.EnableHystrix;");
+					classAnnotations.add("EnableHystrix");
+					break;
 				case "zuul":
 					imports.add("org.springframework.cloud.netflix.zuul.EnableZuulProxy");
 					classAnnotations.add("EnableZuulProxy");

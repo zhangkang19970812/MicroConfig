@@ -1,16 +1,16 @@
 package com.nju.tutorialtool.model;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Table {
     private String tableName;
-    private Map<String, String> columns = new HashMap<>();
+    private List<Column> columnList;
     private String primary_key;
 
-    public Table(String tableName, Map<String, String> columns, String primary_key) {
+    public Table(String tableName, List<Column> columnList, String primary_key) {
         this.tableName = tableName;
-        this.columns = columns;
+        this.columnList = columnList;
         this.primary_key = primary_key;
     }
 
@@ -22,12 +22,12 @@ public class Table {
         this.tableName = tableName;
     }
 
-    public Map<String, String> getColumns() {
-        return columns;
+    public List<Column> getColumnList() {
+        return columnList;
     }
 
-    public void setColumns(Map<String, String> columns) {
-        this.columns = columns;
+    public void setColumnList(List<Column> columnList) {
+        this.columnList = columnList;
     }
 
     public String getPrimary_key() {
