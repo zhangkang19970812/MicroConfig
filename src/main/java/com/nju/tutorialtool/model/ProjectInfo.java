@@ -18,6 +18,12 @@ public class ProjectInfo {
         this.dependencies = dependencies;
     }
 
+    public ProjectInfo(EurekaServerInfo eurekaServerInfo) {
+        this.baseDir = eurekaServerInfo.getBaseDir();
+        this.groupId = eurekaServerInfo.getGroupId();
+        this.artifactId = eurekaServerInfo.getArtifactId();
+    }
+
     public String getBaseDir() {
         return baseDir;
     }

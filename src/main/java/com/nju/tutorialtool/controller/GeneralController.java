@@ -44,7 +44,7 @@ public class GeneralController {
         List<String> serviceRootPaths = new ArrayList<>(services.values());
 
         // Eureka Server
-        eurekaService.createEurekaServer();
+        eurekaService.createEurekaServer(general.getEurekaServerInfo());
 
         // Eureka Client
         eurekaService.addEurekaClient(serviceRootPaths);

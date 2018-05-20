@@ -8,23 +8,69 @@ import java.util.List;
  * @Date 2018/5/20
  */
 public class General {
+
     /**
      * Map：服务名称，地址
-     * Map：服务名称，配置Map<配置名称，配置值>
-     * 组件选择boolean
-     * RabbitMQ: src,dest
-     * Zuul: consumer:String; provider: List<String>
      */
-    HashMap<String, String> services;
-    HashMap<String, HashMap<String, String>> configs;
-    boolean isEurekaServer;
-    boolean isZuul;
-    String zuulComsumer;
-    List<String> zuulProviders;
-    boolean isHystrix;
-    boolean isRabbitMQ;
-    String mqServiceName, mqSrc, mqDest;
-    boolean isRibbon;
+    private HashMap<String, String> services;
+
+    /**
+     * Map：服务名称，配置Map<配置名称，配置值>
+     */
+    private HashMap<String, HashMap<String, String>> configs;
+
+    /**
+     * 是否含有EurekaServer
+     */
+    private boolean isEurekaServer;
+
+    /**
+     * 包含创建eureka server的信息
+     */
+    private EurekaServerInfo eurekaServerInfo;
+
+    /**
+     * 是否含有Zuul
+     */
+    private boolean isZuul;
+
+    /**
+     * zuul Consumer, 服务名称
+     */
+    private String zuulComsumer;
+
+    /**
+     * zuul Providers, 所有提供服务的名称列表
+     */
+    private List<String> zuulProviders;
+
+    /**
+     * 是否含有hystrix
+     */
+    private boolean isHystrix;
+
+    /**
+     * 是否含有rabbitmq
+     */
+    private boolean isRabbitMQ;
+
+    /**
+     * mq的服务名称
+     */
+    private String mqServiceName;
+
+    /**
+     * mq的发送方
+     */
+    private String mqSrc;
+
+    /**
+     * mq的接收方
+     */
+    private String mqDest;
+
+
+    private boolean isRibbon;
 
     public boolean isRibbon() {
         return isRibbon;
@@ -130,5 +176,13 @@ public class General {
 
     public void setServices(HashMap<String, String> services) {
         this.services = services;
+    }
+
+    public EurekaServerInfo getEurekaServerInfo() {
+        return eurekaServerInfo;
+    }
+
+    public void setEurekaServerInfo(EurekaServerInfo eurekaServerInfo) {
+        this.eurekaServerInfo = eurekaServerInfo;
     }
 }

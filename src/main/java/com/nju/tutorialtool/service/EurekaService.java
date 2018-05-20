@@ -1,5 +1,6 @@
 package com.nju.tutorialtool.service;
 
+import com.nju.tutorialtool.model.EurekaServerInfo;
 import com.nju.tutorialtool.model.ProjectInfo;
 import com.nju.tutorialtool.util.io.IO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,22 +25,12 @@ public class EurekaService {
     @Autowired
     private CreateProjectService createProjectService;
 
-    private final String baseDir = "/Users/harvey/tutorial-tool/eureka-server";
-    private final String groupId = "edu.nju";
-    private final String artifactId = "tutorial-tool";
-
     /**
      * 创建Eureka Server项目
      */
-    public void createEurekaServer() {
-        ProjectInfo projectInfo = new ProjectInfo();
-        projectInfo.setBaseDir(baseDir);
-        projectInfo.setGroupId(groupId);
-        projectInfo.setArtifactId(artifactId);
-
-        List<String> dependencies = new ArrayList<>();
-        projectInfo.setDependencies(dependencies);
-
+    public void createEurekaServer(EurekaServerInfo eurekaServerInfo) {
+        ProjectInfo projectInfo = new ProjectInfo(eurekaServerInfo);
+        projectInfo.getDependencies().add("eurekaServer");
         createProjectService.createProject(projectInfo);
     }
 
