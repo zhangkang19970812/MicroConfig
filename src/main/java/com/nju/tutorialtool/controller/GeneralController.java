@@ -66,10 +66,7 @@ public class GeneralController {
             }
         }
         if (general.isRabbitMQ() == true) {
-            for(int i=0;i<serviceURLs.size();i++) {
-               addRabbitmq(serviceURLs.get(i));
-            }
-
+            addRabbitmq(services.get(general.getMqServiceName()));
             addSender(general.getMqSrc());
             addReceiver(general.getMqDest());
         }

@@ -1,7 +1,5 @@
 package com.nju.tutorialtool.model;
 
-import com.jcraft.jsch.HASH;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,7 +23,7 @@ public class General {
     List<String> zuulProviders;
     boolean isHystrix;
     boolean isRabbitMQ;
-    String mqSrc,mqDest;
+    String mqServiceName,mqSrc,mqDest;
     boolean isRibbon;
 
     public boolean isRibbon() {
@@ -48,6 +46,14 @@ public class General {
     public String getMqSrc() {
 
         return mqSrc;
+    }
+
+    public String getMqServiceName() {
+        return mqServiceName;
+    }
+
+    public void setMqServiceName(String mqServiceName) {
+        this.mqServiceName = mqServiceName;
     }
 
     public void setMqSrc(String mqSrc) {
