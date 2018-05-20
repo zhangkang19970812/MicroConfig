@@ -1,13 +1,9 @@
 package com.nju.tutorialtool.controller;
 
-import com.nju.tutorialtool.model.Configuration;
 import com.nju.tutorialtool.model.ConfigurationItem;
 import com.nju.tutorialtool.model.General;
-import com.nju.tutorialtool.service.ConfigurationService;
+import com.nju.tutorialtool.service.*;
 import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
-import com.nju.tutorialtool.service.RabbitmqService;
-import com.nju.tutorialtool.service.RibbonService;
-import com.nju.tutorialtool.service.ZuulService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +23,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/addGeneral")
 public class GeneralController {
+
+    @Autowired
+    private EurekaService eurekaService;
     @Autowired
     private AddHystrixService addHystrixService;
     @Autowired
@@ -40,39 +39,42 @@ public class GeneralController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void addGeneral(@RequestBody General general) throws IOException {
-        HashMap<String,String> services=general.getServices();
-        List<String> serviceURLs=new ArrayList<>();
+        HashMap<String, String> services = general.getServices();
 
-        for (String url : services.values()) {
-            serviceURLs.add(url);
-        }
+        List<String> serviceRootPaths = new ArrayList<>(services.values());
+
+        // Eureka Server
+        eurekaService.createEurekaServer();
+
+        // Eureka Client
+        eurekaService.addEurekaClient(serviceRootPaths);
 
         /**
          * 配置文件
          */
-        for(int i=0;i<serviceURLs.size();i++) {
-            configurationService.editConfiguration(serviceURLs.get(i),getListFromMap(general.getConfigs().get(serviceURLs.get(i))));
+        for (int i = 0; i < serviceRootPaths.size(); i++) {
+            configurationService.editConfiguration(serviceRootPaths.get(i), getListFromMap(general.getConfigs().get(serviceRootPaths.get(i))));
         }
 
-        if (general.isEurekaServer() == true) {
+        if (general.isEurekaServer()) {
 
         }
-        if (general.isZuul() == true) {
-            zuulService.replaceUrl(general.getZuulComsumer(),general.getZuulProviders());
+        if (general.isZuul()) {
+            zuulService.replaceUrl(general.getZuulComsumer(), general.getZuulProviders());
         }
-        if (general.isHystrix() == true) {
-            for(int i=0;i<serviceURLs.size();i++) {
-                addHystrixService.add(serviceURLs.get(i));
+        if (general.isHystrix()) {
+            for (int i = 0; i < serviceRootPaths.size(); i++) {
+                addHystrixService.add(serviceRootPaths.get(i));
             }
         }
-        if (general.isRabbitMQ() == true) {
+        if (general.isRabbitMQ()) {
             addRabbitmq(services.get(general.getMqServiceName()));
             addSender(general.getMqSrc());
             addReceiver(general.getMqDest());
         }
-        if (general.isRibbon()== true) {
-            for(int i=0;i<serviceURLs.size();i++) {
-                ribbonService.addRibbon(serviceURLs.get(i));
+        if (general.isRibbon()) {
+            for (int i = 0; i < serviceRootPaths.size(); i++) {
+                ribbonService.addRibbon(serviceRootPaths.get(i));
             }
         }
     }
@@ -96,12 +98,12 @@ public class GeneralController {
         rabbitmqService.addRecevier(path, direct);
     }
 
-    public List<ConfigurationItem> getListFromMap(HashMap<String,String> map){
-        List<ConfigurationItem> configList=new ArrayList<>();
+    public List<ConfigurationItem> getListFromMap(HashMap<String, String> map) {
+        List<ConfigurationItem> configList = new ArrayList<>();
         Iterator<String> it = map.keySet().iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             String key = it.next();
-            configList.add(new ConfigurationItem(key,map.get(key)));
+            configList.add(new ConfigurationItem(key, map.get(key)));
         }
         return configList;
     }

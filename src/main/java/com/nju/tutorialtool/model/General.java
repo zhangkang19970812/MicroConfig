@@ -15,15 +15,15 @@ public class General {
      * RabbitMQ: src,dest
      * Zuul: consumer:String; provider: List<String>
      */
-    HashMap<String,String> services;
-    HashMap<String,HashMap<String,String>> configs;
+    HashMap<String, String> services;
+    HashMap<String, HashMap<String, String>> configs;
     boolean isEurekaServer;
     boolean isZuul;
     String zuulComsumer;
     List<String> zuulProviders;
     boolean isHystrix;
     boolean isRabbitMQ;
-    String mqServiceName,mqSrc,mqDest;
+    String mqServiceName, mqSrc, mqDest;
     boolean isRibbon;
 
     public boolean isRibbon() {

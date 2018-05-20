@@ -21,14 +21,21 @@ public class TutorialToolApplication {
     //必须在pom.xml引入fastjson的jar包，并且版必须大于1.2.10
     @Bean
     public HttpMessageConverters fastJsonHttpMessageConverters() {
-        //1、定义一个convert转换消息的对象
+        // 1. 定义一个convert转换消息的对象
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
-        //2、添加fastjson的配置信息
+        // 2. 添加fastjson的配置信息
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
-        fastJsonConfig.setSerializerFeatures(SerializerFeature.WriteNonStringKeyAsString, SerializerFeature.QuoteFieldNames, SerializerFeature.WriteMapNullValue, SerializerFeature.PrettyFormat);
-        //3、在convert中添加配置信息
+        // 3. serialFeatures
+        SerializerFeature[] serializerFeatures = new SerializerFeature[]{
+                SerializerFeature.WriteNonStringKeyAsString,
+                SerializerFeature.QuoteFieldNames,
+                SerializerFeature.WriteMapNullValue,
+                SerializerFeature.PrettyFormat
+        };
+        fastJsonConfig.setSerializerFeatures(serializerFeatures);
+        // 4. 在convert中添加配置信息
         fastConverter.setFastJsonConfig(fastJsonConfig);
-        //4、将convert添加到converters中
+        // 5. 将convert添加到converters中
         HttpMessageConverter<?> converter = fastConverter;
         return new HttpMessageConverters(converter);
     }
