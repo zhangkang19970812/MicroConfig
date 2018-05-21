@@ -1,9 +1,13 @@
 package com.nju.tutorialtool.controller;
 
+import com.nju.tutorialtool.model.Configuration;
 import com.nju.tutorialtool.model.ConfigurationItem;
 import com.nju.tutorialtool.model.General;
-import com.nju.tutorialtool.service.*;
+import com.nju.tutorialtool.service.ConfigurationService;
 import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
+import com.nju.tutorialtool.service.RabbitmqService;
+import com.nju.tutorialtool.service.RibbonService;
+import com.nju.tutorialtool.service.ZuulService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +27,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/addGeneral")
 public class GeneralController {
-
-    @Autowired
-    private EurekaService eurekaService;
     @Autowired
     private AddHystrixService addHystrixService;
     @Autowired
@@ -39,42 +40,40 @@ public class GeneralController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void addGeneral(@RequestBody General general) throws IOException {
-        HashMap<String, String> services = general.getServices();
+        HashMap<String,String> services=general.getServices();
+        List<Configuration> configurations=general.getConfigurationList();
+        List<String> serviceURLs=new ArrayList<>();
 
-        List<String> serviceRootPaths = new ArrayList<>(services.values());
-
-        // Eureka Server
-        eurekaService.createEurekaServer(general.getEurekaServerInfo());
-
-        // Eureka Client
-        eurekaService.addEurekaClient(serviceRootPaths);
+        for (String url : services.values()) {
+            serviceURLs.add(url);
+        }
 
         /**
          * 配置文件
          */
-        for (int i = 0; i < serviceRootPaths.size(); i++) {
-            configurationService.editConfiguration(serviceRootPaths.get(i), getListFromMap(general.getConfigs().get(serviceRootPaths.get(i))));
+        for(int i=0;i<configurations.size();i++) {
+            configurationService.editConfiguration(configurations.get(i).getProjectPath(),configurations.get(i).getList());
         }
 
-        if (general.isEurekaServer()) {
+        if (general.isEurekaServer() == true) {
 
         }
-        if (general.isZuul()) {
-            zuulService.replaceUrl(general.getZuulComsumer(), general.getZuulProviders());
+        if (general.isZuul() == true) {
+            zuulService.replaceUrl(general.getZuulComsumer(),general.getZuulProviders());
         }
-        if (general.isHystrix()) {
-            for (int i = 0; i < serviceRootPaths.size(); i++) {
-                addHystrixService.add(serviceRootPaths.get(i));
+        if (general.isHystrix() == true) {
+            for(int i=0;i<serviceURLs.size();i++) {
+                addHystrixService.add(serviceURLs.get(i));
             }
         }
-        if (general.isRabbitMQ()) {
+        if (general.isRabbitMQ() == true) {
             addRabbitmq(services.get(general.getMqServiceName()));
             addSender(general.getMqSrc());
             addReceiver(general.getMqDest());
         }
-        if (general.isRibbon()) {
-            for (int i = 0; i < serviceRootPaths.size(); i++) {
-                ribbonService.addRibbon(serviceRootPaths.get(i));
+        if (general.isRibbon()== true) {
+            for(int i=0;i<serviceURLs.size();i++) {
+                ribbonService.addRibbon(serviceURLs.get(i));
             }
         }
     }
@@ -98,12 +97,12 @@ public class GeneralController {
         rabbitmqService.addRecevier(path, direct);
     }
 
-    public List<ConfigurationItem> getListFromMap(HashMap<String, String> map) {
-        List<ConfigurationItem> configList = new ArrayList<>();
+    public List<ConfigurationItem> getListFromMap(HashMap<String,String> map){
+        List<ConfigurationItem> configList=new ArrayList<>();
         Iterator<String> it = map.keySet().iterator();
-        while (it.hasNext()) {
+        while(it.hasNext()) {
             String key = it.next();
-            configList.add(new ConfigurationItem(key, map.get(key)));
+            configList.add(new ConfigurationItem(key,map.get(key)));
         }
         return configList;
     }
