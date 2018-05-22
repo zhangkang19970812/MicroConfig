@@ -1,19 +1,5 @@
 package com.nju.tutorialtool.main;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-import com.nju.tutorialtool.template.spring.ApplicationClassFile;
-import com.nju.tutorialtool.template.spring.ApplicationYmlResourceFile;
-import com.nju.tutorialtool.template.springmvc.ControllerClassFile;
-import com.nju.tutorialtool.template.common.PojoClassFile;
-import com.nju.tutorialtool.template.common.PomXmlResourceFile;
-import com.nju.tutorialtool.template.springdatajpa.RepositoryInterfaceFile;
-import com.nju.tutorialtool.template.common.ResultClassFile;
-import com.nju.tutorialtool.template.service.ServiceClassFile;
-import com.nju.tutorialtool.template.service.ServiceInterfaceFile;
-
 public class SSSGenerator {
 //	public static void main(String[] args) throws Exception {
 ////		Scanner scanner = new Scanner(System.in);
@@ -39,7 +25,7 @@ public class SSSGenerator {
 //		PomXmlResourceFile pxrf = new PomXmlResourceFile(baseDir+"/"+artifactId, groupId, artifactId, dependencies);
 //		pxrf.generate();
 //
-//		ApplicationYmlResourceFile ayrf = new ApplicationYmlResourceFile(baseDir+"/"+artifactId+"/"+resourcesDir);
+//		ApplicationPropertiesResourceFile ayrf = new ApplicationPropertiesResourceFile(baseDir+"/"+artifactId+"/"+resourcesDir);
 //		ayrf.generate();
 //
 //		ApplicationClassFile acf = new ApplicationClassFile(baseDir+"/"+artifactId+"/"+javaDir+"/"+ toDir(groupId) + "/" + artifactId, toPackage(groupId + "/" + artifactId), dependencies);

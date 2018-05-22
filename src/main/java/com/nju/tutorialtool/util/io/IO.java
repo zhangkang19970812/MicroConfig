@@ -1,5 +1,7 @@
 package com.nju.tutorialtool.util.io;
 
+import com.nju.tutorialtool.util.DependencyConstant;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -166,6 +168,66 @@ public class IO {
         return null;
     }
 
+    /**
+     * 向业务服务的pom文件中添加依赖
+     * @param projectPath 服务路径
+     * @param dependencyList 依赖名称列表
+     */
+    public static void addDependencyToPom(String projectPath, List<String> dependencyList) {
+        File file = getFile(projectPath, "pom.xml");
+        RandomAccessFile raf = null;
+        try {
+            raf = new RandomAccessFile(file, "rw");
+            String line = null;
+            while ((line = raf.readLine()) != null) {
+                if (line.contains("</dependency>")) {
+                    long pointer = raf.getFilePointer();
+                    String annotation = "\n"+ DependencyConstant.getDependencies(dependencyList);
+                    IO.insert(pointer, annotation, file);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 得到某项目的配置文件中的定义的port
+     * @param projectPath
+     * @return
+     */
+    public static String getServicePort(String projectPath) {
+        File file = IO.getFile(projectPath + "/src/main/resources", "application");
+        String[] str = IO.readFromFile(file).split("\n");
+        String port = "";
+        if(file.getName().contains("properties")) {
+            for (String s : str) {
+                s = deleteSpaces(s);
+                if (s.contains("server.port")) {
+                    port = s.substring(s.indexOf("=") + 1);
+                    break;
+                }
+            }
+        }
+        else {
+            int sret = 0;
+            for (String s : str) {
+                if (s.equals("server:")) {
+                    sret = 1;
+                }
+                if (s.equals("name:") && sret == 1) {
+                    s = deleteSpaces(s);
+                    port = s.substring(s.indexOf(":") + 1);
+                    break;
+                }
+            }
+        }
+        return port;
+    }
+
+    public static String deleteSpaces(String s) {
+        return s.replace(" ", "");
+    }
 
 //    public static void main(String[] args) {
 //        File file = new File("H:/programs/web/tutorial-tool/src/main/resources/application.properties");

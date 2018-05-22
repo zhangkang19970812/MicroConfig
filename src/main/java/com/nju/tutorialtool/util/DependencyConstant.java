@@ -1,4 +1,4 @@
-package com.nju.tutorialtool.template.common;
+package com.nju.tutorialtool.util;
 
 import java.util.List;
 

@@ -2,11 +2,11 @@ package com.nju.tutorialtool.model;
 
 import java.util.List;
 
-public class Zuul {
+public class Ribbon {
     private String consumerPath;
     private List<String> providerPath;
 
-    public Zuul(String consumerPath, List<String> providerPath) {
+    public Ribbon(String consumerPath, List<String> providerPath) {
         this.consumerPath = consumerPath;
         this.providerPath = providerPath;
     }

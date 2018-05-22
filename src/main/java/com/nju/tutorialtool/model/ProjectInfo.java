@@ -18,10 +18,10 @@ public class ProjectInfo {
         this.dependencies = dependencies;
     }
 
-    public ProjectInfo(EurekaServerInfo eurekaServerInfo) {
-        this.baseDir = eurekaServerInfo.getBaseDir();
-        this.groupId = eurekaServerInfo.getGroupId();
-        this.artifactId = eurekaServerInfo.getArtifactId();
+    public ProjectInfo(SpringCloudInfo springCloudInfo) {
+        this.baseDir = springCloudInfo.getBaseDir();
+        this.groupId = springCloudInfo.getGroupId();
+        this.artifactId = springCloudInfo.getArtifactId();
     }
 
     public String getBaseDir() {

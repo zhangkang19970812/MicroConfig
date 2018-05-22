@@ -5,7 +5,7 @@ import java.io.FileWriter;
 
 public class DockerFile {
     protected String fileDir;
-    protected static final String FILE_NAME = "Dockerfile";
+    protected static final String FILE_NAME = "DockerfileInfo";
     protected String instructions;
 
     public DockerFile(String fileDir) {

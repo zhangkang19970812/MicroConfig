@@ -4,12 +4,12 @@ package com.nju.tutorialtool.model;
  * @author Shenmiu
  * @date 2018/05/21
  * <p>
- * 包含EurekaServer的信息:
+ * 包含Spring Cloud一系列组件的信息:
  * baseDir
  * groupId
  * artifactId
  */
-public class EurekaServerInfo {
+public class SpringCloudInfo {
 
     /**
      * 目标文件夹

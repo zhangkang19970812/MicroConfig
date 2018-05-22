@@ -2,6 +2,7 @@ package com.nju.tutorialtool.template.common;
 
 
 import com.nju.tutorialtool.base.ResourceFile;
+import com.nju.tutorialtool.util.DependencyConstant;
 
 import java.util.List;
 

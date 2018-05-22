@@ -13,7 +13,7 @@ public class General {
      * 修改为Configuration //Map：服务名称，配置Map<配置名称，配置值>
      * 组件选择boolean
      * RabbitMQ: src,dest
-     * Zuul: consumer:String; provider: List<String>
+     * Ribbon: consumer:String; provider: List<String>
      */
     HashMap<String,String> services;
     List<Configuration> configurationList;

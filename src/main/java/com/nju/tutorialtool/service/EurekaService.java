@@ -1,6 +1,6 @@
 package com.nju.tutorialtool.service;
 
-import com.nju.tutorialtool.model.EurekaServerInfo;
+import com.nju.tutorialtool.model.SpringCloudInfo;
 import com.nju.tutorialtool.model.ProjectInfo;
 import com.nju.tutorialtool.util.io.IO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +28,8 @@ public class EurekaService {
     /**
      * 创建Eureka Server项目
      */
-    public void createEurekaServer(EurekaServerInfo eurekaServerInfo) {
-        ProjectInfo projectInfo = new ProjectInfo(eurekaServerInfo);
+    public void createEurekaServer(SpringCloudInfo springCloudInfo) {
+        ProjectInfo projectInfo = new ProjectInfo(springCloudInfo);
         projectInfo.getDependencies().add("eurekaServer");
         createProjectService.createProject(projectInfo);
     }

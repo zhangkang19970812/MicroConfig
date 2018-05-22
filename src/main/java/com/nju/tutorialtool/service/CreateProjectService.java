@@ -3,7 +3,7 @@ package com.nju.tutorialtool.service;
 import com.nju.tutorialtool.model.ProjectInfo;
 import com.nju.tutorialtool.template.common.PomXmlResourceFile;
 import com.nju.tutorialtool.template.spring.ApplicationClassFile;
-import com.nju.tutorialtool.template.spring.ApplicationYmlResourceFile;
+import com.nju.tutorialtool.template.spring.ApplicationPropertiesResourceFile;
 import org.springframework.stereotype.Service;
 
 /**
@@ -32,7 +32,7 @@ public class CreateProjectService {
         PomXmlResourceFile pxrf = new PomXmlResourceFile(projectInfo.getBaseDir() + "/" + projectInfo.getArtifactId(), projectInfo.getGroupId(), projectInfo.getArtifactId(), projectInfo.getDependencies());
         pxrf.generate();
 
-        ApplicationYmlResourceFile ayrf = new ApplicationYmlResourceFile(projectInfo.getBaseDir() + "/" + projectInfo.getArtifactId() + "/" + "src/main/resources");
+        ApplicationPropertiesResourceFile ayrf = new ApplicationPropertiesResourceFile(projectInfo.getBaseDir() + "/" + projectInfo.getArtifactId() + "/" + "src/main/resources");
         ayrf.generate();
 
         ApplicationClassFile acf = new ApplicationClassFile(projectInfo.getBaseDir() + "/" + projectInfo.getArtifactId() + "/" + "src/main/java" + "/" + toDir(projectInfo.getGroupId()) + "/" + projectInfo.getArtifactId(), toPackage(projectInfo.getGroupId() + "/" + projectInfo.getArtifactId()), projectInfo.getDependencies());
