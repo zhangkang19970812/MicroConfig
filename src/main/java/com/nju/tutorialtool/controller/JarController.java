@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/jar")
 public class JarController {
+
     @Autowired
     private GenerateJarService generateJarService;
 
