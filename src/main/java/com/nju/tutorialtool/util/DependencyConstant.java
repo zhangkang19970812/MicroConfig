@@ -38,48 +38,27 @@ public class DependencyConstant {
 
     private static String getDependency(String name) {
         String res = "";
-        switch (name){
+        switch (name) {
             case "eurekaServer":
-                res = "<dependency>\r\n" +
-                        "\t\t\t<groupId>org.springframework.cloud</groupId>\r\n" +
-                        "\t\t\t<artifactId>spring-cloud-starter-eureka-server</artifactId>\r\n" +
-                        "\t\t</dependency>\r\n";
+                res = eurekaServer;
                 break;
             case "eurekaDiscovery":
-                res = "<dependency>\r\n" +
-                        "\t\t\t<groupId>org.springframework.cloud</groupId>\r\n" +
-                        "\t\t\t<artifactId>spring-cloud-starter-eureka</artifactId>\r\n" +
-                        "\t\t</dependency>\r\n";
+                res = eurekaDiscovery;
                 break;
             case "zuul":
-                res = "<dependency>\r\n" +
-                        "\t\t\t<groupId>org.springframework.cloud</groupId>\r\n" +
-                        "\t\t\t<artifactId>spring-cloud-starter-zuul</artifactId>\r\n" +
-                        "\t\t</dependency>\r\n";
+                res = zuul;
                 break;
             case "hystrix":
-                res = "<dependency>\r\n" +
-                        "\t\t\t<groupId>org.springframework.cloud</groupId>\r\n" +
-                        "\t\t\t<artifactId>spring-cloud-starter-hystrix</artifactId>\r\n" +
-                        "\t\t</dependency>\r\n";
+                res = hystrix;
                 break;
             case "configServer":
-                res = "<dependency>\r\n" +
-                        "\t\t\t<groupId>org.springframework.cloud</groupId>\r\n" +
-                        "\t\t\t<artifactId>spring-cloud-config-server</artifactId>\r\n" +
-                        "\t\t</dependency>\r\n";
+                res = configServer;
                 break;
             case "configClient":
-                res = "<dependency>\r\n" +
-                        "\t\t\t<groupId>org.springframework.cloud</groupId>\r\n" +
-                        "\t\t\t<artifactId>spring-cloud-starter-config</artifactId>\r\n" +
-                        "\t\t</dependency>\r\n";
+                res = configClient;
                 break;
             case "rabbitMQ":
-                res = "<dependency>\r\n" +
-                        "\t\t\t<groupId>org.springframework.boot</groupId>\r\n" +
-                        "\t\t\t<artifactId>spring-boot-starter-amqp</artifactId>\r\n" +
-                        "\t\t</dependency>\r\n";
+                res = rabbitMQ;
                 break;
         }
         return res;
@@ -87,7 +66,7 @@ public class DependencyConstant {
 
     public static String getDependencies(List<String> list) {
         StringBuilder res = new StringBuilder();
-        for (String name: list) {
+        for (String name : list) {
             res.append("      " + getDependency(name));
         }
         return res.toString();

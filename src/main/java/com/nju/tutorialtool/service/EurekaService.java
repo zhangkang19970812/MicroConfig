@@ -1,7 +1,7 @@
 package com.nju.tutorialtool.service;
 
-import com.nju.tutorialtool.model.SpringCloudInfo;
 import com.nju.tutorialtool.model.ProjectInfo;
+import com.nju.tutorialtool.model.SpringCloudInfo;
 import com.nju.tutorialtool.util.io.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,9 +42,13 @@ public class EurekaService {
      * @param serviceRootPaths 所有微服务项目的根目录
      */
     public void addEurekaClient(List<String> serviceRootPaths) {
-        for (int i = 0; i < serviceRootPaths.size(); i++) {
+
+        List<String> dependencies = new ArrayList<>();
+        dependencies.add("eurekaDiscovery");
+
+        for (String serviceRootPath : serviceRootPaths) {
             // 1. 找到有@SpringBootApplication
-            File applicationFile = IO.getApplication(serviceRootPaths.get(i));
+            File applicationFile = IO.getApplication(serviceRootPath);
             // 确定根目录下有一个applicationFile
             assert applicationFile != null;
 
@@ -62,6 +67,9 @@ public class EurekaService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            // 3. pom文件添加注解
+            IO.addDependencyToPom(serviceRootPath, dependencies);
         }
     }
 
