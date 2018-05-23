@@ -3,8 +3,11 @@ package com.nju.tutorialtool.controller;
 import com.nju.tutorialtool.model.Configuration;
 import com.nju.tutorialtool.model.ConfigurationItem;
 import com.nju.tutorialtool.model.General;
-import com.nju.tutorialtool.service.*;
+import com.nju.tutorialtool.service.ConfigurationService;
 import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
+import com.nju.tutorialtool.service.RabbitmqService;
+import com.nju.tutorialtool.service.RibbonService;
+import com.nju.tutorialtool.service.ZuulService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,14 +38,11 @@ public class GeneralController {
     @Autowired
     private ConfigurationService configurationService;
 
-    @Autowired
-    private EurekaService eurekaService;
-
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void addGeneral(@RequestBody General general) throws IOException {
-        HashMap<String, String> services = general.getServices();
-        List<Configuration> configurations = general.getConfigurationList();
-        List<String> serviceURLs = new ArrayList<>();
+        HashMap<String,String> services=general.getServices();
+        List<Configuration> configurations=general.getConfigurationList();
+        List<String> serviceURLs=new ArrayList<>();
 
         for (String url : services.values()) {
             serviceURLs.add(url);
@@ -51,32 +51,28 @@ public class GeneralController {
         /**
          * 配置文件
          */
-        for (int i = 0; i < configurations.size(); i++) {
-            configurationService.editConfiguration(configurations.get(i).getProjectPath(), configurations.get(i).getList());
+        for(int i=0;i<configurations.size();i++) {
+            configurationService.editConfiguration(configurations.get(i).getProjectPath(),configurations.get(i).getList());
         }
 
-        // eureka server
-        eurekaService.createEurekaServer(general.getEurekaServerInfo());
+        if (general.isEurekaServer() == true) {
 
-        // eureka client
-        eurekaService.addEurekaClient(serviceURLs);
-
-
-        if (general.isZuul()) {
-//            zuulService.replaceUrl(general.getZuulComsumer(), general.getZuulProviders());
         }
-        if (general.isHystrix()) {
-            for (int i = 0; i < serviceURLs.size(); i++) {
+        if (general.isRibbon() == true) {
+            ribbonService.replaceUrl(general.getZuulComsumer(),general.getZuulProviders());
+        }
+        if (general.isHystrix() == true) {
+            for(int i=0;i<serviceURLs.size();i++) {
                 addHystrixService.add(serviceURLs.get(i));
             }
         }
-        if (general.isRabbitMQ()) {
+        if (general.isRabbitMQ() == true) {
             addRabbitmq(services.get(general.getMqServiceName()));
             addSender(general.getMqSrc());
             addReceiver(general.getMqDest());
         }
-        if (general.isRibbon()) {
-            for (int i = 0; i < serviceURLs.size(); i++) {
+        if (general.isRibbon()== true) {
+            for(int i=0;i<serviceURLs.size();i++) {
                 ribbonService.addRibbon(serviceURLs.get(i));
             }
         }
@@ -101,12 +97,12 @@ public class GeneralController {
         rabbitmqService.addRecevier(path, direct);
     }
 
-    public List<ConfigurationItem> getListFromMap(HashMap<String, String> map) {
-        List<ConfigurationItem> configList = new ArrayList<>();
+    public List<ConfigurationItem> getListFromMap(HashMap<String,String> map){
+        List<ConfigurationItem> configList=new ArrayList<>();
         Iterator<String> it = map.keySet().iterator();
-        while (it.hasNext()) {
+        while(it.hasNext()) {
             String key = it.next();
-            configList.add(new ConfigurationItem(key, map.get(key)));
+            configList.add(new ConfigurationItem(key,map.get(key)));
         }
         return configList;
     }

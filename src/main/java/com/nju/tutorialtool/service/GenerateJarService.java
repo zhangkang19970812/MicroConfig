@@ -8,8 +8,6 @@ import java.io.File;
 @Service
 public class GenerateJarService {
     public void generateJar(String projectPath) {
-        File file = new File(projectPath);
-        Jar.execCMD(file);
+        Jar.execCMD(projectPath);
     }
-
 }
