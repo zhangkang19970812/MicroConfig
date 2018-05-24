@@ -31,7 +31,7 @@ public class EurekaService {
      */
     public void createEurekaServer(SpringCloudInfo springCloudInfo) {
         ProjectInfo projectInfo = new ProjectInfo(springCloudInfo);
-        projectInfo.getDependencies().add("eurekaServer");
+        projectInfo.addDependency("eurekaServer");
         createProjectService.createProject(projectInfo);
     }
 

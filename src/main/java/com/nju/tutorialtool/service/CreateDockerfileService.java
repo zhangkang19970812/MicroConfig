@@ -10,17 +10,24 @@ import org.springframework.stereotype.Service;
 public class CreateDockerfileService {
     /**
      * 为项目创建Dockerfile
-     * @param dockerfileInfo
+     * @param projectPath
+     * @param type
      * @throws Exception
      */
-    public void createDockerfile(DockerfileInfo dockerfileInfo) throws Exception {
-        if (dockerfileInfo.getProjectType().equals("service")) {
-            ServiceDockerfile serviceDockerfile = new ServiceDockerfile(dockerfileInfo.getProjectPath(), IO.getServicePort(dockerfileInfo.getProjectPath()));
+    public void createDockerfile(String projectPath, String type) throws Exception {
+        if (type.equals("service")) {
+            ServiceDockerfile serviceDockerfile = new ServiceDockerfile(projectPath, IO.getServicePort(projectPath));
             serviceDockerfile.generate();
         }
         else {
-            MysqlDockerfile mysqlDockerfile = new MysqlDockerfile(dockerfileInfo.getProjectPath());
+            MysqlDockerfile mysqlDockerfile = new MysqlDockerfile(projectPath);
             mysqlDockerfile.generate();
         }
     }
+
+//    public static void main(String[] args) throws Exception {
+//        CreateDockerfileService createDockerfileService = new CreateDockerfileService();
+//        DockerfileInfo dockerfileInfo = new DockerfileInfo("H:/programs/account_service", "service");
+//        createDockerfileService.createDockerfile(dockerfileInfo);
+//    }
 }

@@ -1,5 +1,6 @@
 package com.nju.tutorialtool.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectInfo {
@@ -22,6 +23,7 @@ public class ProjectInfo {
         this.baseDir = springCloudInfo.getBaseDir();
         this.groupId = springCloudInfo.getGroupId();
         this.artifactId = springCloudInfo.getArtifactId();
+        this.dependencies = new ArrayList<>();
     }
 
     public String getBaseDir() {
@@ -54,5 +56,9 @@ public class ProjectInfo {
 
     public void setDependencies(List<String> dependencies) {
         this.dependencies = dependencies;
+    }
+
+    public void addDependency(String dependency) {
+        this.dependencies.add(dependency);
     }
 }

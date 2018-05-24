@@ -15,14 +15,14 @@ public class CreateDockerfileController {
     private CreateDockerfileService createDockerfileService;
 
     /**
-     * 参数DockerfileInfo包括项目路径和项目类型，类型包括service和mysql两种
-     * @param dockerfileInfo
+     * 为某服务创建Dockerfile
+     * @param projectPath
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public boolean createDockerfile(@RequestBody DockerfileInfo dockerfileInfo) throws Exception {
-        createDockerfileService.createDockerfile(dockerfileInfo);
+    public boolean createDockerfile(String projectPath) throws Exception {
+        createDockerfileService.createDockerfile(projectPath, "service");
         return true;
     }
 }

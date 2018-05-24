@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,7 +31,7 @@ public class RibbonService {
      * @return
      */
     private String getServiceName(String projectPath) {
-        File file = IO.getFile(projectPath + "/src/main/resources", "application");
+        File file = IO.getFile(projectPath + "/src/main/resources", "application.properties");
         String[] str = IO.readFromFile(file).split("\n");
         String name = "";
         if(file.getName().contains("properties")) {
@@ -73,9 +74,24 @@ public class RibbonService {
         while((line=raf.readLine())!=null){
             if(line.contains("@Bean")){
                 long pointer=raf.getFilePointer();
-                String annotation="@LoadBalanced\n";
+                String annotation="    @LoadBalanced\n";
                 IO.insert(pointer,annotation,applicationFile);
             }
         }
     }
+
+//    public static void main(String[] args) throws Exception {
+//        RibbonService ribbonService = new RibbonService();
+//        String account = "H:/programs/web/Petstore_YuiChen/account_service";
+//        String category = "H:/programs/web/Petstore_YuiChen/category_service";
+//        String order = "H:/programs/web/Petstore_YuiChen/order_service";
+//        String pet = "H:/programs/web/Petstore_YuiChen/pet_service";
+//        List<String> list = new ArrayList<>();
+//        list.add(account);
+//        list.add(category);
+//        list.add(order);
+//        list.add(pet);
+//        ribbonService.replaceUrl("H:/programs/bff_service", list);
+//        ribbonService.addRibbon("H:/programs/bff_service");
+//    }
 }

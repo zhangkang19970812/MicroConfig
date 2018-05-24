@@ -24,7 +24,7 @@ public class IO {
             //fis.read(data)：将字符读入数组。在某个输入可用、发生 I/O 错误或者已到达流的末尾前，此方法一直阻塞。读取的字符数，如果已到达流的末尾，则返回 -1
             while ((rn = br.read(data)) > 0) {         // 读取文件内容到字符串构建器
                 String str = String.valueOf(data, 0, rn);//把数组转换成字符串
-                System.out.println(str);
+//                System.out.println(str);
                 sb.append(str);
             }
             br.close();// 关闭输入流
@@ -113,17 +113,17 @@ public class IO {
      * 精确得到某个文件夹下的某个文件
      *
      * @param path
-     * @param pattern
+     * @param fileName
      * @return
      */
-    public static File getFile(String path, String pattern) {
+    public static File getFile(String path, String fileName) {
         File file = new File(path);
         File[] files1 = file.listFiles();
         if (files1 == null) {
             return file;
         }
         for (File f : files1) {
-            if (f.isFile() && Pattern.matches(pattern, f.getName())) {
+            if (f.isFile() && f.getName().equals(fileName)) {
                 return f;
             }
         }
@@ -184,6 +184,7 @@ public class IO {
                     long pointer = raf.getFilePointer();
                     String annotation = "\n"+ DependencyConstant.getDependencies(dependencyList);
                     IO.insert(pointer, annotation, file);
+                    break;
                 }
             }
         } catch (IOException e) {
@@ -197,7 +198,7 @@ public class IO {
      * @return
      */
     public static String getServicePort(String projectPath) {
-        File file = IO.getFile(projectPath + "/src/main/resources", "application");
+        File file = IO.getFile(projectPath + "/src/main/resources", "application.properties");
         String[] str = IO.readFromFile(file).split("\n");
         String port = "";
         if(file.getName().contains("properties")) {
