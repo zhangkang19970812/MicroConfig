@@ -8,13 +8,7 @@ import java.util.List;
  * @Date 2018/5/20
  */
 public class General {
-    /**
-     * Map：服务名称，地址
-     * 修改为Configuration //Map：服务名称，配置Map<配置名称，配置值>
-     * 组件选择boolean
-     * RabbitMQ: src,dest
-     * Ribbon: consumer:String; provider: List<String>
-     */
+
     /**
      * Map：服务名称，地址
      */
