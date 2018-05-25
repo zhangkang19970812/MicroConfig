@@ -3,11 +3,8 @@ package com.nju.tutorialtool.controller;
 import com.nju.tutorialtool.model.Configuration;
 import com.nju.tutorialtool.model.ConfigurationItem;
 import com.nju.tutorialtool.model.General;
-import com.nju.tutorialtool.service.ConfigurationService;
+import com.nju.tutorialtool.service.*;
 import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
-import com.nju.tutorialtool.service.RabbitmqService;
-import com.nju.tutorialtool.service.RibbonService;
-import com.nju.tutorialtool.service.ZuulService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +34,12 @@ public class GeneralController {
     private ZuulService zuulService;
     @Autowired
     private ConfigurationService configurationService;
+    @Autowired
+    private GenerateJarService generateJarService;
+    @Autowired
+    private CreateMysqlProjectService createMysqlProjectService;
+    @Autowired
+    private UploadService uploadService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void addGeneral(@RequestBody General general) throws IOException {
@@ -76,6 +79,24 @@ public class GeneralController {
                 ribbonService.addRibbon(serviceURLs.get(i));
             }
         }
+        /**
+         * 打包jar
+         */
+        for(String path:general.getJarPaths()) {
+            generateJarService.generateJar(path);
+        }
+        /**
+         * 数据库创建
+         */
+        try {
+            createMysqlProjectService.createMysqlProject(general.getMysqlInfo());
+        } catch (Exception e) {
+            System.out.println("数据库创建出错");
+        }
+        /**
+         * 项目部署
+         */
+        uploadService.upload(general.getServerInfo());
     }
 
 

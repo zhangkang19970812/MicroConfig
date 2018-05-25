@@ -80,6 +80,46 @@ public class General {
      */
     private boolean isRibbon;
 
+    /**
+     * 数据库创建、配置信息
+     */
+    private MysqlInfo mysqlInfo;
+
+    /**
+     * 打包jar的项目路径列表
+     */
+    private List<String> jarPaths;
+
+    public ServerInfo getServerInfo() {
+        return serverInfo;
+    }
+
+    public void setServerInfo(ServerInfo serverInfo) {
+        this.serverInfo = serverInfo;
+    }
+
+    /**
+     * 项目部署路径及详细信息
+
+     */
+    private ServerInfo serverInfo;
+
+    public List<String> getJarPaths() {
+        return jarPaths;
+    }
+
+    public void setJarPaths(List<String> jarPaths) {
+        this.jarPaths = jarPaths;
+    }
+
+    public MysqlInfo getMysqlInfo() {
+        return mysqlInfo;
+    }
+
+    public void setMysqlInfo(MysqlInfo mysqlInfo) {
+        this.mysqlInfo = mysqlInfo;
+    }
+
     public boolean isRibbon() {
         return isRibbon;
     }
