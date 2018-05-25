@@ -34,15 +34,19 @@ public class General {
      */
     private boolean isZuul;
 
-    /**
-     * zuul Consumer, 服务名称
-     */
-    private String zuulComsumer;
+    public Ribbon getRibbon() {
+        return ribbon;
+    }
+
+    public void setRibbon(Ribbon ribbon) {
+        this.ribbon = ribbon;
+    }
 
     /**
-     * zuul Providers, 所有提供服务的名称列表
+     * Ribbon
+
      */
-    private List<String> zuulProviders;
+    private Ribbon ribbon;
 
     /**
      * 是否含有hystrix
@@ -153,15 +157,6 @@ public class General {
         isHystrix = hystrix;
     }
 
-    public List<String> getZuulProviders() {
-
-        return zuulProviders;
-    }
-
-    public void setZuulProviders(List<String> zuulProviders) {
-        this.zuulProviders = zuulProviders;
-    }
-
     public boolean isZuul() {
 
         return isZuul;
@@ -169,15 +164,6 @@ public class General {
 
     public void setZuul(boolean zuul) {
         isZuul = zuul;
-    }
-
-    public String getZuulComsumer() {
-
-        return zuulComsumer;
-    }
-
-    public void setZuulComsumer(String zuulComsumer) {
-        this.zuulComsumer = zuulComsumer;
     }
 
     public boolean isEurekaServer() {

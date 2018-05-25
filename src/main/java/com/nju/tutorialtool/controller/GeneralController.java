@@ -68,7 +68,10 @@ public class GeneralController {
         }
 
         if (general.isRibbon()) {
-            ribbonService.replaceUrl(general.getZuulComsumer(), general.getZuulProviders());
+            for (int i = 0; i < serviceURLs.size(); i++) {
+                ribbonService.addRibbon(serviceURLs.get(i));
+            }
+            ribbonService.replaceUrl(general.getRibbon().getConsumerPath(), general.getRibbon().getProviderPath());
         }
         if (general.isHystrix()) {
             for (int i = 0; i < serviceURLs.size(); i++) {
@@ -80,11 +83,7 @@ public class GeneralController {
             addSender(general.getMqSrc());
             addReceiver(general.getMqDest());
         }
-        if (general.isRibbon()) {
-            for (int i = 0; i < serviceURLs.size(); i++) {
-                ribbonService.addRibbon(serviceURLs.get(i));
-            }
-        }
+
         /**
          * 打包jar
          */
