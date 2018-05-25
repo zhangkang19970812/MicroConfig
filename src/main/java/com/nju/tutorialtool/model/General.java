@@ -79,11 +79,6 @@ public class General {
      */
     private MysqlInfo mysqlInfo;
 
-    /**
-     * 打包jar的项目路径列表
-     */
-    private List<String> jarPaths;
-
     public ServerInfo getServerInfo() {
         return serverInfo;
     }
@@ -97,14 +92,6 @@ public class General {
 
      */
     private ServerInfo serverInfo;
-
-    public List<String> getJarPaths() {
-        return jarPaths;
-    }
-
-    public void setJarPaths(List<String> jarPaths) {
-        this.jarPaths = jarPaths;
-    }
 
     public MysqlInfo getMysqlInfo() {
         return mysqlInfo;
