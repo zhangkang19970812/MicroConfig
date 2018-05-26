@@ -3,6 +3,7 @@ package com.nju.tutorialtool.controller;
 import com.nju.tutorialtool.model.Configuration;
 import com.nju.tutorialtool.model.ConfigurationItem;
 import com.nju.tutorialtool.model.General;
+import com.nju.tutorialtool.model.Ribbon;
 import com.nju.tutorialtool.service.*;
 import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,24 +72,13 @@ public class GeneralController {
             for (int i = 0; i < serviceURLs.size(); i++) {
                 ribbonService.addRibbon(serviceURLs.get(i));
             }
-            ribbonService.replaceUrl(general.getRibbon().getConsumerPath(), general.getRibbon().getProviderPath());
+            Ribbon ribbon = new Ribbon(general.getRibbonDTO(), general.getServices());
+            ribbonService.replaceUrl(ribbon.getConsumerPath(), ribbon.getProviderPath());
         }
         if (general.isHystrix()) {
             for (int i = 0; i < serviceURLs.size(); i++) {
                 addHystrixService.add(serviceURLs.get(i));
             }
-        }
-        if (general.isRabbitMQ()) {
-            addRabbitmq(services.get(general.getMqServiceName()));
-            addSender(general.getMqSrc());
-            addReceiver(general.getMqDest());
-        }
-
-        /**
-         * 打包jar
-         */
-        for (String path : serviceURLs) {
-            generateJarService.generateJar(path);
         }
         /**
          * 数据库创建
@@ -97,6 +87,12 @@ public class GeneralController {
             createMysqlProjectService.createMysqlProject(general.getMysqlInfo());
         } catch (Exception e) {
             System.out.println("数据库创建出错");
+        }
+        /**
+         * 打包jar
+         */
+        for (String path : serviceURLs) {
+            generateJarService.generateJar(path);
         }
         /**
          * 项目部署

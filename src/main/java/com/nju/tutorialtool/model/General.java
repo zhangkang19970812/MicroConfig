@@ -1,5 +1,8 @@
 package com.nju.tutorialtool.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.nju.tutorialtool.model.dto.RibbonDTO;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,53 +33,26 @@ public class General {
     private SpringCloudInfo eurekaServerInfo;
 
     /**
-     * 是否含有Zuul
-     */
-    private boolean isZuul;
-
-    public Ribbon getRibbon() {
-        return ribbon;
-    }
-
-    public void setRibbon(Ribbon ribbon) {
-        this.ribbon = ribbon;
-    }
-
-    /**
-     * Ribbon
-
-     */
-    private Ribbon ribbon;
-
-    /**
      * 是否含有hystrix
      */
     private boolean isHystrix;
 
     /**
-     * 是否含有rabbitmq
-     */
-    private boolean isRabbitMQ;
-
-    /**
-     * mq的服务名称
-     */
-    private String mqServiceName;
-
-    /**
-     * mq的发送方
-     */
-    private String mqSrc;
-
-    /**
-     * mq的接收方
-     */
-    private String mqDest;
-
-    /**
      * 是否含有ribbon
      */
     private boolean isRibbon;
+
+    /**
+     * RibbonDTO
+     */
+    @JSONField(name = "ribbon")
+    private RibbonDTO ribbonDTO;
+
+
+    /**
+     * 是否含有Zuul
+     */
+    private boolean isZuul;
 
     /**
      * 数据库创建、配置信息
@@ -93,7 +69,6 @@ public class General {
 
     /**
      * 项目部署路径及详细信息
-
      */
     private ServerInfo serverInfo;
 
@@ -111,41 +86,6 @@ public class General {
 
     public void setRibbon(boolean ribbon) {
         isRibbon = ribbon;
-    }
-
-    public String getMqDest() {
-
-        return mqDest;
-    }
-
-    public void setMqDest(String mqDest) {
-        this.mqDest = mqDest;
-    }
-
-    public String getMqSrc() {
-
-        return mqSrc;
-    }
-
-    public String getMqServiceName() {
-        return mqServiceName;
-    }
-
-    public void setMqServiceName(String mqServiceName) {
-        this.mqServiceName = mqServiceName;
-    }
-
-    public void setMqSrc(String mqSrc) {
-        this.mqSrc = mqSrc;
-    }
-
-    public boolean isRabbitMQ() {
-
-        return isRabbitMQ;
-    }
-
-    public void setRabbitMQ(boolean rabbitMQ) {
-        isRabbitMQ = rabbitMQ;
     }
 
     public boolean isHystrix() {
@@ -198,5 +138,13 @@ public class General {
 
     public void setEurekaServerInfo(SpringCloudInfo eurekaServerInfo) {
         this.eurekaServerInfo = eurekaServerInfo;
+    }
+
+    public RibbonDTO getRibbonDTO() {
+        return ribbonDTO;
+    }
+
+    public void setRibbonDTO(RibbonDTO ribbonDTO) {
+        this.ribbonDTO = ribbonDTO;
     }
 }
