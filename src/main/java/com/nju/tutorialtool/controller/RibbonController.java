@@ -32,7 +32,7 @@ public class RibbonController {
      * @return
      * @throws IOException
      */
-    @RequestMapping("/addRibbon")
+    @RequestMapping(value = "/addRibbon", method = RequestMethod.POST)
     public boolean addRibbon(String projectPath) throws IOException {
         ribbonService.addRibbon(projectPath);
         return true;
