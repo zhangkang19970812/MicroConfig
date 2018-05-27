@@ -2,6 +2,8 @@ package com.nju.tutorialtool.template.compose;
 
 import com.nju.tutorialtool.base.ResourceFile;
 import com.nju.tutorialtool.model.Service;
+import com.nju.tutorialtool.util.enums.BaseDirConstant;
+
 import java.util.List;
 
 public class ComposeYmlFile extends ResourceFile {
@@ -16,7 +18,7 @@ public class ComposeYmlFile extends ResourceFile {
                 stringBuilder.append("  " + service.getServiceName() + ":\n" +
                         "    " + "image: " + service.getImage() + "\n" +
                         "    " + "volumes:\n" +
-                        "      " + "- /usr/services/" + service.getServiceName() + ":/var/lib/mysql\n");
+                        "      " + "- " + BaseDirConstant.volumeDir + "/" + service.getServiceName() + ":/var/lib/mysql\n");
             }
             else if (service.getPort() != null) {
                 stringBuilder.append("  " + service.getServiceName() + ":\n" +

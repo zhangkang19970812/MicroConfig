@@ -6,15 +6,15 @@ public class ServerInfo {
     private String password;
     private String port;
     private String sourcePath;
-    private String destinationPath;
+//    private String destinationPath;
 
-    public ServerInfo(String ip, String user, String password, String port, String sourcePath, String destinationPath) {
+    public ServerInfo(String ip, String user, String password, String port, String sourcePath) {
         this.ip = ip;
         this.user = user;
         this.password = password;
         this.port = port;
         this.sourcePath = sourcePath;
-        this.destinationPath = destinationPath;
+//        this.destinationPath = destinationPath;
     }
 
     public String getIp() {
@@ -57,10 +57,11 @@ public class ServerInfo {
         this.sourcePath = sourcePath;
     }
 
-    public String getDestinationPath() {
-        return destinationPath;
-    }
-
-    public void setDestinationPath(String destinationPath) {
-        this.destinationPath = destinationPath;
-    }}
+//    public String getDestinationPath() {
+//        return destinationPath;
+//    }
+//
+//    public void setDestinationPath(String destinationPath) {
+//        this.destinationPath = destinationPath;
+//    }
+}

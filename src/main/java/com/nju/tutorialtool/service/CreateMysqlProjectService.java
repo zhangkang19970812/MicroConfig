@@ -6,6 +6,7 @@ import com.nju.tutorialtool.model.Table;
 import com.nju.tutorialtool.template.mysql.PrivilegesFile;
 import com.nju.tutorialtool.template.mysql.SchemaFile;
 import com.nju.tutorialtool.template.mysql.SetupShFile;
+import com.nju.tutorialtool.util.enums.BaseDirConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,18 +19,18 @@ public class CreateMysqlProjectService {
     private CreateDockerfileService createDockerfileService;
 
     public void createMysqlProject(MysqlInfo mysqlInfo) throws Exception {
-        SchemaFile schemaFile = new SchemaFile(mysqlInfo.getBaseDir() + "/" + mysqlInfo.getProjectName(),
+        SchemaFile schemaFile = new SchemaFile(BaseDirConstant.projectBaseDir + "/" + mysqlInfo.getProjectName(),
                 mysqlInfo.getDatabase(), mysqlInfo.getTables());
         schemaFile.generate();
 
-        PrivilegesFile privilegesFile = new PrivilegesFile(mysqlInfo.getBaseDir() + "/" + mysqlInfo.getProjectName(),
+        PrivilegesFile privilegesFile = new PrivilegesFile(BaseDirConstant.projectBaseDir + "/" + mysqlInfo.getProjectName(),
                 mysqlInfo.getUser(), mysqlInfo.getPassword(), mysqlInfo.getDatabase());
         privilegesFile.generate();
 
-        SetupShFile setupShFile = new SetupShFile(mysqlInfo.getBaseDir() + "/" + mysqlInfo.getProjectName());
+        SetupShFile setupShFile = new SetupShFile(BaseDirConstant.projectBaseDir + "/" + mysqlInfo.getProjectName());
         setupShFile.generate();
 
-        createDockerfileService.createDockerfile(mysqlInfo.getBaseDir() + "/" + mysqlInfo.getProjectName(), "mysql");
+        createDockerfileService.createDockerfile(BaseDirConstant.projectBaseDir + "/" + mysqlInfo.getProjectName(), "mysql");
     }
 
 //    public static void main(String[] args) throws Exception {

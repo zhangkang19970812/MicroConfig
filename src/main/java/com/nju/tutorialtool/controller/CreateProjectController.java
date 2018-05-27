@@ -20,6 +20,10 @@ public class CreateProjectController {
         return new ModelAndView("index");
     }
 
+    /**
+     * @param projectInfo 不包含baseDir了
+     * @return
+     */
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public boolean createProject(@RequestBody ProjectInfo projectInfo) {
         createProjectService.createProject(projectInfo);

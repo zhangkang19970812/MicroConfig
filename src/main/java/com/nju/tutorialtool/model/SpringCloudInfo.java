@@ -14,7 +14,7 @@ public class SpringCloudInfo {
     /**
      * 目标文件夹
      */
-    private String baseDir;
+//    private String baseDir;
 
     /**
      * GroupId
@@ -26,13 +26,13 @@ public class SpringCloudInfo {
      */
     private String artifactId;
 
-    public String getBaseDir() {
-        return baseDir;
-    }
-
-    public void setBaseDir(String baseDir) {
-        this.baseDir = baseDir;
-    }
+//    public String getBaseDir() {
+//        return baseDir;
+//    }
+//
+//    public void setBaseDir(String baseDir) {
+//        this.baseDir = baseDir;
+//    }
 
     public String getGroupId() {
         return groupId;

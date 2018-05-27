@@ -2,6 +2,7 @@ package com.nju.tutorialtool.service;
 
 import com.nju.tutorialtool.model.ComposeInfo;
 import com.nju.tutorialtool.template.compose.ComposeYmlFile;
+import com.nju.tutorialtool.util.enums.BaseDirConstant;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,7 +13,7 @@ public class CreateComposeYmlService {
      * @throws Exception
      */
     public void createComposeYml(ComposeInfo composeInfo) throws Exception {
-        ComposeYmlFile composeYmlFile = new ComposeYmlFile(composeInfo.getBaseDir(), composeInfo.getServiceList());
+        ComposeYmlFile composeYmlFile = new ComposeYmlFile(BaseDirConstant.projectBaseDir, composeInfo.getServiceList());
         composeYmlFile.generate();
     }
 }

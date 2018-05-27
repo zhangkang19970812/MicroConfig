@@ -20,6 +20,11 @@ public class CreateMysqlProjectController {
         return new ModelAndView("");
     }
 
+    /**
+     * @param mysqlInfo 不包含baseDir了
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public boolean createProject(@RequestBody MysqlInfo mysqlInfo) throws Exception {
         createMysqlProjectService.createMysqlProject(mysqlInfo);

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectInfo {
-    private String baseDir;
+//    private String baseDir;
     private String groupId;
     private String artifactId;
     private List<String> dependencies;
@@ -12,27 +12,27 @@ public class ProjectInfo {
     public ProjectInfo() {
     }
 
-    public ProjectInfo(String baseDir, String groupId, String artifactId, List<String> dependencies) {
-        this.baseDir = baseDir;
+    public ProjectInfo(String groupId, String artifactId, List<String> dependencies) {
+//        this.baseDir = baseDir;
         this.groupId = groupId;
         this.artifactId = artifactId;
         this.dependencies = dependencies;
     }
 
     public ProjectInfo(SpringCloudInfo springCloudInfo) {
-        this.baseDir = springCloudInfo.getBaseDir();
+//        this.baseDir = springCloudInfo.getBaseDir();
         this.groupId = springCloudInfo.getGroupId();
         this.artifactId = springCloudInfo.getArtifactId();
         this.dependencies = new ArrayList<>();
     }
 
-    public String getBaseDir() {
-        return baseDir;
-    }
-
-    public void setBaseDir(String baseDir) {
-        this.baseDir = baseDir;
-    }
+//    public String getBaseDir() {
+//        return baseDir;
+//    }
+//
+//    public void setBaseDir(String baseDir) {
+//        this.baseDir = baseDir;
+//    }
 
     public String getGroupId() {
         return groupId;
