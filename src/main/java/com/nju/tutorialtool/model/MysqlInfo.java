@@ -1,11 +1,22 @@
 package com.nju.tutorialtool.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.List;
 
+@Entity
 public class MysqlInfo {
 //    private String baseDir;
+    @Id
+    @GeneratedValue
+    private Long id;
+
     private String projectName;
     private String database;
+
+    @OneToMany
     private List<Table> tables;
     private String user;
     private String password;

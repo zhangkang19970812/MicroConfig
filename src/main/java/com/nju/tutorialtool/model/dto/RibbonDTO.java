@@ -1,13 +1,19 @@
 package com.nju.tutorialtool.model.dto;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.List;
 
 /**
  * @author Shenmiu
  * @date 2018/05/26
  */
+@Entity
 public class RibbonDTO {
-
+    @Id
+    @GeneratedValue
+    private Long id;
     /**
      * ribbon consumer的服务名称
      */

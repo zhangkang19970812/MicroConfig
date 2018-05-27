@@ -3,6 +3,7 @@ package com.nju.tutorialtool.model;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.nju.tutorialtool.model.dto.RibbonDTO;
 
+import javax.persistence.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,16 +11,28 @@ import java.util.List;
  * @Author YZ
  * @Date 2018/5/20
  */
+@Entity
 public class General {
 
+    @Id
+    @GeneratedValue
+    private Long id;
+
     /**
-     * Map：服务名称，地址
+     * 要部署的服务器信息
      */
-    private HashMap<String, String> services;
+    private DeployServer deployServer;
+
+    /**
+     * Map：服务名称，文件夹名称
+     */
+    @OneToMany
+    private List<ServiceDirMap> services;
 
     /**
      * 服务的配置
      */
+    @OneToMany
     private List<Configuration> configurationList;
 
     /**
@@ -46,18 +59,21 @@ public class General {
      * RibbonDTO
      */
     @JSONField(name = "ribbon")
+    @OneToOne
     private RibbonDTO ribbonDTO;
-
 
     /**
      * 是否含有Zuul
      */
     private boolean isZuul;
 
+    private SpringCloudInfo zuulInfo;
+
     /**
      * 数据库创建、配置信息
      */
-    private MysqlInfo mysqlInfo;
+    @OneToMany
+    private List<MysqlInfo> mysqlInfoList;
 
     public ServerInfo getServerInfo() {
         return serverInfo;
@@ -70,19 +86,37 @@ public class General {
     /**
      * 项目部署路径及详细信息
      */
+    @OneToOne
     private ServerInfo serverInfo;
 
     /**
      * 创建docker-compose.yml所需信息
      */
+    @OneToOne
     private ComposeInfo composeInfo;
 
-    public MysqlInfo getMysqlInfo() {
-        return mysqlInfo;
+    public DeployServer getDeployServer() {
+        return deployServer;
     }
 
-    public void setMysqlInfo(MysqlInfo mysqlInfo) {
-        this.mysqlInfo = mysqlInfo;
+    public void setDeployServer(DeployServer deployServer) {
+        this.deployServer = deployServer;
+    }
+
+    public ComposeInfo getComposeInfo() {
+        return composeInfo;
+    }
+
+    public void setComposeInfo(ComposeInfo composeInfo) {
+        this.composeInfo = composeInfo;
+    }
+
+    public List<MysqlInfo> getMysqlInfoList() {
+        return mysqlInfoList;
+    }
+
+    public void setMysqlInfoList(List<MysqlInfo> mysqlInfoList) {
+        this.mysqlInfoList = mysqlInfoList;
     }
 
     public boolean isRibbon() {
@@ -128,12 +162,11 @@ public class General {
         this.configurationList = configurationList;
     }
 
-    public HashMap<String, String> getServices() {
-
+    public List<ServiceDirMap> getServices() {
         return services;
     }
 
-    public void setServices(HashMap<String, String> services) {
+    public void setServices(List<ServiceDirMap> services) {
         this.services = services;
     }
 
@@ -151,5 +184,13 @@ public class General {
 
     public void setRibbonDTO(RibbonDTO ribbonDTO) {
         this.ribbonDTO = ribbonDTO;
+    }
+
+    public SpringCloudInfo getZuulInfo() {
+        return zuulInfo;
+    }
+
+    public void setZuulInfo(SpringCloudInfo zuulInfo) {
+        this.zuulInfo = zuulInfo;
     }
 }

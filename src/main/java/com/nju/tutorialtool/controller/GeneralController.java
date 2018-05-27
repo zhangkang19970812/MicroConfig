@@ -1,11 +1,9 @@
 package com.nju.tutorialtool.controller;
 
-import com.nju.tutorialtool.model.Configuration;
-import com.nju.tutorialtool.model.ConfigurationItem;
-import com.nju.tutorialtool.model.General;
-import com.nju.tutorialtool.model.Ribbon;
+import com.nju.tutorialtool.model.*;
 import com.nju.tutorialtool.service.*;
 import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
+import com.nju.tutorialtool.util.enums.BaseDirConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +23,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/addGeneral")
 public class GeneralController {
-
+    @Autowired
+    private DeployServerService deployServerService;
+    @Autowired
+    private ServiceDirMapService serviceDirMapService;
+    @Autowired
+    private ShowServiceInfoService showServiceInfoService;
     @Autowired
     private EurekaService eurekaService;
     @Autowired
@@ -47,16 +50,25 @@ public class GeneralController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void addGeneral(@RequestBody General general) throws IOException {
-        HashMap<String, String> services = general.getServices();
+        DeployServer deployServer = general.getDeployServer();
+        List<ServiceDirMap> services = general.getServices();
         List<Configuration> configurations = general.getConfigurationList();
         List<String> serviceURLs = new ArrayList<>();
 
-        for (String url : services.values()) {
-            serviceURLs.add(url);
+        /**
+         * 用户添加部署服务器
+         */
+        deployServerService.addServer(deployServer);
+
+
+        for (ServiceDirMap serviceDirMap : services) {
+            serviceURLs.add(BaseDirConstant.projectBaseDir + "/" + serviceDirMap.getDirName());
         }
 
         // eureka server
         eurekaService.createEurekaServer(general.getEurekaServerInfo());
+        String eurekaServerName = general.getEurekaServerInfo().getArtifactId();
+        serviceDirMapService.addServiceDirMap(new ServiceDirMap(eurekaServerName, eurekaServerName));
 
         // eureka client
         eurekaService.addEurekaClient(serviceURLs);
@@ -81,13 +93,26 @@ public class GeneralController {
             }
         }
         /**
-         * 数据库创建
+         * 新增：创建Zuul项目
+         */
+        if (general.isZuul()) {
+            zuulService.createZuulProject(general.getZuulInfo());
+            String zuulName = general.getZuulInfo().getArtifactId();
+            serviceDirMapService.addServiceDirMap(new ServiceDirMap(zuulName, zuulName));
+        }
+        /**
+         * 数据库创建(多个)
          */
         try {
-            createMysqlProjectService.createMysqlProject(general.getMysqlInfo());
+            for (MysqlInfo mysqlInfo : general.getMysqlInfoList()) {
+                createMysqlProjectService.createMysqlProject(mysqlInfo);
+                serviceDirMapService.addServiceDirMap(new ServiceDirMap(mysqlInfo.getProjectName(), mysqlInfo.getProjectName()));
+            }
         } catch (Exception e) {
             System.out.println("数据库创建出错");
         }
+
+
         /**
          * 打包jar
          */
@@ -100,6 +125,14 @@ public class GeneralController {
         uploadService.upload(general.getServerInfo());
     }
 
+    /**
+     * 最后展示所有服务列表界面
+     * @return
+     */
+    @RequestMapping("/showAllServiceInfo")
+    public List<ServiceShowInfo> showAllServiceInfo() {
+        return showServiceInfoService.getAllServiceInfo();
+    }
 
     public void addRabbitmq(String location) {
         String path = rabbitmqService.find(location);

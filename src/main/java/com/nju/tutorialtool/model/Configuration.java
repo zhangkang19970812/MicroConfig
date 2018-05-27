@@ -1,9 +1,19 @@
 package com.nju.tutorialtool.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.List;
 
+@Entity
 public class Configuration {
+    @Id
+    @GeneratedValue
+    private Long id;
     private String projectPath;
+
+    @OneToMany
     private List<ConfigurationItem> list;
 
     public Configuration(String projectPath, List<ConfigurationItem> list) {

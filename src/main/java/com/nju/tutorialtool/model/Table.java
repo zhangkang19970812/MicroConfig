@@ -1,10 +1,21 @@
 package com.nju.tutorialtool.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.List;
 import java.util.Map;
 
+@Entity
 public class Table {
+    @Id
+    @GeneratedValue
+    private Long id;
+
     private String tableName;
+
+    @OneToMany
     private List<Column> columnList;
     private String primary_key;
 

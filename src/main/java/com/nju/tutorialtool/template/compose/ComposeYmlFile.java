@@ -16,19 +16,19 @@ public class ComposeYmlFile extends ResourceFile {
         for (Service service : list) {
             if (service.isMysql()) {
                 stringBuilder.append("  " + service.getServiceName() + ":\n" +
-                        "    " + "image: " + service.getImage() + "\n" +
+                        "    " + "image: " + service.getServiceName() + "\n" +
                         "    " + "volumes:\n" +
                         "      " + "- " + BaseDirConstant.volumeDir + "/" + service.getServiceName() + ":/var/lib/mysql\n");
             }
             else if (service.getPort() != null) {
                 stringBuilder.append("  " + service.getServiceName() + ":\n" +
-                        "    " + "image: " + service.getImage() + "\n" +
+                        "    " + "image: " + service.getServiceName() + "\n" +
                         "    " + "ports:\n" +
                         "      " + "- \"" + service.getPort() + ":" + service.getPort() + "\"\n");
             }
             else {
                 stringBuilder.append("  " + service.getServiceName() + ":\n" +
-                        "    " + "image: " + service.getImage() + "\n");
+                        "    " + "image: " + service.getServiceName() + "\n");
             }
         }
 

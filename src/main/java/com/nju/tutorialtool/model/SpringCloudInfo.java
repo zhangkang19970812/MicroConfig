@@ -1,5 +1,9 @@
 package com.nju.tutorialtool.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * @author Shenmiu
  * @date 2018/05/21
@@ -9,7 +13,11 @@ package com.nju.tutorialtool.model;
  * groupId
  * artifactId
  */
+@Entity
 public class SpringCloudInfo {
+    @Id
+    @GeneratedValue
+    private Long id;
 
     /**
      * 目标文件夹

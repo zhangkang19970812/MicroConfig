@@ -1,14 +1,23 @@
 package com.nju.tutorialtool.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Service {
+    @Id
+    @GeneratedValue
+    private Long id;
+
     private String serviceName;
-    private String image;
+//    private String image;
     private String port;
     private boolean mysql;
 
-    public Service(String serviceName, String image, String port, boolean mysql) {
+    public Service(String serviceName, String port, boolean mysql) {
         this.serviceName = serviceName;
-        this.image = image;
+//        this.image = image;
         this.port = port;
         this.mysql = mysql;
     }
@@ -21,13 +30,13 @@ public class Service {
         this.serviceName = serviceName;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
+//    public String getImage() {
+//        return image;
+//    }
+//
+//    public void setImage(String image) {
+//        this.image = image;
+//    }
 
     public String getPort() {
         return port;

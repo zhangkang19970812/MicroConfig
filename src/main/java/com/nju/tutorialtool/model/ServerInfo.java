@@ -1,6 +1,17 @@
 package com.nju.tutorialtool.model;
 
+import com.sun.javafx.beans.IDProperty;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class ServerInfo {
+    @Id
+    @GeneratedValue
+    private Long id;
+
     private String ip;
     private String user;
     private String password;

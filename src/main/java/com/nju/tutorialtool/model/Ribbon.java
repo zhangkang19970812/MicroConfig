@@ -1,6 +1,7 @@
 package com.nju.tutorialtool.model;
 
 import com.nju.tutorialtool.model.dto.RibbonDTO;
+import com.nju.tutorialtool.util.enums.BaseDirConstant;
 
 import java.util.List;
 import java.util.Map;
@@ -14,9 +15,21 @@ public class Ribbon {
         this.providerPath = providerPath;
     }
 
-    public Ribbon(RibbonDTO ribbonDTO, Map<String, String> services) {
-        consumerPath = services.get(ribbonDTO.getConsumer());
-        ribbonDTO.getProviders().forEach(provider -> providerPath.add(services.get(provider)));
+    public Ribbon(RibbonDTO ribbonDTO, List<ServiceDirMap> services) {
+//        consumerPath = services.get(ribbonDTO.getConsumer());
+//        ribbonDTO.getProviders().forEach(provider -> providerPath.add(services.get(provider)));
+        for (ServiceDirMap serviceDirMap : services) {
+            if (serviceDirMap.getServiceName().equals(ribbonDTO.getConsumer())) {
+                consumerPath = BaseDirConstant.projectBaseDir + "/" + serviceDirMap.getDirName();
+                continue;
+            }
+            for (String provider: ribbonDTO.getProviders()) {
+                if (serviceDirMap.getServiceName().equals(provider)) {
+                    providerPath.add(BaseDirConstant.projectBaseDir + "/" + serviceDirMap.getDirName());
+                    break;
+                }
+            }
+        }
     }
 
     public String getConsumerPath() {
