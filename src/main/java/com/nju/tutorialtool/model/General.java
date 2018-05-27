@@ -72,6 +72,11 @@ public class General {
      */
     private ServerInfo serverInfo;
 
+    /**
+     * 创建docker-compose.yml所需信息
+     */
+    private ComposeInfo composeInfo;
+
     public MysqlInfo getMysqlInfo() {
         return mysqlInfo;
     }

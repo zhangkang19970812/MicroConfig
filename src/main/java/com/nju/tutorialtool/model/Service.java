@@ -4,13 +4,13 @@ public class Service {
     private String serviceName;
     private String image;
     private String port;
-    private boolean isMysql;
+    private boolean mysql;
 
-    public Service(String serviceName, String image, String port, boolean isMysql) {
+    public Service(String serviceName, String image, String port, boolean mysql) {
         this.serviceName = serviceName;
         this.image = image;
         this.port = port;
-        this.isMysql = isMysql;
+        this.mysql = mysql;
     }
 
     public String getServiceName() {
@@ -38,10 +38,10 @@ public class Service {
     }
 
     public boolean isMysql() {
-        return isMysql;
+        return mysql;
     }
 
     public void setMysql(boolean mysql) {
-        isMysql = mysql;
+        this.mysql = mysql;
     }
 }
