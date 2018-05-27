@@ -3,7 +3,6 @@ package com.nju.tutorialtool.model;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.nju.tutorialtool.model.dto.RibbonDTO;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,12 +14,7 @@ public class General {
     /**
      * Map：服务名称，地址
      */
-    private HashMap<String, String> services;
-
-    /**
-     * 服务的配置
-     */
-    private List<Configuration> configurationList;
+    private List<ServiceInfo> services;
 
     /**
      * 是否含有EurekaServer
@@ -48,16 +42,15 @@ public class General {
     @JSONField(name = "ribbon")
     private RibbonDTO ribbonDTO;
 
-
     /**
      * 是否含有Zuul
      */
     private boolean isZuul;
 
     /**
-     * 数据库创建、配置信息
+     * 创建zuul的信息
      */
-    private MysqlInfo mysqlInfo;
+    private SpringCloudInfo zuulInfo;
 
     public ServerInfo getServerInfo() {
         return serverInfo;
@@ -76,14 +69,6 @@ public class General {
      * 创建docker-compose.yml所需信息
      */
     private ComposeInfo composeInfo;
-
-    public MysqlInfo getMysqlInfo() {
-        return mysqlInfo;
-    }
-
-    public void setMysqlInfo(MysqlInfo mysqlInfo) {
-        this.mysqlInfo = mysqlInfo;
-    }
 
     public boolean isRibbon() {
         return isRibbon;
@@ -120,20 +105,12 @@ public class General {
         isEurekaServer = eurekaServer;
     }
 
-    public List<Configuration> getConfigurationList() {
-        return configurationList;
-    }
-
-    public void setConfigurationList(List<Configuration> configurationList) {
-        this.configurationList = configurationList;
-    }
-
-    public HashMap<String, String> getServices() {
+    public List<ServiceInfo> getServices() {
 
         return services;
     }
 
-    public void setServices(HashMap<String, String> services) {
+    public void setServices(List<ServiceInfo> services) {
         this.services = services;
     }
 
@@ -151,5 +128,13 @@ public class General {
 
     public void setRibbonDTO(RibbonDTO ribbonDTO) {
         this.ribbonDTO = ribbonDTO;
+    }
+
+    public SpringCloudInfo getZuulInfo() {
+        return zuulInfo;
+    }
+
+    public void setZuulInfo(SpringCloudInfo zuulInfo) {
+        this.zuulInfo = zuulInfo;
     }
 }

@@ -14,11 +14,6 @@ public class Ribbon {
         this.providerPath = providerPath;
     }
 
-    public Ribbon(RibbonDTO ribbonDTO, Map<String, String> services) {
-        consumerPath = services.get(ribbonDTO.getConsumer());
-        ribbonDTO.getProviders().forEach(provider -> providerPath.add(services.get(provider)));
-    }
-
     public String getConsumerPath() {
         return consumerPath;
     }

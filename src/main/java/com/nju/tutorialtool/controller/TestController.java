@@ -1,5 +1,6 @@
 package com.nju.tutorialtool.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.nju.tutorialtool.model.General;
 import com.nju.tutorialtool.util.FileUtil;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ public class TestController {
 
     @PostMapping(value = "/uploadFolder")
     public String uploadFolder(MultipartFile[] folder) {
+        logger.info("传入的文件参数：{}", JSON.toJSONString(folder, true));
         FileUtil.saveMultiFile(UPLOAD_FOLDER, folder);
         return "ok";
     }

@@ -35,42 +35,39 @@ public class EurekaService {
         createProjectService.createProject(projectInfo);
     }
 
-
     /**
      * 给已有微服务添加Eureka Client组件
      *
-     * @param serviceRootPaths 所有微服务项目的根目录
+     * @param serviceRootPath 微服务项目的根目录
      */
-    public void addEurekaClient(List<String> serviceRootPaths) {
+    public void addEurekaClient(String serviceRootPath) {
 
         List<String> dependencies = new ArrayList<>();
         dependencies.add("eurekaDiscovery");
 
-        for (String serviceRootPath : serviceRootPaths) {
-            // 1. 找到有@SpringBootApplication
-            File applicationFile = IO.getApplication(serviceRootPath);
-            // 确定根目录下有一个applicationFile
-            assert applicationFile != null;
+        // 1. 找到有@SpringBootApplication
+        File applicationFile = IO.getApplication(serviceRootPath);
+        // 确定根目录下有一个applicationFile
+        assert applicationFile != null;
 
-            // 2. 添加@EnableDiscoveryClient注解
-            RandomAccessFile raf = null;
-            try {
-                raf = new RandomAccessFile(applicationFile, "rw");
-                String line = null;
-                while ((line = raf.readLine()) != null) {
-                    if (line.contains("@SpringBootApplication")) {
-                        long pointer = raf.getFilePointer();
-                        String annotation = "@EnableDiscoveryClient\n";
-                        IO.insert(pointer, annotation, applicationFile);
-                    }
+        // 2. 添加@EnableDiscoveryClient注解
+        RandomAccessFile raf = null;
+        try {
+            raf = new RandomAccessFile(applicationFile, "rw");
+            String line = null;
+            while ((line = raf.readLine()) != null) {
+                if (line.contains("@SpringBootApplication")) {
+                    long pointer = raf.getFilePointer();
+                    String annotation = "@EnableDiscoveryClient\n";
+                    IO.insert(pointer, annotation, applicationFile);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-
-            // 3. pom文件添加注解
-            IO.addDependencyToPom(serviceRootPath, dependencies);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        // 3. pom文件添加注解
+        IO.addDependencyToPom(serviceRootPath, dependencies);
     }
 
 //    public static void main(String[] args) {

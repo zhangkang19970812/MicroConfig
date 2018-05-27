@@ -1,22 +1,23 @@
 package com.nju.tutorialtool.controller;
 
-import com.nju.tutorialtool.model.Configuration;
-import com.nju.tutorialtool.model.ConfigurationItem;
 import com.nju.tutorialtool.model.General;
 import com.nju.tutorialtool.model.Ribbon;
+import com.nju.tutorialtool.model.ServiceInfo;
+import com.nju.tutorialtool.model.dto.RibbonDTO;
 import com.nju.tutorialtool.service.*;
 import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
+import com.nju.tutorialtool.util.enums.BaseDirConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author YZ
@@ -30,8 +31,6 @@ public class GeneralController {
     private EurekaService eurekaService;
     @Autowired
     private AddHystrixService addHystrixService;
-    @Autowired
-    private RabbitmqService rabbitmqService;
     @Autowired
     private RibbonService ribbonService;
     @Autowired
@@ -47,85 +46,70 @@ public class GeneralController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void addGeneral(@RequestBody General general) throws IOException {
-        HashMap<String, String> services = general.getServices();
-        List<Configuration> configurations = general.getConfigurationList();
-        List<String> serviceURLs = new ArrayList<>();
 
-        for (String url : services.values()) {
-            serviceURLs.add(url);
-        }
+        List<ServiceInfo> services = general.getServices();
+
+        Map<String, String> service2folder = services.stream()
+                .collect(Collectors.toMap(ServiceInfo::getServiceName, ServiceInfo::getFolderName));
 
         // eureka server
         eurekaService.createEurekaServer(general.getEurekaServerInfo());
 
-        // eureka client
-        eurekaService.addEurekaClient(serviceURLs);
+        for (ServiceInfo service : services) {
 
-        /**
-         * 配置文件
-         */
-        for (int i = 0; i < configurations.size(); i++) {
-            configurationService.editConfiguration(configurations.get(i).getProjectPath(), configurations.get(i).getList());
+            String serviceRootPath = BaseDirConstant.projectBaseDir + File.separator + service.getFolderName();
+
+            /**
+             * 组件
+             */
+            // eureka client
+            eurekaService.addEurekaClient(serviceRootPath);
+
+            // hystrix
+            if (general.isHystrix()) {
+                addHystrixService.add(serviceRootPath);
+            }
+
+            // ribbon
+            if (general.isRibbon()) {
+                ribbonService.addRibbon(serviceRootPath);
+                RibbonDTO ribbonDTO = general.getRibbonDTO();
+
+                String consumerPath = service2folder.get(ribbonDTO.getConsumer());
+                List<String> providersPath = ribbonDTO.getProviders().stream()
+                        .map(service2folder::get)
+                        .collect(Collectors.toList());
+
+                Ribbon ribbon = new Ribbon(consumerPath, providersPath);
+                ribbonService.replaceUrl(ribbon.getConsumerPath(), ribbon.getProviderPath());
+            }
+
+            // zuul
+            if (general.isZuul()) {
+                zuulService.createZuulProject(general.getZuulInfo());
+            }
+
+            /**
+             * 服务相关
+             */
+            // config
+            configurationService.editConfiguration(service.getConfig().getProjectPath(), service.getConfig().getList());
+
+            // 数据库创建
+            try {
+                createMysqlProjectService.createMysqlProject(service.getMysqlInfo());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // 打包jar
+            generateJarService.generateJar(serviceRootPath);
+
         }
 
-        if (general.isRibbon()) {
-            for (int i = 0; i < serviceURLs.size(); i++) {
-                ribbonService.addRibbon(serviceURLs.get(i));
-            }
-            Ribbon ribbon = new Ribbon(general.getRibbonDTO(), general.getServices());
-            ribbonService.replaceUrl(ribbon.getConsumerPath(), ribbon.getProviderPath());
-        }
-        if (general.isHystrix()) {
-            for (int i = 0; i < serviceURLs.size(); i++) {
-                addHystrixService.add(serviceURLs.get(i));
-            }
-        }
-        /**
-         * 数据库创建
-         */
-        try {
-            createMysqlProjectService.createMysqlProject(general.getMysqlInfo());
-        } catch (Exception e) {
-            System.out.println("数据库创建出错");
-        }
-        /**
-         * 打包jar
-         */
-        for (String path : serviceURLs) {
-            generateJarService.generateJar(path);
-        }
         /**
          * 项目部署
          */
         uploadService.upload(general.getServerInfo());
-    }
-
-
-    public void addRabbitmq(String location) {
-        String path = rabbitmqService.find(location);
-        String direct = path.substring(location.length() + 15);
-        rabbitmqService.addQueue(path, direct);
-    }
-
-    public void addSender(String location) {
-        String path = rabbitmqService.find(location);
-        String direct = path.substring(location.length() + 15);
-        rabbitmqService.addSender(path, direct);
-    }
-
-    public void addReceiver(String location) {
-        String path = rabbitmqService.find(location);
-        String direct = path.substring(location.length() + 15);
-        rabbitmqService.addRecevier(path, direct);
-    }
-
-    public List<ConfigurationItem> getListFromMap(HashMap<String, String> map) {
-        List<ConfigurationItem> configList = new ArrayList<>();
-        Iterator<String> it = map.keySet().iterator();
-        while (it.hasNext()) {
-            String key = it.next();
-            configList.add(new ConfigurationItem(key, map.get(key)));
-        }
-        return configList;
     }
 }
