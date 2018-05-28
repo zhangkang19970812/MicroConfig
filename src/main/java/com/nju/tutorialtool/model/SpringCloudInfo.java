@@ -1,5 +1,7 @@
 package com.nju.tutorialtool.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,6 +19,7 @@ import javax.persistence.Id;
 public class SpringCloudInfo {
     @Id
     @GeneratedValue
+    @JSONField(deserialize = false)
     private Long id;
 
     /**

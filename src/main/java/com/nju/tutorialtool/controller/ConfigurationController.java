@@ -22,7 +22,7 @@ public class ConfigurationController {
      */
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public boolean editConfiguration(@RequestBody Configuration configuration) {
-        configurationService.editConfiguration(configuration.getProjectPath(), configuration.getList());
+//        configurationService.editConfiguration(configuration.getProjectPath(), configuration.getList());
         return true;
     }
 }

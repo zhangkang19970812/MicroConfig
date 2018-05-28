@@ -1,5 +1,7 @@
 package com.nju.tutorialtool.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -10,25 +12,17 @@ import java.util.List;
 public class Configuration {
     @Id
     @GeneratedValue
+    @JSONField(deserialize = false)
     private Long id;
-    private String projectPath;
 
     @OneToMany
     private List<ConfigurationItem> list;
 
-    public Configuration(){}
+    public Configuration() {
+    }
 
-    public Configuration(String projectPath, List<ConfigurationItem> list) {
-        this.projectPath = projectPath;
+    public Configuration(List<ConfigurationItem> list) {
         this.list = list;
-    }
-
-    public String getProjectPath() {
-        return projectPath;
-    }
-
-    public void setProjectPath(String projectPath) {
-        this.projectPath = projectPath;
     }
 
     public List<ConfigurationItem> getList() {

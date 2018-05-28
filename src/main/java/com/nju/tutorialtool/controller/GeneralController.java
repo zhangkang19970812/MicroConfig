@@ -1,8 +1,6 @@
 package com.nju.tutorialtool.controller;
 
 import com.nju.tutorialtool.model.*;
-import com.nju.tutorialtool.model.General;
-import com.nju.tutorialtool.model.Ribbon;
 import com.nju.tutorialtool.model.dto.RibbonDTO;
 import com.nju.tutorialtool.service.*;
 import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
@@ -50,6 +48,8 @@ public class GeneralController {
     @Autowired
     private CreateMysqlProjectService createMysqlProjectService;
 
+    private static final String UPLOAD_FOLDER = "upload";
+
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void addGeneral(@RequestBody General general) throws IOException {
         DeployServer deployServer = general.getDeployServer();
@@ -77,7 +77,7 @@ public class GeneralController {
 
         for (ServiceInfo service : services) {
 
-            String serviceRootPath = BaseDirConstant.projectBaseDir + File.separator + service.getFolderName();
+            String serviceRootPath = UPLOAD_FOLDER + File.separator + service.getFolderName();
 
             /**
              * 组件
@@ -122,7 +122,7 @@ public class GeneralController {
                 e.printStackTrace();
             }
 
-            try{
+            try {
                 createDockerfileService.createDockerfile(serviceRootPath, "service");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -139,6 +139,7 @@ public class GeneralController {
 
     /**
      * 最后展示所有服务列表界面
+     *
      * @return
      */
     @RequestMapping("/showAllServiceInfo")

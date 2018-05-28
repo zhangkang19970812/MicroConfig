@@ -1,5 +1,6 @@
 package com.nju.tutorialtool.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.sun.javafx.beans.IDProperty;
 
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 public class ServerInfo {
     @Id
     @GeneratedValue
+    @JSONField(deserialize = false)
     private Long id;
 
     private String ip;

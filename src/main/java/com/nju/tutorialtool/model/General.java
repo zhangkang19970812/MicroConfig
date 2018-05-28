@@ -15,13 +15,8 @@ public class General {
 
     @Id
     @GeneratedValue
+    @JSONField(deserialize = false)
     private Long id;
-
-    /**
-     * 要部署的服务器信息
-     */
-    @OneToOne
-    private DeployServer deployServer;
 
     /**
      * Map：服务名称，文件夹名称
@@ -74,7 +69,14 @@ public class General {
     @OneToOne
     private ComposeInfo composeInfo;
 
-    public General(){}
+    /**
+     * 要部署的服务器信息
+     */
+    @OneToOne
+    private DeployServer deployServer;
+
+    public General() {
+    }
 
     public DeployServer getDeployServer() {
         return deployServer;

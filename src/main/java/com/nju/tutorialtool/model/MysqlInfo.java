@@ -1,5 +1,7 @@
 package com.nju.tutorialtool.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -8,9 +10,10 @@ import java.util.List;
 
 @Entity
 public class MysqlInfo {
-//    private String baseDir;
+    //    private String baseDir;
     @Id
     @GeneratedValue
+    @JSONField(deserialize = false)
     private Long id;
 
     private String projectName;

@@ -1,5 +1,7 @@
 package com.nju.tutorialtool.model.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import java.util.List;
 public class RibbonDTO {
     @Id
     @GeneratedValue
+    @JSONField(deserialize = false)
     private Long id;
     /**
      * ribbon consumer的服务名称

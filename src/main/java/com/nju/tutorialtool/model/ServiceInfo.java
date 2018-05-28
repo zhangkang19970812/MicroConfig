@@ -1,5 +1,7 @@
 package com.nju.tutorialtool.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,39 +11,40 @@ import javax.persistence.OneToOne;
 public class ServiceInfo {
     @Id
     @GeneratedValue
+    @JSONField(deserialize = false)
     private Long id;
 
     private String serviceName;
 
     private String folderName;
 
-        /**
-         * 微服务的配置
-         */
-        @OneToOne
-        private Configuration config;
+    /**
+     * 微服务的配置
+     */
+    @OneToOne
+    private Configuration config;
 
-        /**
-         * 微服务对应的mysql数据库的信息
-         */
-        @OneToOne
-        private MysqlInfo mysqlInfo;
+    /**
+     * 微服务对应的mysql数据库的信息
+     */
+    @OneToOne
+    private MysqlInfo mysqlInfo;
 
-        public Configuration getConfig() {
-            return config;
-        }
+    public Configuration getConfig() {
+        return config;
+    }
 
-        public void setConfig(Configuration config) {
-            this.config = config;
-        }
+    public void setConfig(Configuration config) {
+        this.config = config;
+    }
 
-        public MysqlInfo getMysqlInfo() {
-            return mysqlInfo;
-        }
+    public MysqlInfo getMysqlInfo() {
+        return mysqlInfo;
+    }
 
-        public void setMysqlInfo(MysqlInfo mysqlInfo) {
-            this.mysqlInfo = mysqlInfo;
-        }
+    public void setMysqlInfo(MysqlInfo mysqlInfo) {
+        this.mysqlInfo = mysqlInfo;
+    }
 
     public ServiceInfo() {
     }

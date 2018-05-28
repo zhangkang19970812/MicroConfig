@@ -1,5 +1,7 @@
 package com.nju.tutorialtool.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -8,10 +10,10 @@ import javax.persistence.Id;
 public class Service {
     @Id
     @GeneratedValue
+    @JSONField(deserialize = false)
     private Long id;
 
     private String serviceName;
-//    private String image;
     private String port;
     private boolean mysql;
 
@@ -20,7 +22,6 @@ public class Service {
 
     public Service(String serviceName, String port, boolean mysql) {
         this.serviceName = serviceName;
-//        this.image = image;
         this.port = port;
         this.mysql = mysql;
     }
