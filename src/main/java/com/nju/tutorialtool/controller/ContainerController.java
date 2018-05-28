@@ -8,6 +8,7 @@ import com.nju.tutorialtool.util.enums.BaseDirConstant;
 import com.nju.tutorialtool.vo.ContainerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +35,8 @@ public class ContainerController {
     }
 
     @PostMapping("/deploy")
-    public void uploadAndBuildImageAndDeploy() {
+    public void uploadAndBuildImageAndDeploy(@RequestBody DeployServer deployServer) {
+        deployServerService.addServer(deployServer);
         uploadAllServices();
         uploadComposeFile();
         buildDockerImage();
