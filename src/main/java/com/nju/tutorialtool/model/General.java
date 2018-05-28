@@ -18,11 +18,6 @@ public class General {
     private Long id;
 
     /**
-     * 要部署的服务器信息
-     */
-    private DeployServer deployServer;
-
-    /**
      * Map：服务名称，文件夹名称
      */
     @OneToMany
@@ -39,11 +34,6 @@ public class General {
     private SpringCloudInfo eurekaServerInfo;
 
     /**
-     * 是否含有hystrix
-     */
-    private boolean isHystrix;
-
-    /**
      * 是否含有ribbon
      */
     private boolean isRibbon;
@@ -56,6 +46,11 @@ public class General {
     private RibbonDTO ribbonDTO;
 
     /**
+     * 是否含有hystrix
+     */
+    private boolean isHystrix;
+
+    /**
      * 是否含有Zuul
      */
     private boolean isZuul;
@@ -65,26 +60,16 @@ public class General {
      */
     private SpringCloudInfo zuulInfo;
 
-
-    public ServerInfo getServerInfo() {
-        return serverInfo;
-    }
-
-    public void setServerInfo(ServerInfo serverInfo) {
-        this.serverInfo = serverInfo;
-    }
-
-    /**
-     * 项目部署路径及详细信息
-     */
-    @OneToOne
-    private ServerInfo serverInfo;
-
     /**
      * 创建docker-compose.yml所需信息
      */
     @OneToOne
     private ComposeInfo composeInfo;
+
+    /**
+     * 要部署的服务器信息
+     */
+    private DeployServer deployServer;
 
     public DeployServer getDeployServer() {
         return deployServer;
