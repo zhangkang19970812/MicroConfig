@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @Date 2018/5/18
  */
 @RestController
-@RequestMapping("/addGeneral")
+@RequestMapping("/general")
 public class GeneralController {
     @Autowired
     private DeployServerService deployServerService;
@@ -48,8 +48,6 @@ public class GeneralController {
     private GenerateJarService generateJarService;
     @Autowired
     private CreateMysqlProjectService createMysqlProjectService;
-    @Autowired
-    private UploadService uploadService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void addGeneral(@RequestBody General general) throws IOException {
