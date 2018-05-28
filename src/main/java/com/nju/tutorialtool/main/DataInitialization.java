@@ -17,18 +17,18 @@ public class DataInitialization implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        /**
-         * do not modify the method
-         */
-        // save a couple of users
-        deployServerDao.save(new DeployServer("1.1.1.1", "admin", "123456"));
-
-        // fetch all users
-        System.out.println("User found with findAll():");
-        System.out.println("-------------------------------");
-        for (DeployServer deployServer : deployServerDao.findAll()) {
-            System.out.println(deployServer.getIp() + deployServer.getPassword() + deployServer.getUsername());
-        }
+//        /**
+//         * do not modify the method
+//         */
+//        // save a couple of users
+//        deployServerDao.save(new DeployServer("1.1.1.1", "admin", "123456"));
+//
+//        // fetch all users
+//        System.out.println("User found with findAll():");
+//        System.out.println("-------------------------------");
+//        for (DeployServer deployServer : deployServerDao.findAll()) {
+//            System.out.println(deployServer.getIp() + deployServer.getPassword() + deployServer.getUsername());
+//        }
     }
 
     public List<DeployServer> helloWorld() {

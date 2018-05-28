@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -93,20 +94,24 @@ public class GeneralController {
              * 服务相关
              */
             // config
-            configurationService.editConfiguration(service.getConfig().getProjectPath(), service.getConfig().getList());
+            configurationService.editConfiguration(serviceRootPath, service.getConfig().getList());
 
             // ribbon
             if (general.isRibbon()) {
                 ribbonService.addRibbon(serviceRootPath);
                 RibbonDTO ribbonDTO = general.getRibbonDTO();
 
-                String consumerPath = service2folder.get(ribbonDTO.getConsumer());
-                List<String> providersPath = ribbonDTO.getProviders().stream()
+                String consumerDir = service2folder.get(ribbonDTO.getConsumer());
+                List<String> providersDir = ribbonDTO.getProviders().stream()
                         .map(service2folder::get)
                         .collect(Collectors.toList());
+                List<String> providersPath = new ArrayList<>();
 
-                Ribbon ribbon = new Ribbon(consumerPath, providersPath);
-                ribbonService.replaceUrl(ribbon.getConsumerPath(), ribbon.getProviderPath());
+//                Ribbon ribbon = new Ribbon(consumerPath, providersPath);
+                for (String s : providersDir) {
+                    providersPath.add(getProjectPath(s));
+                }
+                ribbonService.replaceUrl(getProjectPath(consumerDir), providersPath);
             }
 
             // 数据库创建
@@ -126,6 +131,10 @@ public class GeneralController {
             generateJarService.generateJar(serviceRootPath);
         }
 
+    }
+
+    private String getProjectPath(String dirName) {
+        return BaseDirConstant.projectBaseDir + File.separator + dirName;
     }
 
     /**
