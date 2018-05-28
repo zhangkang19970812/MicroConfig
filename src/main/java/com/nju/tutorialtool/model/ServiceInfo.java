@@ -3,6 +3,7 @@ package com.nju.tutorialtool.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class ServiceInfo {
@@ -17,11 +18,13 @@ public class ServiceInfo {
         /**
          * 微服务的配置
          */
+        @OneToOne
         private Configuration config;
 
         /**
          * 微服务对应的mysql数据库的信息
          */
+        @OneToOne
         private MysqlInfo mysqlInfo;
 
         public Configuration getConfig() {

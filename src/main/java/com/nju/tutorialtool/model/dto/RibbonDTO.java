@@ -1,8 +1,6 @@
 package com.nju.tutorialtool.model.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -22,6 +20,7 @@ public class RibbonDTO {
     /**
      * 所有ribbon providers的服务名称
      */
+    @ElementCollection
     private List<String> providers;
 
     public String getConsumer() {

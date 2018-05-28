@@ -18,6 +18,12 @@ public class General {
     private Long id;
 
     /**
+     * 要部署的服务器信息
+     */
+    @OneToOne
+    private DeployServer deployServer;
+
+    /**
      * Map：服务名称，文件夹名称
      */
     @OneToMany
@@ -31,6 +37,7 @@ public class General {
     /**
      * 包含创建eureka server的信息
      */
+    @OneToOne
     private SpringCloudInfo eurekaServerInfo;
 
     /**
@@ -58,6 +65,7 @@ public class General {
     /**
      * 创建zuul的信息
      */
+    @OneToOne
     private SpringCloudInfo zuulInfo;
 
     /**
@@ -65,11 +73,6 @@ public class General {
      */
     @OneToOne
     private ComposeInfo composeInfo;
-
-    /**
-     * 要部署的服务器信息
-     */
-    private DeployServer deployServer;
 
     public DeployServer getDeployServer() {
         return deployServer;
