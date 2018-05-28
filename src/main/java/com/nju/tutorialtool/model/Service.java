@@ -15,6 +15,9 @@ public class Service {
     private String port;
     private boolean mysql;
 
+    public Service() {
+    }
+
     public Service(String serviceName, String port, boolean mysql) {
         this.serviceName = serviceName;
 //        this.image = image;

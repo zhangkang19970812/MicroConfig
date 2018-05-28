@@ -43,6 +43,8 @@ public class ServiceInfo {
             this.mysqlInfo = mysqlInfo;
         }
 
+    public ServiceInfo() {
+    }
 
     public ServiceInfo(String serviceName, String folderName) {
         this.serviceName = serviceName;

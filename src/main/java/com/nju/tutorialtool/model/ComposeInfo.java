@@ -16,6 +16,8 @@ public class ComposeInfo {
     @OneToMany
     private List<Service> serviceList;
 
+    public ComposeInfo(){}
+
     public ComposeInfo(List<Service> serviceList) {
 //        this.baseDir = baseDir;
         this.serviceList = serviceList;

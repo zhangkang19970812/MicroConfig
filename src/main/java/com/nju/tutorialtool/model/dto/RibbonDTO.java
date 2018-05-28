@@ -23,6 +23,9 @@ public class RibbonDTO {
     @ElementCollection
     private List<String> providers;
 
+    public RibbonDTO() {
+    }
+
     public String getConsumer() {
         return consumer;
     }

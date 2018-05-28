@@ -19,6 +19,10 @@ public class ServerInfo {
     private String sourcePath;
 //    private String destinationPath;
 
+
+    public ServerInfo() {
+    }
+
     public ServerInfo(String ip, String user, String password, String port, String sourcePath) {
         this.ip = ip;
         this.user = user;

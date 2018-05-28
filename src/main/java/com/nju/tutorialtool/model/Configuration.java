@@ -16,6 +16,8 @@ public class Configuration {
     @OneToMany
     private List<ConfigurationItem> list;
 
+    public Configuration(){}
+
     public Configuration(String projectPath, List<ConfigurationItem> list) {
         this.projectPath = projectPath;
         this.list = list;

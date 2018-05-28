@@ -42,6 +42,10 @@ public class SpringCloudInfo {
 //        this.baseDir = baseDir;
 //    }
 
+
+    public SpringCloudInfo() {
+    }
+
     public String getGroupId() {
         return groupId;
     }

@@ -74,6 +74,8 @@ public class General {
     @OneToOne
     private ComposeInfo composeInfo;
 
+    public General(){}
+
     public DeployServer getDeployServer() {
         return deployServer;
     }

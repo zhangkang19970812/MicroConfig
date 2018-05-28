@@ -19,6 +19,9 @@ public class Table {
     private List<Column> columnList;
     private String primary_key;
 
+    public Table() {
+    }
+
     public Table(String tableName, List<Column> columnList, String primary_key) {
         this.tableName = tableName;
         this.columnList = columnList;

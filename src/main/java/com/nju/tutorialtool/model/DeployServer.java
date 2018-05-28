@@ -29,6 +29,14 @@ public class DeployServer {
      */
     private String password;
 
+    public DeployServer(){}
+
+    public DeployServer(String ip, String username, String password) {
+        this.ip = ip;
+        this.username = username;
+        this.password = password;
+    }
+
     public String getIp() {
         return ip;
     }

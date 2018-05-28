@@ -14,6 +14,8 @@ public class ConfigurationItem {
     private String itemName;
     private String value;
 
+    public ConfigurationItem(){}
+
     public ConfigurationItem(String itemName, String value) {
         this.itemName = itemName;
         this.value = value;
