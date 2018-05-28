@@ -4,7 +4,6 @@ import com.nju.tutorialtool.model.dto.RibbonDTO;
 import com.nju.tutorialtool.util.enums.BaseDirConstant;
 
 import java.util.List;
-import java.util.Map;
 
 public class Ribbon {
     private String consumerPath;
@@ -15,23 +14,26 @@ public class Ribbon {
         this.providerPath = providerPath;
     }
 
-    public Ribbon(RibbonDTO ribbonDTO, List<ServiceDirMap> services) {
+<<<<<<< HEAD
+    public Ribbon(RibbonDTO ribbonDTO, List<ServiceInfo> services) {
 //        consumerPath = services.get(ribbonDTO.getConsumer());
 //        ribbonDTO.getProviders().forEach(provider -> providerPath.add(services.get(provider)));
-        for (ServiceDirMap serviceDirMap : services) {
-            if (serviceDirMap.getServiceName().equals(ribbonDTO.getConsumer())) {
-                consumerPath = BaseDirConstant.projectBaseDir + "/" + serviceDirMap.getDirName();
+        for (ServiceInfo serviceInfo : services) {
+            if (serviceInfo.getServiceName().equals(ribbonDTO.getConsumer())) {
+                consumerPath = BaseDirConstant.projectBaseDir + "/" + serviceInfo.getFolderName();
                 continue;
             }
             for (String provider: ribbonDTO.getProviders()) {
-                if (serviceDirMap.getServiceName().equals(provider)) {
-                    providerPath.add(BaseDirConstant.projectBaseDir + "/" + serviceDirMap.getDirName());
+                if (serviceInfo.getServiceName().equals(provider)) {
+                    providerPath.add(BaseDirConstant.projectBaseDir + "/" + serviceInfo.getFolderName());
                     break;
                 }
             }
         }
     }
 
+=======
+>>>>>>> origin/master
     public String getConsumerPath() {
         return consumerPath;
     }

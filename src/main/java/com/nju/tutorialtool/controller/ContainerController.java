@@ -2,7 +2,7 @@ package com.nju.tutorialtool.controller;
 
 import com.nju.tutorialtool.model.DeployServer;
 import com.nju.tutorialtool.model.ServerInfo;
-import com.nju.tutorialtool.model.ServiceDirMap;
+import com.nju.tutorialtool.model.ServiceInfo;
 import com.nju.tutorialtool.service.ContainerService;
 import com.nju.tutorialtool.service.DeployServerService;
 import com.nju.tutorialtool.service.ImageService;
@@ -38,9 +38,9 @@ public class ContainerController {
     }
 
     private void buildDockerImage() {
-        List<ServiceDirMap> serviceDirMapList = serviceDirMapService.getAllServices();
-        for (ServiceDirMap serviceDirMap : serviceDirMapList) {
-            imageService.buildImageByDockerfile(BaseDirConstant.projectBaseDir + "/" + serviceDirMap.getDirName(), getServerInfo(), serviceDirMap.getServiceName());
+        List<ServiceInfo> serviceInfoList = serviceDirMapService.getAllServices();
+        for (ServiceInfo serviceInfo : serviceInfoList) {
+            imageService.buildImageByDockerfile(BaseDirConstant.projectBaseDir + "/" + serviceInfo.getFolderName(), getServerInfo(), serviceInfo.getServiceName());
         }
     }
 

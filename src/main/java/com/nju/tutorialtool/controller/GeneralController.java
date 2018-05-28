@@ -1,6 +1,9 @@
 package com.nju.tutorialtool.controller;
 
 import com.nju.tutorialtool.model.*;
+import com.nju.tutorialtool.model.General;
+import com.nju.tutorialtool.model.Ribbon;
+import com.nju.tutorialtool.model.dto.RibbonDTO;
 import com.nju.tutorialtool.service.*;
 import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
 import com.nju.tutorialtool.util.enums.BaseDirConstant;
@@ -10,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author YZ
@@ -34,8 +37,6 @@ public class GeneralController {
     @Autowired
     private AddHystrixService addHystrixService;
     @Autowired
-    private RabbitmqService rabbitmqService;
-    @Autowired
     private RibbonService ribbonService;
     @Autowired
     private ZuulService zuulService;
@@ -51,74 +52,72 @@ public class GeneralController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void addGeneral(@RequestBody General general) throws IOException {
         DeployServer deployServer = general.getDeployServer();
-        List<ServiceDirMap> services = general.getServices();
-        List<Configuration> configurations = general.getConfigurationList();
-        List<String> serviceURLs = new ArrayList<>();
+        List<ServiceInfo> services = general.getServices();
 
         /**
          * 用户添加部署服务器
          */
         deployServerService.addServer(deployServer);
 
-
-        for (ServiceDirMap serviceDirMap : services) {
-            serviceURLs.add(BaseDirConstant.projectBaseDir + "/" + serviceDirMap.getDirName());
-        }
+        Map<String, String> service2folder = services.stream()
+                .collect(Collectors.toMap(ServiceInfo::getServiceName, ServiceInfo::getFolderName));
 
         // eureka server
         eurekaService.createEurekaServer(general.getEurekaServerInfo());
         String eurekaServerName = general.getEurekaServerInfo().getArtifactId();
-        serviceDirMapService.addServiceDirMap(new ServiceDirMap(eurekaServerName, eurekaServerName));
+        serviceDirMapService.addServiceDirMap(new ServiceInfo(eurekaServerName, eurekaServerName));
 
-        // eureka client
-        eurekaService.addEurekaClient(serviceURLs);
+        for (ServiceInfo service : services) {
 
-        /**
-         * 配置文件
-         */
-        for (int i = 0; i < configurations.size(); i++) {
-            configurationService.editConfiguration(configurations.get(i).getProjectPath(), configurations.get(i).getList());
-        }
+            String serviceRootPath = BaseDirConstant.projectBaseDir + File.separator + service.getFolderName();
 
-        if (general.isRibbon()) {
-            for (int i = 0; i < serviceURLs.size(); i++) {
-                ribbonService.addRibbon(serviceURLs.get(i));
+            /**
+             * 组件
+             */
+            // eureka client
+            eurekaService.addEurekaClient(serviceRootPath);
+
+            // hystrix
+            if (general.isHystrix()) {
+                addHystrixService.add(serviceRootPath);
             }
-            Ribbon ribbon = new Ribbon(general.getRibbonDTO(), general.getServices());
-            ribbonService.replaceUrl(ribbon.getConsumerPath(), ribbon.getProviderPath());
-        }
-        if (general.isHystrix()) {
-            for (int i = 0; i < serviceURLs.size(); i++) {
-                addHystrixService.add(serviceURLs.get(i));
-            }
-        }
-        /**
-         * 新增：创建Zuul项目
-         */
-        if (general.isZuul()) {
-            zuulService.createZuulProject(general.getZuulInfo());
-            String zuulName = general.getZuulInfo().getArtifactId();
-            serviceDirMapService.addServiceDirMap(new ServiceDirMap(zuulName, zuulName));
-        }
-        /**
-         * 数据库创建(多个)
-         */
-        try {
-            for (MysqlInfo mysqlInfo : general.getMysqlInfoList()) {
-                createMysqlProjectService.createMysqlProject(mysqlInfo);
-                serviceDirMapService.addServiceDirMap(new ServiceDirMap(mysqlInfo.getProjectName(), mysqlInfo.getProjectName()));
-            }
-        } catch (Exception e) {
-            System.out.println("数据库创建出错");
-        }
 
+            // ribbon
+            if (general.isRibbon()) {
+                ribbonService.addRibbon(serviceRootPath);
+                RibbonDTO ribbonDTO = general.getRibbonDTO();
 
-        /**
-         * 打包jar
-         */
-        for (String path : serviceURLs) {
-            generateJarService.generateJar(path);
-        }
+                String consumerPath = service2folder.get(ribbonDTO.getConsumer());
+                List<String> providersPath = ribbonDTO.getProviders().stream()
+                        .map(service2folder::get)
+                        .collect(Collectors.toList());
+
+                Ribbon ribbon = new Ribbon(consumerPath, providersPath);
+                ribbonService.replaceUrl(ribbon.getConsumerPath(), ribbon.getProviderPath());
+            }
+
+            // zuul
+            if (general.isZuul()) {
+                zuulService.createZuulProject(general.getZuulInfo());
+            }
+
+            /**
+             * 服务相关
+             */
+            // config
+            configurationService.editConfiguration(service.getConfig().getProjectPath(), service.getConfig().getList());
+
+            // 数据库创建
+            try {
+                createMysqlProjectService.createMysqlProject(service.getMysqlInfo());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // 打包jar
+            generateJarService.generateJar(serviceRootPath);
+    }
+
         /**
          * 项目部署
          */
@@ -132,33 +131,5 @@ public class GeneralController {
     @RequestMapping("/showAllServiceInfo")
     public List<ServiceShowInfo> showAllServiceInfo() {
         return showServiceInfoService.getAllServiceInfo();
-    }
-
-    public void addRabbitmq(String location) {
-        String path = rabbitmqService.find(location);
-        String direct = path.substring(location.length() + 15);
-        rabbitmqService.addQueue(path, direct);
-    }
-
-    public void addSender(String location) {
-        String path = rabbitmqService.find(location);
-        String direct = path.substring(location.length() + 15);
-        rabbitmqService.addSender(path, direct);
-    }
-
-    public void addReceiver(String location) {
-        String path = rabbitmqService.find(location);
-        String direct = path.substring(location.length() + 15);
-        rabbitmqService.addRecevier(path, direct);
-    }
-
-    public List<ConfigurationItem> getListFromMap(HashMap<String, String> map) {
-        List<ConfigurationItem> configList = new ArrayList<>();
-        Iterator<String> it = map.keySet().iterator();
-        while (it.hasNext()) {
-            String key = it.next();
-            configList.add(new ConfigurationItem(key, map.get(key)));
-        }
-        return configList;
     }
 }

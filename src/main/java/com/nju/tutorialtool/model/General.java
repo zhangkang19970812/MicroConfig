@@ -4,7 +4,6 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.nju.tutorialtool.model.dto.RibbonDTO;
 
 import javax.persistence.*;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -27,13 +26,7 @@ public class General {
      * Map：服务名称，文件夹名称
      */
     @OneToMany
-    private List<ServiceDirMap> services;
-
-    /**
-     * 服务的配置
-     */
-    @OneToMany
-    private List<Configuration> configurationList;
+    private List<ServiceInfo> services;
 
     /**
      * 是否含有EurekaServer
@@ -67,13 +60,11 @@ public class General {
      */
     private boolean isZuul;
 
+    /**
+     * 创建zuul的信息
+     */
     private SpringCloudInfo zuulInfo;
 
-    /**
-     * 数据库创建、配置信息
-     */
-    @OneToMany
-    private List<MysqlInfo> mysqlInfoList;
 
     public ServerInfo getServerInfo() {
         return serverInfo;
@@ -111,14 +102,6 @@ public class General {
         this.composeInfo = composeInfo;
     }
 
-    public List<MysqlInfo> getMysqlInfoList() {
-        return mysqlInfoList;
-    }
-
-    public void setMysqlInfoList(List<MysqlInfo> mysqlInfoList) {
-        this.mysqlInfoList = mysqlInfoList;
-    }
-
     public boolean isRibbon() {
         return isRibbon;
     }
@@ -154,19 +137,11 @@ public class General {
         isEurekaServer = eurekaServer;
     }
 
-    public List<Configuration> getConfigurationList() {
-        return configurationList;
-    }
-
-    public void setConfigurationList(List<Configuration> configurationList) {
-        this.configurationList = configurationList;
-    }
-
-    public List<ServiceDirMap> getServices() {
+    public List<ServiceInfo> getServices() {
         return services;
     }
 
-    public void setServices(List<ServiceDirMap> services) {
+    public void setServices(List<ServiceInfo> services) {
         this.services = services;
     }
 

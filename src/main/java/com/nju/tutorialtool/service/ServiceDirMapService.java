@@ -1,7 +1,7 @@
 package com.nju.tutorialtool.service;
 
 import com.nju.tutorialtool.dao.ServiceDirMapDao;
-import com.nju.tutorialtool.model.ServiceDirMap;
+import com.nju.tutorialtool.model.ServiceInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +12,11 @@ public class ServiceDirMapService {
     @Autowired
     private ServiceDirMapDao serviceDirMapDao;
 
-    public void addServiceDirMap(ServiceDirMap serviceDirMap) {
-        serviceDirMapDao.save(serviceDirMap);
+    public void addServiceDirMap(ServiceInfo serviceInfo) {
+        serviceDirMapDao.save(serviceInfo);
     }
 
-    public List<ServiceDirMap> getAllServices() {
+    public List<ServiceInfo> getAllServices() {
         return serviceDirMapDao.findAll();
     }
 }

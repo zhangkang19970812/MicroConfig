@@ -1,8 +1,8 @@
 package com.nju.tutorialtool.dao;
 
-import com.nju.tutorialtool.model.ServiceDirMap;
+import com.nju.tutorialtool.model.ServiceInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ServiceDirMapDao extends JpaRepository<ServiceDirMap, Long> {
+public interface ServiceDirMapDao extends JpaRepository<ServiceInfo, Long> {
 
 }
