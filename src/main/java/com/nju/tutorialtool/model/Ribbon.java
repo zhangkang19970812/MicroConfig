@@ -14,26 +14,6 @@ public class Ribbon {
         this.providerPath = providerPath;
     }
 
-<<<<<<< HEAD
-    public Ribbon(RibbonDTO ribbonDTO, List<ServiceInfo> services) {
-//        consumerPath = services.get(ribbonDTO.getConsumer());
-//        ribbonDTO.getProviders().forEach(provider -> providerPath.add(services.get(provider)));
-        for (ServiceInfo serviceInfo : services) {
-            if (serviceInfo.getServiceName().equals(ribbonDTO.getConsumer())) {
-                consumerPath = BaseDirConstant.projectBaseDir + "/" + serviceInfo.getFolderName();
-                continue;
-            }
-            for (String provider: ribbonDTO.getProviders()) {
-                if (serviceInfo.getServiceName().equals(provider)) {
-                    providerPath.add(BaseDirConstant.projectBaseDir + "/" + serviceInfo.getFolderName());
-                    break;
-                }
-            }
-        }
-    }
-
-=======
->>>>>>> origin/master
     public String getConsumerPath() {
         return consumerPath;
     }

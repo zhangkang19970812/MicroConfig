@@ -33,6 +33,8 @@ public class GeneralController {
     @Autowired
     private ShowServiceInfoService showServiceInfoService;
     @Autowired
+    private CreateDockerfileService createDockerfileService;
+    @Autowired
     private EurekaService eurekaService;
     @Autowired
     private AddHystrixService addHystrixService;
@@ -67,6 +69,13 @@ public class GeneralController {
         String eurekaServerName = general.getEurekaServerInfo().getArtifactId();
         serviceDirMapService.addServiceDirMap(new ServiceInfo(eurekaServerName, eurekaServerName));
 
+        // zuul
+        if (general.isZuul()) {
+            zuulService.createZuulProject(general.getZuulInfo());
+            String zuulName = general.getZuulInfo().getArtifactId();
+            serviceDirMapService.addServiceDirMap(new ServiceInfo(zuulName, zuulName));
+        }
+
         for (ServiceInfo service : services) {
 
             String serviceRootPath = BaseDirConstant.projectBaseDir + File.separator + service.getFolderName();
@@ -82,6 +91,12 @@ public class GeneralController {
                 addHystrixService.add(serviceRootPath);
             }
 
+            /**
+             * 服务相关
+             */
+            // config
+            configurationService.editConfiguration(service.getConfig().getProjectPath(), service.getConfig().getList());
+
             // ribbon
             if (general.isRibbon()) {
                 ribbonService.addRibbon(serviceRootPath);
@@ -96,32 +111,23 @@ public class GeneralController {
                 ribbonService.replaceUrl(ribbon.getConsumerPath(), ribbon.getProviderPath());
             }
 
-            // zuul
-            if (general.isZuul()) {
-                zuulService.createZuulProject(general.getZuulInfo());
-            }
-
-            /**
-             * 服务相关
-             */
-            // config
-            configurationService.editConfiguration(service.getConfig().getProjectPath(), service.getConfig().getList());
-
             // 数据库创建
             try {
                 createMysqlProjectService.createMysqlProject(service.getMysqlInfo());
+                serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getMysqlInfo().getProjectName(), service.getMysqlInfo().getProjectName()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
+            try{
+                createDockerfileService.createDockerfile(serviceRootPath, "service");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             // 打包jar
             generateJarService.generateJar(serviceRootPath);
-    }
+        }
 
-        /**
-         * 项目部署
-         */
-        uploadService.upload(general.getServerInfo());
     }
 
     /**
