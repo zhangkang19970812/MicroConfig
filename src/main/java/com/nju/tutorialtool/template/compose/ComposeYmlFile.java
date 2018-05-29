@@ -20,7 +20,7 @@ public class ComposeYmlFile extends ResourceFile {
                         "    " + "volumes:\n" +
                         "      " + "- " + BaseDirConstant.volumeDir + "/" + service.getServiceName() + ":/var/lib/mysql\n");
             }
-            else if (service.getPort() != null) {
+            else if (service.getPort() != "") {
                 stringBuilder.append("  " + service.getServiceName() + ":\n" +
                         "    " + "image: " + service.getServiceName() + "\n" +
                         "    " + "ports:\n" +
