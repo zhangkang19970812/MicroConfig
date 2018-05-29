@@ -8,11 +8,28 @@ public class Jar {
      * @param projectPath
      */
     public static void execCMD(String projectPath){
-        Runtime runtime=Runtime.getRuntime();
+        String osName = System.getProperty("os.name");
         try {
-            runtime.exec("cd "+ projectPath +" && mvn clean package -Dmaven.test.skip=true");
-        } catch (IOException e) {
+            String[] cmd = new String[3];
+            if (osName.contains("Windows")) {
+                cmd[0] = "cmd";
+                cmd[1] = "/C";
+                cmd[2] = "cd " + projectPath + " && mvn clean package -Dmaven.test.skip=true";
+            }
+            else if (osName.contains("Mac") || osName.contains("Linux")) {
+                cmd[0] = "/bin/bash";
+                cmd[1] = "/C";
+                cmd[2] = "cd " + projectPath + " && mvn clean package -Dmaven.test.skip=true";
+            }
+            Runtime runtime=Runtime.getRuntime();
+//            runtime.exec("cd "+ projectPath +" && mvn clean package -Dmaven.test.skip=true");
+            Process ps = runtime.exec(cmd);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        Jar.execCMD("H:/programs/account_service");
     }
 }
