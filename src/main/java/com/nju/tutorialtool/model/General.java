@@ -69,21 +69,7 @@ public class General {
     @OneToOne
     private ComposeInfo composeInfo;
 
-    /**
-     * 要部署的服务器信息
-     */
-    @OneToOne
-    private DeployServer deployServer;
-
     public General() {
-    }
-
-    public DeployServer getDeployServer() {
-        return deployServer;
-    }
-
-    public void setDeployServer(DeployServer deployServer) {
-        this.deployServer = deployServer;
     }
 
     public ComposeInfo getComposeInfo() {
