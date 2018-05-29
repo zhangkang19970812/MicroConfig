@@ -72,6 +72,12 @@ public class RibbonService {
         RandomAccessFile raf=new RandomAccessFile(applicationFile,"rw");
         String line=null;
         while((line=raf.readLine())!=null){
+            if (line.contains("import org.")) {
+                long pointer = raf.getFilePointer();
+                String importPackage = "import org.springframework.cloud.client.loadbalancer.LoadBalanced;\n";
+                IO.insert(pointer, importPackage, applicationFile);
+            }
+
             if(line.contains("@Bean")){
                 long pointer=raf.getFilePointer();
                 String annotation="    @LoadBalanced\n";

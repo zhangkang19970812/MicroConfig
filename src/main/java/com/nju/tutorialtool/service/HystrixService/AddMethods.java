@@ -1,5 +1,7 @@
 package com.nju.tutorialtool.service.HystrixService;
 
+import com.nju.tutorialtool.util.io.IO;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -35,6 +37,11 @@ public class AddMethods {
         RandomAccessFile raf=new RandomAccessFile(applicationFile,"rw");
         String line=null;
         while((line=raf.readLine())!=null){
+            if (line.contains("import org.")) {
+                long pointer = raf.getFilePointer();
+                String importPackage = "import org.springframework.cloud.netflix.hystrix.EnableHystrix;\n";
+                IO.insert(pointer, importPackage, applicationFile);
+            }
             if(line.contains("@SpringBootApplication")){
                 long pointer=raf.getFilePointer();
                 String annotation="@EnableHystrix\n";
@@ -54,6 +61,11 @@ public class AddMethods {
         String lastLine=null;
         int signal=0;//表示该代码还未加过熔断
         while((line=raf.readLine())!=null){
+            if (line.contains("import ")) {
+                long pointer = raf.getFilePointer();
+                String importPackage = "import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;\n";
+                IO.insert(pointer, importPackage, controllerFile);
+            }
             lastLine=line;
             //找到方法所在的行数及代码
             if(Pattern.matches(".*RequestMethod.*",line)){
