@@ -29,7 +29,7 @@ public class ServerLogin {
      * @param ip 服务器IP
      * @param user 服务器用户名
      * @param pwd 服务器密码
-     * @param port 端口
+     * @param port 端口 可为空
      * @param privateKeyPath 可为空
      * @param passphrase 可为空
      * @param sourcePath 本地文件路径
@@ -37,7 +37,7 @@ public class ServerLogin {
      */
     public static void downLoadFile(String ip,String user,String pwd,String port,String privateKeyPath,String passphrase,String sourcePath,String destinationPath){
         if (ip != null && !ip.equals("") && user != null && !user.equals("")
-                && port != null && !port.equals("") && sourcePath != null
+                && sourcePath != null
                 && !sourcePath.equals("") && destinationPath != null
                 && !destinationPath.equals("")) {
 
@@ -45,14 +45,13 @@ public class ServerLogin {
                 sshSftp2(ip, user, Integer.parseInt(port), privateKeyPath,
                         passphrase, sourcePath, destinationPath);
             } else if (pwd != null && !pwd.equals("")) {
-                sshSftp(ip, user, pwd, Integer.parseInt(port), sourcePath,
+                sshSftp(ip, user, pwd, sourcePath,
                         destinationPath);
             } else {
                 Console console = System.console();
                 System.out.print("Enter password:");
                 char[] readPassword = console.readPassword();
-                sshSftp(ip, user, new String(readPassword),
-                        Integer.parseInt(port), sourcePath, destinationPath);
+                sshSftp(ip, user, new String(readPassword), sourcePath, destinationPath);
             }
         } else {
             System.out.println("请先设置配置文件");
@@ -65,24 +64,23 @@ public class ServerLogin {
      * @param ip
      * @param user
      * @param psw
-     * @param port
      * @param sPath
      * @param dPath
      */
-    public static void sshSftp(String ip, String user, String psw, int port,
+    public static void sshSftp(String ip, String user, String psw,
                                String sPath, String dPath) {
         System.out.println("password login");
         Session session = null;
 
         JSch jsch = new JSch();
         try {
-            if (port <= 0) {
+//            if (port <= 0) {
                 // 连接服务器，采用默认端口
                 session = jsch.getSession(user, ip);
-            } else {
-                // 采用指定的端口连接服务器
-                session = jsch.getSession(user, ip, port);
-            }
+//            } else {
+//                // 采用指定的端口连接服务器
+//                session = jsch.getSession(user, ip, port);
+//            }
 
             // 如果服务器连接不上，则抛出异常
             if (session == null) {

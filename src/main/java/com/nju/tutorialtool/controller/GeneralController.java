@@ -79,6 +79,8 @@ public class GeneralController {
 
             String serviceRootPath = UPLOAD_FOLDER + File.separator + service.getFolderName();
 
+            serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getServiceName(), service.getFolderName()));
+
             /**
              * 组件
              */
@@ -146,4 +148,5 @@ public class GeneralController {
     public List<ServiceShowInfo> showAllServiceInfo() {
         return showServiceInfoService.getAllServiceInfo();
     }
+
 }
