@@ -127,19 +127,11 @@ public class GeneralController {
                 ribbonService.replaceUrl(getProjectPath(consumerDir), providersPath);
             }
 
-            // 数据库创建
-            try {
-                createMysqlProjectService.createMysqlProject(service.getMysqlInfo());
-                serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getMysqlInfo().getProjectName(), service.getMysqlInfo().getProjectName()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            createMysqlProjectService.createMysqlProject(service.getMysqlInfo());
+            serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getMysqlInfo().getProjectName(), service.getMysqlInfo().getProjectName()));
 
-            try {
-                createDockerfileService.createDockerfile(serviceRootPath, "service");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            createDockerfileService.createDockerfile(serviceRootPath, "service");
+
             // 打包jar
             generateJarService.generateJar(serviceRootPath);
         }
