@@ -10,7 +10,7 @@ public class Jar {
     public static void execCMD(String projectPath){
         Runtime runtime=Runtime.getRuntime();
         try {
-            runtime.exec("cmd /k cd "+ projectPath +" && mvn clean package -Dmaven.test.skip=true");
+            runtime.exec("cd "+ projectPath +" && mvn clean package -Dmaven.test.skip=true");
         } catch (IOException e) {
             e.printStackTrace();
         }

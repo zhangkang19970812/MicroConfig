@@ -24,8 +24,8 @@ public class ShowServiceInfoService {
         for (ServiceInfo serviceInfo : serviceInfoList) {
             String serviceName = serviceInfo.getServiceName();
             String port = IO.getServicePort(BaseDirConstant.projectBaseDir + "/" + serviceInfo.getFolderName());
-            String ip = deployServerService.getFirst().getIp();
-            list.add(new ServiceShowInfo(serviceName, port, ip));
+//            String ip = deployServerService.getFirst().getIp();
+            list.add(new ServiceShowInfo(serviceName, port, ""));
         }
         return list;
     }

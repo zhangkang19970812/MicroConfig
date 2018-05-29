@@ -1,19 +1,15 @@
 package com.nju.tutorialtool.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.nju.tutorialtool.model.General;
-import com.nju.tutorialtool.model.ServiceInfo;
-import com.nju.tutorialtool.model.ServiceShowInfo;
+import com.nju.tutorialtool.model.*;
 import com.nju.tutorialtool.model.dto.RibbonDTO;
 import com.nju.tutorialtool.service.*;
 import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
-import com.nju.tutorialtool.util.FileUtil;
 import com.nju.tutorialtool.util.enums.BaseDirConstant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,23 +48,31 @@ public class GeneralController {
     @Autowired
     private CreateMysqlProjectService createMysqlProjectService;
 
-    private Logger logger = LoggerFactory.getLogger(GeneralController.class);
+    private static final String UPLOAD_FOLDER = "upload";
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void addGeneral(@RequestBody General general) throws IOException {
+    public void addGeneral(@RequestBody General general) throws Exception {
+//        DeployServer deployServer = general.getDeployServer();
         List<ServiceInfo> services = general.getServices();
+
+//        /**
+//         * 用户添加部署服务器
+//         */
+//        deployServerService.addServer(deployServer);
 
         Map<String, String> service2folder = services.stream()
                 .collect(Collectors.toMap(ServiceInfo::getServiceName, ServiceInfo::getFolderName));
 
         // eureka server
         eurekaService.createEurekaServer(general.getEurekaServerInfo());
+        createDockerfileService.createDockerfile(BaseDirConstant.projectBaseDir + "/" + general.getEurekaServerInfo().getArtifactId(), "service");
         String eurekaServerName = general.getEurekaServerInfo().getArtifactId();
         serviceDirMapService.addServiceDirMap(new ServiceInfo(eurekaServerName, eurekaServerName));
 
         // zuul
         if (general.isZuul()) {
             zuulService.createZuulProject(general.getZuulInfo());
+            createDockerfileService.createDockerfile(BaseDirConstant.projectBaseDir + "/" + general.getZuulInfo().getArtifactId(), "service");
             String zuulName = general.getZuulInfo().getArtifactId();
             serviceDirMapService.addServiceDirMap(new ServiceInfo(zuulName, zuulName));
         }
@@ -147,11 +151,5 @@ public class GeneralController {
         return showServiceInfoService.getAllServiceInfo();
     }
 
-    @PostMapping(value = "/uploadFolder")
-    public String uploadFolder(MultipartFile[] folder) {
-        logger.info("传入的文件参数：{}", JSON.toJSONString(folder, true));
-        FileUtil.saveMultiFile(BaseDirConstant.projectBaseDir, folder);
-        return "ok";
-    }
 
 }
