@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 
 @Service("createProjectService")
 public class CreateProjectService {
-    public void createProject(ProjectInfo projectInfo) {
+    public void createProject(ProjectInfo projectInfo, String projectType) {
         try {
-            createEmptyProject(projectInfo);
+            createEmptyProject(projectInfo, projectType);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -29,11 +29,11 @@ public class CreateProjectService {
         return packageDir.replaceAll("\\.", "/");
     }
 
-    private void createEmptyProject(ProjectInfo projectInfo) throws Exception {
+    private void createEmptyProject(ProjectInfo projectInfo, String projectType) throws Exception {
         PomXmlResourceFile pxrf = new PomXmlResourceFile(BaseDirConstant.projectBaseDir + "/" + projectInfo.getArtifactId(), projectInfo.getGroupId(), projectInfo.getArtifactId(), projectInfo.getDependencies());
         pxrf.generate();
 
-        ApplicationPropertiesResourceFile ayrf = new ApplicationPropertiesResourceFile(BaseDirConstant.projectBaseDir + "/" + projectInfo.getArtifactId() + "/" + "src/main/resources");
+        ApplicationPropertiesResourceFile ayrf = new ApplicationPropertiesResourceFile(BaseDirConstant.projectBaseDir + "/" + projectInfo.getArtifactId() + "/" + "src/main/resources", projectType);
         ayrf.generate();
 
         ApplicationClassFile acf = new ApplicationClassFile(BaseDirConstant.projectBaseDir + "/" + projectInfo.getArtifactId() + "/" + "src/main/java" + "/" + toDir(projectInfo.getGroupId()) + "/" + projectInfo.getArtifactId(), toPackage(projectInfo.getGroupId() + "/" + projectInfo.getArtifactId()), projectInfo.getDependencies());

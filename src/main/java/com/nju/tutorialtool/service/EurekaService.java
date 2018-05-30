@@ -32,7 +32,7 @@ public class EurekaService {
     public void createEurekaServer(SpringCloudInfo springCloudInfo) {
         ProjectInfo projectInfo = new ProjectInfo(springCloudInfo);
         projectInfo.addDependency("eurekaServer");
-        createProjectService.createProject(projectInfo);
+        createProjectService.createProject(projectInfo, "eurekaServer");
     }
 
     /**
