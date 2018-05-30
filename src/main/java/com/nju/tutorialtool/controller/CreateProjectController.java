@@ -26,7 +26,7 @@ public class CreateProjectController {
      */
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public boolean createProject(@RequestBody ProjectInfo projectInfo) {
-        createProjectService.createProject(projectInfo);
+        createProjectService.createProject(projectInfo, "");
         return true;
     }
 }

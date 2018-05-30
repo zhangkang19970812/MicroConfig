@@ -10,8 +10,11 @@ public class ApplicationPropertiesResourceFile extends ResourceFile {
 		if (projectType.equals("eurekaServer")) {
 			port = "8761";
 		}
-		else {
+		else if (projectType.equals("zuul")){
 			port = "8040";
+		}
+		else {
+			port = "8080";
 		}
 		String resource = 
 				"server.port=" + port;
