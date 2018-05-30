@@ -36,18 +36,25 @@ public class AddMethods {
     public void modifyApplication(File applicationFile) throws IOException {
         RandomAccessFile raf=new RandomAccessFile(applicationFile,"rw");
         String line=null;
-        while((line=raf.readLine())!=null){
-            if (line.contains("import org.")) {
-                long pointer = raf.getFilePointer();
-                String importPackage = "import org.springframework.cloud.netflix.hystrix.EnableHystrix;\n";
-                IO.insert(pointer, importPackage, applicationFile);
+        boolean findImportPointer = false;
+        boolean findAnnotationPointer = false;
+        long importPointer = 0;
+        long annotationPointer = 0;
+        while((line=raf.readLine())!=null && (!findImportPointer || !findAnnotationPointer)){
+            if (line.contains("import org.") && !findImportPointer) {
+                importPointer = raf.getFilePointer();
+                findImportPointer = true;
             }
-            if(line.contains("@SpringBootApplication")){
-                long pointer=raf.getFilePointer();
-                String annotation="@EnableHystrix\n";
-                insertAnnotation(pointer,annotation,applicationFile);
+            if(line.contains("@SpringBootApplication") && !findAnnotationPointer){
+                annotationPointer = raf.getFilePointer();
+                findAnnotationPointer = true;
             }
         }
+
+        String importPackage = "import org.springframework.cloud.netflix.hystrix.EnableHystrix;\n";
+        IO.insert(importPointer, importPackage, applicationFile);
+        String annotation="@EnableHystrix\n";
+        insertAnnotation(annotationPointer,annotation,applicationFile);
     }
     /**
      * 对一个controller代码进行处理
@@ -60,11 +67,13 @@ public class AddMethods {
         String line=null;
         String lastLine=null;
         int signal=0;//表示该代码还未加过熔断
+        boolean findImportPointer = false; //是否找到Import包
         while((line=raf.readLine())!=null){
-            if (line.contains("import ")) {
+            if (line.contains("import ") && !findImportPointer) {
                 long pointer = raf.getFilePointer();
                 String importPackage = "import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;\n";
                 IO.insert(pointer, importPackage, controllerFile);
+                findImportPointer = true;
             }
             lastLine=line;
             //找到方法所在的行数及代码

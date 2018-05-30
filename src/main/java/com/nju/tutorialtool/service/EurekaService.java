@@ -59,7 +59,7 @@ public class EurekaService {
             boolean findAnnotationPointer = false;
             long importPointer = 0;
             long annotationPointer = 0;
-            while ((line = raf.readLine()) != null && (!findImportPointer || findAnnotationPointer)) {
+            while ((line = raf.readLine()) != null && (!findImportPointer || !findAnnotationPointer)) {
                 if (line.contains("import org.") && !findImportPointer) {
                     importPointer = raf.getFilePointer();
                     findImportPointer = true;

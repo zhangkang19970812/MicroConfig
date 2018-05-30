@@ -71,19 +71,25 @@ public class RibbonService {
         File applicationFile = IO.getApplication(projectPath);
         RandomAccessFile raf=new RandomAccessFile(applicationFile,"rw");
         String line=null;
-        while((line=raf.readLine())!=null){
-            if (line.contains("import org.")) {
-                long pointer = raf.getFilePointer();
-                String importPackage = "import org.springframework.cloud.client.loadbalancer.LoadBalanced;\n";
-                IO.insert(pointer, importPackage, applicationFile);
+        boolean findImportPointer = false;
+        boolean findAnnotationPointer = false;
+        long importPointer = 0;
+        long annotationPointer = 0;
+        while((line=raf.readLine())!=null && (!findImportPointer || !findAnnotationPointer)){
+            if (line.contains("import org.") && !findImportPointer) {
+                importPointer = raf.getFilePointer();
+                findImportPointer = true;
             }
 
-            if(line.contains("@Bean")){
-                long pointer=raf.getFilePointer();
-                String annotation="    @LoadBalanced\n";
-                IO.insert(pointer,annotation,applicationFile);
+            if(line.contains("@Bean") && !findAnnotationPointer){
+                annotationPointer = raf.getFilePointer();
+                findAnnotationPointer = true;
             }
         }
+        String importPackage = "import org.springframework.cloud.client.loadbalancer.LoadBalanced;\n";
+        IO.insert(importPointer, importPackage, applicationFile);
+        String annotation="    @LoadBalanced\n";
+        IO.insert(annotationPointer,annotation,applicationFile);
     }
 
 //    public static void main(String[] args) throws Exception {
