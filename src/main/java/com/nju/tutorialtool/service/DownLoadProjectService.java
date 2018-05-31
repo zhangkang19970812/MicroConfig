@@ -2,42 +2,35 @@ package com.nju.tutorialtool.service;
 
 import com.nju.tutorialtool.model.ServerInfo;
 import com.nju.tutorialtool.model.ServiceInfo;
-import com.nju.tutorialtool.util.downloadFile.DownLoadFile;
+import com.nju.tutorialtool.util.downloadFile.FTPDownload;
 import com.nju.tutorialtool.util.enums.BaseDirConstant;
-import com.nju.tutorialtool.util.exec.RunCommand;
+import com.nju.tutorialtool.util.enums.ServerMessage;
 import com.nju.tutorialtool.util.ssh.RemoteExecuteCommand;
-import com.nju.tutorialtool.util.ssh.SSHHelper;
-import com.nju.tutorialtool.util.ssh.SSHInfo;
+import org.apache.catalina.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
 
 @Service
 public class DownLoadProjectService {
     @Autowired
     private ServiceDirMapService serviceDirMapService;
 
-    public void downloadAllProjects(ServerInfo serverInfo, String localPath) {
-        for (ServiceInfo serviceInfo : serviceDirMapService.getAllServices()) {
-            downloadProject(serverInfo, serviceInfo.getFolderName(), localPath);
-        }
+    public InputStream downloadProjects() {
+        RemoteExecuteCommand remote = new RemoteExecuteCommand(ServerMessage.serverIp, ServerMessage.serverUser, ServerMessage.serverPassword);
+        System.out.println(remote.execute("cd " + BaseDirConstant.servicesDir + " && zip -r " + BaseDirConstant.zipName + " ./*"));
+        return FTPDownload.download(BaseDirConstant.ftpDir + "/" + BaseDirConstant.zipName);
+
     }
 
-    public void downloadProject(ServerInfo serverInfo, String folderName, String localPath) {
-        RemoteExecuteCommand remote = new RemoteExecuteCommand(serverInfo.getIp(), serverInfo.getUser(), serverInfo.getPassword());
-//        if (remote.login()) {
-        System.out.println(remote.execute("cd " + "/usr/services" + "/" + folderName + " && zip -r " + folderName + ".zip ./*"));
-        remote.getFile("/usr/services" + "/" + folderName + "/" + folderName + ".zip", localPath);
-//        }
 
-//        RunCommand.runCommand(localPath, "scp " + serverInfo.getUser() + "@" + serverInfo.getIp() + ":" + "/usr/services" + "/" + folderName + "/" + folderName + ".zip ./",
-//                "scp " + serverInfo.getUser() + "@" + serverInfo.getIp() + ":" + "/usr/services" + "/" + folderName + "/" + folderName + ".zip ./");
-//        DownLoadFile.downloadFile("http://" + serverInfo.getIp() + ":" + serverInfo.getPort() + "/usr/services" + "/" + folderName + "/" + folderName + ".zip",
-//                localPath + "/" + folderName + ".zip");
-        RunCommand.runCommand(localPath, "expand " + folderName + ".zip " + folderName, "unzip " + folderName + ".zip");
-    }
-
-    public static void main(String[] args) {
-        DownLoadProjectService downLoadProjectService = new DownLoadProjectService();
-        downLoadProjectService.downloadProject(new ServerInfo("114.115.137.102", "root", "stk0123STK0123", "", ""), "account_service", "H:/programs/spark");
-    }
+//    public static void main(String[] args) throws Exception {
+//        DownLoadProjectService downLoadProjectService = new DownLoadProjectService();
+//        InputStream inputStream = downLoadProjectService.downloadProject(new ServerInfo("114.115.137.102", "root", "stk0123STK0123", "", ""), "account_service", "H:/programs/spark");
+////        downLoadProjectService.test(new ServerInfo("114.115.137.102", "root", "stk0123STK0123", "80", ""), "account_service", "H:/programs/spark");
+//        System.out.println(inputStream.available());
+//    }
 }

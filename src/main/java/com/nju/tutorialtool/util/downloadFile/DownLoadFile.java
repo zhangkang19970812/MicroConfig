@@ -14,6 +14,7 @@ public class DownLoadFile {
         try
         {
             urlfile = new URL(remoteFilePath);
+            System.out.println(remoteFilePath);
             httpUrl = (HttpURLConnection)urlfile.openConnection();
             httpUrl.connect();
             bis = new BufferedInputStream(httpUrl.getInputStream());

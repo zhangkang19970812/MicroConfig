@@ -1,10 +1,9 @@
 package com.nju.tutorialtool.util.ssh;
 
-import ch.ethz.ssh2.Connection;
-import ch.ethz.ssh2.SCPClient;
-import ch.ethz.ssh2.Session;
-import ch.ethz.ssh2.StreamGobbler;
+import ch.ethz.ssh2.*;
+import jdk.internal.util.xml.impl.Input;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 
 import java.io.*;
 import java.util.logging.Level;
@@ -76,15 +75,23 @@ public class RemoteExecuteCommand {
         return result;
     }
 
+    public static void main(String[] args) {
+        String folderName = "account_service";
+        RemoteExecuteCommand remote = new RemoteExecuteCommand("114.115.137.102", "root", "stk0123STK0123");
+//        System.out.println(remote.execute("cd " + "/usr/services" + "/" + folderName + " && zip -r " + folderName + ".zip ./*"));
+        System.out.println(remote.execute("scp -f " + "root@114.115.137.102:/usr/services" + "/" + folderName + "/" + folderName + ".iml"));
+    }
+
     /**
      * 从远端服务器下载文件到本地
      * @param remoteFile
-     * @param localTargetDirectory
      */
-    public void getFile(String remoteFile, String localTargetDirectory) {
-        String cmd = "scp -r " + userName + "@" + ip + ":" + remoteFile + " " + localTargetDirectory;
+    public InputStream getFile(String remoteFile) throws Exception {
+//        String cmd = "scp -f " + userName + "@" + ip + ":" + remoteFile;
+        String cmd = "scp -f " + remoteFile;
         Connection conn = new Connection(ip);
-
+        InputStream inputStream = null;
+        String result = "";
         try {
             conn.connect();
             boolean isAuthenticated = conn.authenticateWithPassword(userName,
@@ -93,11 +100,27 @@ public class RemoteExecuteCommand {
                 System.err.println("authentication failed");
             }
             SCPClient client = new SCPClient(conn);
-            client.get(remoteFile, localTargetDirectory);
+//            inputStream = client.get(remoteFile);
+            Session session= conn.openSession();//打开一个会话
+            session.execCommand(cmd);
+            result=processStdout(session.getStdout(),DEFAULTCHART);
             conn.close();
+            session.close();
         } catch (IOException ex) {
             Logger.getLogger(SCPClient.class.getName()).log(Level.SEVERE, null,ex);
         }
+        return inputStream;
+    }
+
+
+
+    //outputStream转inputStream
+    public ByteArrayInputStream parse(OutputStream out) throws Exception
+    {
+        ByteArrayOutputStream   baos=new   ByteArrayOutputStream();
+        baos=(ByteArrayOutputStream) out;
+        ByteArrayInputStream swapStream = new ByteArrayInputStream(baos.toByteArray());
+        return swapStream;
     }
 
     /**
