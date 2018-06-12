@@ -90,6 +90,9 @@ public class ConfigurationService {
         return "";
     }
 
+    /**
+     * 将各服务的配置文件中关于数据库的配置都更改一下
+     */
     public void editServicesMysqlConfigurations() {
         List<ServiceInfo> serviceInfoList = serviceDirMapService.getAllServices();
         for (ServiceInfo serviceInfo : serviceInfoList) {

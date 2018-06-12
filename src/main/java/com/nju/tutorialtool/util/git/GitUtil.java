@@ -1,6 +1,11 @@
 package com.nju.tutorialtool.util.git;
 
-import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.*;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,11 +46,33 @@ public class GitUtil {
 //            git.add().addFilepattern("pets").call();
             //提交
             git.commit().setMessage("").call();
-            git.push().call();
+            git.push().setCredentialsProvider( new UsernamePasswordCredentialsProvider( "zhangkang19970812", "zhang19970812")).call();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    public static void commitAndPush(String localRepoGitConfig, String username, String password) throws Exception {
+        FileRepositoryBuilder builder = new FileRepositoryBuilder();
+        Repository repository = builder.setGitDir(new File(localRepoGitConfig))
+                .readEnvironment() // scan environment GIT_* variables
+                .findGitDir() // scan up the file system tree
+                .build();
+        Git git = new Git(repository);
+        AddCommand add = git.add();
+        add.addFilepattern(".").call();//git add .
+        CommitCommand commit = git.commit();
+        /**-Dusername=%teamcity.build.username%**/
+        commit.setCommitter("MSConfig", "");
+        commit.setAuthor("MSConfig","");
+        commit.setAll(true);
+        //commit.setCommitter(new PersonIdent(repository));
+        RevCommit revCommit = commit.setMessage("MSConfig").call();//git commit -m "use jgit"
+        String commitId = revCommit.getId().name();
+        System.out.println(commitId);
+        PushCommand push = git.push().setCredentialsProvider( new UsernamePasswordCredentialsProvider( username, password));
+        push.call();//git push
     }
 
     private static void deleteFolder(File file){
@@ -58,5 +85,19 @@ public class GitUtil {
                 files[i].delete();
             }
         }
+    }
+
+    public static void addRemoteRepo() throws Exception {
+        Git git = Git.init().setDirectory(new File("C:/Users/zk/Desktop/account_mysql")).call();
+        RemoteAddCommand remoteAddCommand = git.remoteAdd();
+        remoteAddCommand.setName("origin");
+        remoteAddCommand.setUri(new URIish("https://github.com/zhangkang19970812/account_mysql"));
+        remoteAddCommand.call();
+    }
+
+    public static void main(String[] args) throws Exception {
+//        GitUtil.clone("https://github.com/zhangkang19970812/test", "C:/Users/zk/Desktop/test");
+//        GitUtil.commitAndPush("C:/Users/zk/Desktop/test/.git");
+        GitUtil.addRemoteRepo();
     }
 }
