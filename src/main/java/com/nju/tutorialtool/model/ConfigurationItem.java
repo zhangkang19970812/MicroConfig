@@ -44,4 +44,11 @@ public class ConfigurationItem {
     public String toString() {
         return itemName + "=" + value;
     }
+
+    public boolean equals(ConfigurationItem configurationItem) {
+        if (itemName.equals(configurationItem.getItemName()) && value.equals(configurationItem.getValue())) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -15,17 +15,13 @@ public class CreateComposeYmlController {
     private CreateComposeYmlService createComposeYmlService;
 
     /**
-     * 根据composeInfo创建docker-compose.yml文件
-     * composeInfo包括一个service的list，
-     * service是指compose文件中定义的一个服务，包括service的名称，image镜像，如果是eureka或者zuul项目则会包括port，否则port属性为null
-     * isMysql是指该服务是否是mysql项目
-     * @param composeInfo
+     * 创建docker-compose.yml文件
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public boolean createComposeYml(@RequestBody ComposeInfo composeInfo) throws Exception {
-        createComposeYmlService.createComposeYml(composeInfo);
+    public boolean createComposeYml() throws Exception {
+        createComposeYmlService.createComposeYml();
         return true;
     }
 }

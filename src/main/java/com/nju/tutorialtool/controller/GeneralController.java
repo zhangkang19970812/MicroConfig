@@ -62,13 +62,7 @@ public class GeneralController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void addGeneral(@RequestBody General general) throws Exception {
-//        DeployServer deployServer = general.getDeployServer();
         List<ServiceInfo> services = general.getServices();
-
-//        /**
-//         * 用户添加部署服务器
-//         */
-//        deployServerService.addServer(deployServer);
 
         Map<String, String> service2folder = services.stream()
                 .collect(Collectors.toMap(ServiceInfo::getServiceName, ServiceInfo::getFolderName));
@@ -91,7 +85,7 @@ public class GeneralController {
 
             String serviceRootPath = BaseDirConstant.projectBaseDir + File.separator + service.getFolderName();
 
-            serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getServiceName(), service.getFolderName()));
+            serviceDirMapService.addServiceDirMap(service);
 
             /**
              * 组件
@@ -109,6 +103,7 @@ public class GeneralController {
              */
             // config
             configurationService.editConfiguration(serviceRootPath, service.getConfig().getList());
+            configurationService.editServicesMysqlConfigurations();
 
             // ribbon
             if (general.isRibbon()) {
@@ -129,7 +124,7 @@ public class GeneralController {
             }
 
             createMysqlProjectService.createMysqlProject(service.getMysqlInfo());
-            serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getMysqlInfo().getProjectName(), service.getMysqlInfo().getProjectName()));
+//            serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getMysqlInfo().getProjectName(), service.getMysqlInfo().getProjectName()));
 
             createDockerfileService.createDockerfile(serviceRootPath, "service");
 

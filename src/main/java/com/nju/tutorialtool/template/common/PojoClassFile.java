@@ -15,7 +15,7 @@ public class PojoClassFile extends JavaFile {
 		List<String> classAnnotations = new LinkedList<>();
 		List<String> extendss = new LinkedList<>();
 		List<String> implementss = new LinkedList<>();
-		List<JavaFile.Field> fields = new LinkedList<>();
+		List<Field> fields = new LinkedList<>();
 		List<Method> methods = new LinkedList<>();
 		
 		//imports

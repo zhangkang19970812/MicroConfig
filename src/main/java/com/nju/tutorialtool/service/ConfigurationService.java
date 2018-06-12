@@ -3,7 +3,10 @@ package com.nju.tutorialtool.service;
 import com.nju.tutorialtool.controller.ConfigurationController;
 import com.nju.tutorialtool.model.Configuration;
 import com.nju.tutorialtool.model.ConfigurationItem;
+import com.nju.tutorialtool.model.ServiceInfo;
+import com.nju.tutorialtool.util.enums.BaseDirConstant;
 import com.nju.tutorialtool.util.io.IO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -13,6 +16,10 @@ import java.util.Map;
 
 @Service
 public class ConfigurationService {
+
+    @Autowired
+    private ServiceDirMapService serviceDirMapService;
+
     /**
      * 修改某项目的配置文件
      * @param projectPath
@@ -32,6 +39,74 @@ public class ConfigurationService {
             }
             if (ret == 0) {
                 IO.insertToEnd(file, configurationItem.toString());
+
+            }
+        }
+    }
+
+    /**
+     * 返回所有服务的配置，用于之后的配置检查
+     * @return
+     */
+    public List<Configuration> getAllServicesConfigurations() {
+        List<Configuration> list = new ArrayList<>();
+        List<ServiceInfo> serviceInfoList = serviceDirMapService.getAllServices();
+        for (ServiceInfo serviceInfo : serviceInfoList) {
+            String serviceRootPath = BaseDirConstant.projectBaseDir + File.separator + serviceInfo.getFolderName();
+            list.add(new Configuration(getConfigurations(serviceRootPath)));
+        }
+        return list;
+    }
+
+    /**
+     * 返回某服务的配置项列表
+     * @param projectPath
+     * @return
+     */
+    private List<ConfigurationItem> getConfigurations(String projectPath) {
+        List<ConfigurationItem> list = new ArrayList<>();
+        File file = IO.getFile(projectPath + "/src/main/resources", "application.properties");
+        String[] str = IO.readFromFile(file).split("\n");
+        for (String s : str) {
+            s = IO.deleteSpaces(s);
+            String[] c = s.split("=");
+            ConfigurationItem configurationItem = new ConfigurationItem(c[0], c[1]);
+            list.add(configurationItem);
+        }
+        return list;
+    }
+
+    /**
+     * 从数据库中得到某服务的port
+     * @param serviceInfo
+     * @return
+     */
+    public String getPort(ServiceInfo serviceInfo) {
+        for (ConfigurationItem configurationItem : serviceInfo.getConfig().getList()) {
+            if (configurationItem.getItemName().equals("server.port")) {
+                return configurationItem.getValue();
+            }
+        }
+        return "";
+    }
+
+    public void editServicesMysqlConfigurations() {
+        List<ServiceInfo> serviceInfoList = serviceDirMapService.getAllServices();
+        for (ServiceInfo serviceInfo : serviceInfoList) {
+            String serviceRootPath = BaseDirConstant.projectBaseDir + File.separator + serviceInfo.getFolderName();
+            File file = IO.getFile(serviceRootPath + "/src/main/resources", "application.properties");
+            String[] str = IO.readFromFile(file).split("\n");
+            for (String s : str) {
+                if (s.split("=")[0].equals("spring.datasource.url")) {
+                    String replace = "jdbc:mysql://"+ serviceInfo.getMysqlInfo().getProjectName();
+                    IO.replaceFileStr(file, s.split("=")[1].substring(0, s.indexOf(":3306")), replace);
+                }
+                if (s.split("=")[0].equals("spring.datasource.username")) {
+                    IO.replaceFileStr(file, s, "spring.datasource.username=" + serviceInfo.getMysqlInfo().getUser());
+                }
+                if (s.split("=")[0].equals("spring.datasource.password")) {
+                    IO.replaceFileStr(file, s, "spring.datasource.password=" + serviceInfo.getMysqlInfo().getPassword());
+                }
             }
         }
     }

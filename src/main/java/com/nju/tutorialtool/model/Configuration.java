@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,5 +32,20 @@ public class Configuration {
 
     public void setList(List<ConfigurationItem> list) {
         this.list = list;
+    }
+
+    public List<ConfigurationItem> getSameConfigurationItems(Configuration configuration) {
+        List<ConfigurationItem> resList = new ArrayList<>();
+        for (ConfigurationItem configurationItem : configuration.getList()) {
+            if ("server.port".equals(configurationItem.getItemName()) || "spring.application.name".equals(configurationItem.getItemName())) {
+                for (ConfigurationItem configurationItem1 : list) {
+                    if (configurationItem.equals(configurationItem1)) {
+                        resList.add(configurationItem);
+                        break;
+                    }
+                }
+            }
+        }
+        return resList;
     }
 }

@@ -26,6 +26,9 @@ public class ShowServiceInfoService {
             String port = IO.getServicePort(BaseDirConstant.projectBaseDir + "/" + serviceInfo.getFolderName());
 //            String ip = deployServerService.getFirst().getIp();
             list.add(new ServiceShowInfo(serviceName, port, ""));
+            if (serviceInfo.getMysqlInfo() != null) {
+                list.add(new ServiceShowInfo(serviceInfo.getMysqlInfo().getProjectName(), "3306", ""));
+            }
         }
         return list;
     }
