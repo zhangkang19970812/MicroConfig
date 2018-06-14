@@ -50,13 +50,16 @@ public class GeneralController {
     private GenerateJarService generateJarService;
     @Autowired
     private CreateMysqlProjectService createMysqlProjectService;
+    @Autowired
+    private UserService userService;
 
     private Logger logger = LoggerFactory.getLogger(GeneralController.class);
 
     @PostMapping(value = "/uploadFolder")
     public String uploadFolder(MultipartFile[] folder) {
         logger.info("传入的文件参数：{}", JSON.toJSONString(folder, true));
-        FileUtil.saveMultiFile(BaseDirConstant.projectBaseDir, folder);
+        userService.addUser();
+        FileUtil.saveMultiFile(userService.getUserFolder(), folder);
         return "ok";
     }
 
@@ -69,21 +72,21 @@ public class GeneralController {
 
         // eureka server
         eurekaService.createEurekaServer(general.getEurekaServerInfo());
-        createDockerfileService.createDockerfile(BaseDirConstant.projectBaseDir + "/" + general.getEurekaServerInfo().getArtifactId(), "service");
+        createDockerfileService.createDockerfile(userService.getUserFolder() + File.separator + general.getEurekaServerInfo().getArtifactId(), "service");
         String eurekaServerName = general.getEurekaServerInfo().getArtifactId();
         serviceDirMapService.addServiceDirMap(new ServiceInfo(eurekaServerName, eurekaServerName));
 
         // zuul
         if (general.isZuul()) {
             zuulService.createZuulProject(general.getZuulInfo());
-            createDockerfileService.createDockerfile(BaseDirConstant.projectBaseDir + "/" + general.getZuulInfo().getArtifactId(), "service");
+            createDockerfileService.createDockerfile(userService.getUserFolder() + File.separator + general.getZuulInfo().getArtifactId(), "service");
             String zuulName = general.getZuulInfo().getArtifactId();
             serviceDirMapService.addServiceDirMap(new ServiceInfo(zuulName, zuulName));
         }
 
         for (ServiceInfo service : services) {
 
-            String serviceRootPath = BaseDirConstant.projectBaseDir + File.separator + service.getFolderName();
+            String serviceRootPath = userService.getUserFolder() + File.separator + service.getFolderName();
 
             serviceDirMapService.addServiceDirMap(service);
 
@@ -135,7 +138,7 @@ public class GeneralController {
     }
 
     private String getProjectPath(String dirName) {
-        return BaseDirConstant.projectBaseDir + File.separator + dirName;
+        return userService.getUserFolder() + File.separator + dirName;
     }
 
     /**

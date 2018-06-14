@@ -1,9 +1,7 @@
 package com.nju.tutorialtool.service;
 
-import com.nju.tutorialtool.model.ComposeInfo;
 import com.nju.tutorialtool.model.ServiceInfo;
 import com.nju.tutorialtool.template.compose.ComposeYmlFile;
-import com.nju.tutorialtool.util.enums.BaseDirConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +17,9 @@ public class CreateComposeYmlService {
 
     @Autowired
     private ConfigurationService configurationService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 创建docker-compose.yml文件
@@ -39,7 +40,7 @@ public class CreateComposeYmlService {
                 serviceList.add(toolService);
             }
         }
-        ComposeYmlFile composeYmlFile = new ComposeYmlFile(BaseDirConstant.projectBaseDir, serviceList);
+        ComposeYmlFile composeYmlFile = new ComposeYmlFile(userService.getUserFolder(), serviceList);
         composeYmlFile.generate();
     }
 

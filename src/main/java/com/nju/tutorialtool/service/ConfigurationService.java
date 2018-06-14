@@ -16,9 +16,11 @@ import java.util.Map;
 
 @Service
 public class ConfigurationService {
-
     @Autowired
     private ServiceDirMapService serviceDirMapService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 修改某项目的配置文件
@@ -52,7 +54,7 @@ public class ConfigurationService {
         List<Configuration> list = new ArrayList<>();
         List<ServiceInfo> serviceInfoList = serviceDirMapService.getAllServices();
         for (ServiceInfo serviceInfo : serviceInfoList) {
-            String serviceRootPath = BaseDirConstant.projectBaseDir + File.separator + serviceInfo.getFolderName();
+            String serviceRootPath = userService.getUserFolder() + File.separator + serviceInfo.getFolderName();
             list.add(new Configuration(getConfigurations(serviceRootPath)));
         }
         return list;
@@ -96,7 +98,7 @@ public class ConfigurationService {
     public void editServicesMysqlConfigurations() {
         List<ServiceInfo> serviceInfoList = serviceDirMapService.getAllServices();
         for (ServiceInfo serviceInfo : serviceInfoList) {
-            String serviceRootPath = BaseDirConstant.projectBaseDir + File.separator + serviceInfo.getFolderName();
+            String serviceRootPath = userService.getUserFolder() + File.separator + serviceInfo.getFolderName();
             File file = IO.getFile(serviceRootPath + "/src/main/resources", "application.properties");
             String[] str = IO.readFromFile(file).split("\n");
             for (String s : str) {

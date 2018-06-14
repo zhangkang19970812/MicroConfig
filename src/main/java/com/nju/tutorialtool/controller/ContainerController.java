@@ -28,6 +28,8 @@ public class ContainerController {
     private DeployServerService deployServerService;
     @Autowired
     private UploadService uploadService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/showAllContainerInfo")
     public List<ContainerVO> showContainerList() {
@@ -44,7 +46,7 @@ public class ContainerController {
     }
 
     private void deployContainers() {
-        containerService.deployContainerByCompose(BaseDirConstant.projectBaseDir, getServerInfo());
+        containerService.deployContainerByCompose(userService.getUserFolder(), getServerInfo());
     }
 
     private void buildDockerImage() {

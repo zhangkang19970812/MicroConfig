@@ -14,7 +14,7 @@ public class UploadService {
     private UserService userService;
 
     public void upload(ServerInfo serverInfo) {
-        String id = userService.addUser();
-        ServerLogin.downLoadFile(serverInfo.getIp(), serverInfo.getUser(), serverInfo.getPassword(), serverInfo.getPort(), "", "", serverInfo.getSourcePath(), BaseDirConstant.projectBaseDir + File.separator + "user" + id);
+        userService.addUser();
+        ServerLogin.downLoadFile(serverInfo.getIp(), serverInfo.getUser(), serverInfo.getPassword(), serverInfo.getPort(), "", "", serverInfo.getSourcePath(), userService.getUserFolder());
     }
 }
