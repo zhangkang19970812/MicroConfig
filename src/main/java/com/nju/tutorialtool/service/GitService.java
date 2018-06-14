@@ -12,24 +12,14 @@ import java.util.List;
 @Service
 public class GitService {
     @Autowired
-    private ServiceDirMapService serviceDirMapService;
+    private UserService userService;
 
     public void cloneToLocal(String githubUrl) {
-        String folderName = githubUrl.substring(githubUrl.lastIndexOf("/") + 1);
-        GitUtil.clone(githubUrl, BaseDirConstant.projectBaseDir + File.separator + folderName);
+        userService.addUser();
+        GitUtil.clone(githubUrl, userService.getUserFolder());
     }
 
     public void pushToGithub(String username, String password) throws Exception {
-        List<ServiceInfo> list = serviceDirMapService.getAllServices();
-        for (ServiceInfo serviceInfo : list) {
-            if (serviceInfo.getMysqlInfo() != null) {
-//                GitUtil.commitAndPush(getProjectGitPath(serviceInfo.getMysqlInfo()), username, password);
-            }
-//            GitUtil.commitAndPush(getProjectGitPath(serviceInfo.getFolderName()), username, password);
-        }
-    }
-
-    private String getProjectGitPath(String dirName) {
-        return BaseDirConstant.projectBaseDir + File.separator + dirName + File.separator + ".git";
+        GitUtil.commitAndPush(userService.getUserFolder() + File.separator + ".git", username, password);
     }
 }

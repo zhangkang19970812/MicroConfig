@@ -6,18 +6,21 @@ public class ApplicationPropertiesResourceFile extends ResourceFile {
 	private static final String FILE_NAME = "application.properties";
 	public ApplicationPropertiesResourceFile(String fileDir, String projectType) {
 		super(fileDir, FILE_NAME);
-		String port = "";
+		String resource = "";
 		if (projectType.equals("eurekaServer")) {
-			port = "8761";
+			resource = "server.port=8761\n" +
+					"eureka.client.service-url.defaultZone=http://eureka:8761/eureka/\n" +
+					"eureka.client.register-with-eureka=false\n" +
+					"eureka.client.fetch-registry=false";
 		}
 		else if (projectType.equals("zuul")){
-			port = "8040";
+			resource = "server.port=8040\n" +
+					"spring.application.name=zuul\n" +
+					"eureka.client.service-url.defaultZone=http://eureka:8761/eureka/";
 		}
 		else {
-			port = "8080";
+			resource = "server.port=8040";
 		}
-		String resource = 
-				"server.port=" + port;
 		init(resource);
 	}
 }
