@@ -1,9 +1,7 @@
 package com.nju.tutorialtool.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.nju.tutorialtool.model.General;
-import com.nju.tutorialtool.model.ServiceInfo;
-import com.nju.tutorialtool.model.ServiceShowInfo;
+import com.nju.tutorialtool.model.*;
 import com.nju.tutorialtool.model.dto.RibbonDTO;
 import com.nju.tutorialtool.service.*;
 import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
@@ -48,10 +46,14 @@ public class GeneralController {
     private ConfigurationService configurationService;
     @Autowired
     private GenerateJarService generateJarService;
+//    @Autowired
+//    private CreateMysqlProjectService createMysqlProjectService;
     @Autowired
-    private CreateMysqlProjectService createMysqlProjectService;
+    private SqlService sqlService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CreateComposeYmlService createComposeYmlService;
 
     private Logger logger = LoggerFactory.getLogger(GeneralController.class);
 
@@ -74,20 +76,26 @@ public class GeneralController {
         eurekaService.createEurekaServer(general.getEurekaServerInfo());
         createDockerfileService.createDockerfile(userService.getUserFolder() + File.separator + general.getEurekaServerInfo().getArtifactId(), "service");
         String eurekaServerName = general.getEurekaServerInfo().getArtifactId();
-        serviceDirMapService.addServiceDirMap(new ServiceInfo(eurekaServerName, eurekaServerName));
+        List<ConfigurationItem> elist = new ArrayList<>();
+        ConfigurationItem configurationItem = new ConfigurationItem("server.port", "8761");
+        elist.add(configurationItem);
+        serviceDirMapService.addServiceDirMap(new ServiceInfo(eurekaServerName, eurekaServerName, new Configuration(elist)));
 
         // zuul
         if (general.isZuul()) {
             zuulService.createZuulProject(general.getZuulInfo());
             createDockerfileService.createDockerfile(userService.getUserFolder() + File.separator + general.getZuulInfo().getArtifactId(), "service");
             String zuulName = general.getZuulInfo().getArtifactId();
-            serviceDirMapService.addServiceDirMap(new ServiceInfo(zuulName, zuulName));
+            List<ConfigurationItem> zlist = new ArrayList<>();
+            ConfigurationItem configurationItem1 = new ConfigurationItem("server.port", "8040");
+            zlist.add(configurationItem1);
+            serviceDirMapService.addServiceDirMap(new ServiceInfo(zuulName, zuulName, new Configuration(zlist)));
         }
 
         for (ServiceInfo service : services) {
 
             String serviceRootPath = userService.getUserFolder() + File.separator + service.getFolderName();
-
+            service.setMysqlInfo(new MysqlInfo(service.getFolderName() + "_mysql"));
             serviceDirMapService.addServiceDirMap(service);
 
             /**
@@ -106,7 +114,7 @@ public class GeneralController {
              */
             // config
             configurationService.editConfiguration(serviceRootPath, service.getConfig().getList());
-            configurationService.editServicesMysqlConfigurations();
+//            configurationService.editServicesMysqlConfigurations();
 
             // ribbon
             if (general.isRibbon()) {
@@ -126,10 +134,14 @@ public class GeneralController {
                 ribbonService.replaceUrl(getProjectPath(consumerDir), providersPath);
             }
 
-            createMysqlProjectService.createMysqlProject(service.getMysqlInfo());
+            sqlService.createMysqlProject(serviceRootPath);
+            serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getFolderName() + "_mysql", service.getFolderName() + "_mysql"));
+//            createMysqlProjectService.createMysqlProject(service.getMysqlInfo());
 //            serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getMysqlInfo().getProjectName(), service.getMysqlInfo().getProjectName()));
 
             createDockerfileService.createDockerfile(serviceRootPath, "service");
+
+            createComposeYmlService.createComposeYml();
 
             // 打包jar
             generateJarService.generateJar(serviceRootPath);

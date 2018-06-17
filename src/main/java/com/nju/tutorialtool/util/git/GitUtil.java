@@ -75,7 +75,7 @@ public class GitUtil {
         push.call();//git push
     }
 
-    private static void deleteFolder(File file){
+    public static void deleteFolder(File file){
         if(file.isFile() || file.list().length==0){
             file.delete();
         }else{

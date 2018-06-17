@@ -54,6 +54,12 @@ public class ServiceInfo {
         this.folderName = folderName;
     }
 
+    public ServiceInfo(String serviceName, String folderName, Configuration config) {
+        this.serviceName = serviceName;
+        this.folderName = folderName;
+        this.config = config;
+    }
+
     public String getServiceName() {
         return serviceName;
     }

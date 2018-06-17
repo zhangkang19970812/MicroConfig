@@ -27,6 +27,10 @@ public class MysqlInfo {
     public MysqlInfo() {
     }
 
+    public MysqlInfo(String projectName) {
+        this.projectName = projectName;
+    }
+
     public MysqlInfo(String projectName, String database, List<Table> tables, String user, String password) {
 //        this.baseDir = baseDir;
         this.projectName = projectName;

@@ -226,6 +226,21 @@ public class IO {
         return port;
     }
 
+    public static void copyfile(String from,String to) throws IOException{
+        BufferedReader in=new BufferedReader(new FileReader(from));
+        BufferedWriter out=new BufferedWriter(new FileWriter(to));
+        String line=null;
+        int linenumber=0;
+        while((line=in.readLine())!=null){
+            out.write(line+"\n");
+            linenumber++;
+        }
+        in.close();
+        out.close();
+
+        System.out.println("line number "+linenumber);
+    }
+
     public static String deleteSpaces(String s) {
         return s.replace(" ", "");
     }

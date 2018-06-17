@@ -65,7 +65,7 @@ public class ConfigurationService {
      * @param projectPath
      * @return
      */
-    private List<ConfigurationItem> getConfigurations(String projectPath) {
+    public List<ConfigurationItem> getConfigurations(String projectPath) {
         List<ConfigurationItem> list = new ArrayList<>();
         File file = IO.getFile(projectPath + "/src/main/resources", "application.properties");
         String[] str = IO.readFromFile(file).split("\n");
@@ -93,28 +93,61 @@ public class ConfigurationService {
     }
 
     /**
-     * 将各服务的配置文件中关于数据库的配置都更改一下
+     * 返回某服务的配置项中数据库名称，用户，密码
+     * @param projectPath
+     * @return
      */
-    public void editServicesMysqlConfigurations() {
-        List<ServiceInfo> serviceInfoList = serviceDirMapService.getAllServices();
-        for (ServiceInfo serviceInfo : serviceInfoList) {
-            String serviceRootPath = userService.getUserFolder() + File.separator + serviceInfo.getFolderName();
-            File file = IO.getFile(serviceRootPath + "/src/main/resources", "application.properties");
-            String[] str = IO.readFromFile(file).split("\n");
-            for (String s : str) {
-                if (s.split("=")[0].equals("spring.datasource.url")) {
-                    String replace = "jdbc:mysql://"+ serviceInfo.getMysqlInfo().getProjectName();
-                    IO.replaceFileStr(file, s.split("=")[1].substring(0, s.indexOf(":3306")), replace);
-                }
-                if (s.split("=")[0].equals("spring.datasource.username")) {
-                    IO.replaceFileStr(file, s, "spring.datasource.username=" + serviceInfo.getMysqlInfo().getUser());
-                }
-                if (s.split("=")[0].equals("spring.datasource.password")) {
-                    IO.replaceFileStr(file, s, "spring.datasource.password=" + serviceInfo.getMysqlInfo().getPassword());
-                }
+    public String[] getMysqlInfo(String projectPath) {
+        String[] res = new String[3];
+        List<ConfigurationItem> list = getConfigurations(projectPath);
+        boolean database = false, username = false, password = false;
+        for (ConfigurationItem configurationItem : list) {
+            if (database && username && password) {
+                break;
+            }
+            if ("spring.datasource.url".equals(configurationItem.getItemName())) {
+                String url = configurationItem.getValue();
+                int start = url.indexOf(":3306/") + 6, end = (url.contains("?")) ? url.indexOf("?") : url.length();
+                res[0] = url.substring(start, end);
+                database = true;
+                continue;
+            }
+            if ("spring.datasource.username".equals(configurationItem.getItemName())) {
+                res[1] = configurationItem.getValue();
+                username = true;
+                continue;
+            }
+            if ("spring.datasource.password".equals(configurationItem.getItemName())) {
+                res[2] = configurationItem.getValue();
+                password = true;
             }
         }
+        return res;
     }
+
+//    /**
+//     * 将各服务的配置文件中关于数据库的配置都更改一下
+//     */
+//    public void editServicesMysqlConfigurations() {
+//        List<ServiceInfo> serviceInfoList = serviceDirMapService.getAllServices();
+//        for (ServiceInfo serviceInfo : serviceInfoList) {
+//            String serviceRootPath = userService.getUserFolder() + File.separator + serviceInfo.getFolderName();
+//            File file = IO.getFile(serviceRootPath + "/src/main/resources", "application.properties");
+//            String[] str = IO.readFromFile(file).split("\n");
+//            for (String s : str) {
+//                if (s.split("=")[0].equals("spring.datasource.url")) {
+//                    String replace = "jdbc:mysql://"+ serviceInfo.getMysqlInfo().getProjectName();
+//                    IO.replaceFileStr(file, s.split("=")[1].substring(0, s.indexOf(":3306")), replace);
+//                }
+//                if (s.split("=")[0].equals("spring.datasource.username")) {
+//                    IO.replaceFileStr(file, s, "spring.datasource.username=" + serviceInfo.getMysqlInfo().getUser());
+//                }
+//                if (s.split("=")[0].equals("spring.datasource.password")) {
+//                    IO.replaceFileStr(file, s, "spring.datasource.password=" + serviceInfo.getMysqlInfo().getPassword());
+//                }
+//            }
+//        }
+//    }
 
 //    public static void main(String[] args) {
 //        ConfigurationItem configurationItem1 = new ConfigurationItem("server.port", "5000");

@@ -11,9 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateTable {
+//    public static void main(String[] args) throws Exception {
+//        createSql("account", GetEntityClass.getEntity("C:/Users/zk/Desktop/account_service"), "C:/Users/zk/Desktop/account_service_mysql/schema.sql");
+//    }
 
-    public static void createSql(List<Class> cList, String path) {
+    public static void createSql(String database, List<Class> cList, String path) {
         StringBuilder finalSql = new StringBuilder();
+        finalSql.append("create database `" + database + "` default character set utf8 collate utf8_general_ci;\n"
+                + "use " + database + ";\n");
         for (Class c : cList) {
             // 表名
             String tableName = getTableName(c);

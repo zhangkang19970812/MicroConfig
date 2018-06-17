@@ -14,10 +14,8 @@ public class CreateComposeYmlService {
 
     @Autowired
     private ServiceDirMapService serviceDirMapService;
-
     @Autowired
     private ConfigurationService configurationService;
-
     @Autowired
     private UserService userService;
 
@@ -29,16 +27,20 @@ public class CreateComposeYmlService {
         List<ServiceInfo> list = serviceDirMapService.getAllServices();
         List<com.nju.tutorialtool.model.Service> serviceList = new ArrayList<>();
         for (ServiceInfo serviceInfo : list) {
-            if (serviceInfo.getMysqlInfo() != null) {
-                com.nju.tutorialtool.model.Service service = new com.nju.tutorialtool.model.Service(serviceInfo.getServiceName(), "", false);
-                com.nju.tutorialtool.model.Service mysqlService = new com.nju.tutorialtool.model.Service(serviceInfo.getMysqlInfo().getProjectName(), "", true);
-                serviceList.add(service);
-                serviceList.add(mysqlService);
+            com.nju.tutorialtool.model.Service service = null;
+            if (serviceInfo.getConfig() != null) {
+                if (serviceInfo.getMysqlInfo() != null) {
+                    service = new com.nju.tutorialtool.model.Service(serviceInfo.getServiceName(), "", false);
+                }
+                else {
+                    service = new com.nju.tutorialtool.model.Service(serviceInfo.getServiceName(), configurationService.getPort(serviceInfo), false);
+                }
             }
             else {
-                com.nju.tutorialtool.model.Service toolService = new com.nju.tutorialtool.model.Service(serviceInfo.getServiceName(), configurationService.getPort(serviceInfo), false);
-                serviceList.add(toolService);
+                service = new com.nju.tutorialtool.model.Service(serviceInfo.getServiceName(), "", true);
             }
+
+            serviceList.add(service);
         }
         ComposeYmlFile composeYmlFile = new ComposeYmlFile(userService.getUserFolder(), serviceList);
         composeYmlFile.generate();
