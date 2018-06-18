@@ -72,26 +72,25 @@ public class GeneralController {
         eurekaService.createEurekaServer(general.getEurekaServerInfo());
         createDockerfileService.createDockerfile(userService.getUserFolder() + File.separator + general.getEurekaServerInfo().getArtifactId(), "service");
         String eurekaServerName = general.getEurekaServerInfo().getArtifactId();
-        List<ConfigurationItem> elist = new ArrayList<>();
-        ConfigurationItem configurationItem = new ConfigurationItem("server.port", "8761");
-        elist.add(configurationItem);
-        serviceDirMapService.addServiceDirMap(new ServiceInfo(eurekaServerName, eurekaServerName, new Configuration(elist)));
+        Configuration eConfiguration = generateConfiguration("8761");
+        serviceDirMapService.addServiceDirMap(new ServiceInfo(eurekaServerName, eurekaServerName, eConfiguration));
 
         // zuul
         if (general.isZuul()) {
             zuulService.createZuulProject(general.getZuulInfo());
             createDockerfileService.createDockerfile(userService.getUserFolder() + File.separator + general.getZuulInfo().getArtifactId(), "service");
             String zuulName = general.getZuulInfo().getArtifactId();
-            List<ConfigurationItem> zlist = new ArrayList<>();
-            ConfigurationItem configurationItem1 = new ConfigurationItem("server.port", "8040");
-            zlist.add(configurationItem1);
-            serviceDirMapService.addServiceDirMap(new ServiceInfo(zuulName, zuulName, new Configuration(zlist)));
+            Configuration zConfiguration = generateConfiguration("8040");
+            serviceDirMapService.addServiceDirMap(new ServiceInfo(zuulName, zuulName, zConfiguration));
         }
 
         for (ServiceInfo service : services) {
 
             String serviceRootPath = userService.getUserFolder() + File.separator + service.getFolderName();
-            service.setMysqlInfo(new MysqlInfo(service.getFolderName() + "_mysql"));
+            MysqlInfo mysqlInfo = new MysqlInfo(service.getFolderName() + "_mysql");
+            service.setMysqlInfo(mysqlInfo);
+            configurationService.addConfiguration(service.getConfig());
+            sqlService.addMysqlInfo(mysqlInfo);
             serviceDirMapService.addServiceDirMap(service);
 
             /**
@@ -143,6 +142,15 @@ public class GeneralController {
             generateJarService.generateJar(serviceRootPath);
         }
 
+    }
+
+    private Configuration generateConfiguration(String port) {
+        List<ConfigurationItem> elist = new ArrayList<>();
+        ConfigurationItem configurationItem = new ConfigurationItem("server.port", port);
+        elist.add(configurationItem);
+        Configuration configuration = new Configuration(elist);
+        configurationService.addConfiguration(configuration);
+        return configuration;
     }
 
     private String getProjectPath(String dirName) {

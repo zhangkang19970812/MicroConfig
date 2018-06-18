@@ -21,7 +21,7 @@ public class DownLoadProjectService {
 
     public InputStream downloadProjects() {
         RemoteExecuteCommand remote = new RemoteExecuteCommand(ServerMessage.serverIp, ServerMessage.serverUser, ServerMessage.serverPassword);
-        System.out.println(remote.execute("cd " + BaseDirConstant.servicesDir + " && zip -r " + BaseDirConstant.zipName + " ./*"));
+//        System.out.println(remote.execute("cd " + BaseDirConstant.servicesDir + " && zip -r " + BaseDirConstant.zipName + " ./*"));
         return FTPDownload.download(BaseDirConstant.ftpDir + "/" + BaseDirConstant.zipName);
 
     }

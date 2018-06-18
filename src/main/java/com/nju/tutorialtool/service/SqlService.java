@@ -1,5 +1,7 @@
 package com.nju.tutorialtool.service;
 
+import com.nju.tutorialtool.dao.MysqlInfoDao;
+import com.nju.tutorialtool.model.MysqlInfo;
 import com.nju.tutorialtool.template.mysql.PrivilegesFile;
 import com.nju.tutorialtool.template.mysql.SetupShFile;
 import com.nju.tutorialtool.util.sql.CreateTable;
@@ -13,6 +15,8 @@ public class SqlService {
     private CreateDockerfileService createDockerfileService;
     @Autowired
     private ConfigurationService configurationService;
+    @Autowired
+    private MysqlInfoDao mysqlInfoDao;
 
     public void createMysqlProject(String projectPath) throws Exception {
         String[] mysql = configurationService.getMysqlInfo(projectPath);
@@ -25,5 +29,9 @@ public class SqlService {
         setupShFile.generate();
 
         createDockerfileService.createDockerfile(projectPath + "_mysql", "mysql");
+    }
+
+    public void addMysqlInfo(MysqlInfo mysqlInfo) {
+        mysqlInfoDao.save(mysqlInfo);
     }
 }

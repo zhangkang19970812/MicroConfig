@@ -1,6 +1,7 @@
 package com.nju.tutorialtool.service;
 
 import com.nju.tutorialtool.controller.ConfigurationController;
+import com.nju.tutorialtool.dao.ConfigurationDao;
 import com.nju.tutorialtool.model.Configuration;
 import com.nju.tutorialtool.model.ConfigurationItem;
 import com.nju.tutorialtool.model.ServiceInfo;
@@ -18,9 +19,10 @@ import java.util.Map;
 public class ConfigurationService {
     @Autowired
     private ServiceDirMapService serviceDirMapService;
-
     @Autowired
     private UserService userService;
+    @Autowired
+    private ConfigurationDao configurationDao;
 
     /**
      * 修改某项目的配置文件
@@ -125,6 +127,10 @@ public class ConfigurationService {
             }
         }
         return res;
+    }
+
+    public void addConfiguration(Configuration configuration) {
+        configurationDao.save(configuration);
     }
 
 //    /**

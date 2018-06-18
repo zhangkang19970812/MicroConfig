@@ -26,11 +26,12 @@ public class ShowServiceInfoService {
         List<ServiceInfo> serviceInfoList = serviceDirMapService.getAllServices();
         for (ServiceInfo serviceInfo : serviceInfoList) {
             String serviceName = serviceInfo.getServiceName();
-            String port = IO.getServicePort(userService.getUserFolder() + File.separator + serviceInfo.getFolderName());
-//            String ip = deployServerService.getFirst().getIp();
-            list.add(new ServiceShowInfo(serviceName, port, ""));
-            if (serviceInfo.getMysqlInfo() != null) {
-                list.add(new ServiceShowInfo(serviceInfo.getMysqlInfo().getProjectName(), "3306", ""));
+            if (serviceInfo.getConfig() != null) {
+                String port = IO.getServicePort(userService.getUserFolder() + File.separator + serviceInfo.getFolderName());
+                list.add(new ServiceShowInfo(serviceName, port, ""));
+            }
+            else {
+                list.add(new ServiceShowInfo(serviceName, "3306", ""));
             }
         }
         return list;
