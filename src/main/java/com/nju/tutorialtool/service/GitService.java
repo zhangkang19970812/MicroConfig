@@ -32,7 +32,9 @@ public class GitService {
         }
         else {
             for (File file : list) {
-                resList.add(new ServiceInfo(file.getName(), file.getName()));
+                if (!".git".equals(file.getName())) {
+                    resList.add(new ServiceInfo(file.getName(), file.getName()));
+                }
             }
         }
         return resList;
