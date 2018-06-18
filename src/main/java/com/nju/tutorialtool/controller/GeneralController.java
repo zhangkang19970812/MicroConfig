@@ -27,8 +27,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/general")
 public class GeneralController {
     @Autowired
-    private DeployServerService deployServerService;
-    @Autowired
     private ServiceDirMapService serviceDirMapService;
     @Autowired
     private ShowServiceInfoService showServiceInfoService;
@@ -46,8 +44,6 @@ public class GeneralController {
     private ConfigurationService configurationService;
     @Autowired
     private GenerateJarService generateJarService;
-//    @Autowired
-//    private CreateMysqlProjectService createMysqlProjectService;
     @Autowired
     private SqlService sqlService;
     @Autowired

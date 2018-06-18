@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 public class ServiceInfo {
     @Id
     @GeneratedValue
-    @JSONField(deserialize = false)
+    @JSONField(deserialize = false, serialize = false)
     private Long id;
 
     private String serviceName;
@@ -28,6 +28,7 @@ public class ServiceInfo {
      * 微服务对应的mysql数据库的信息
      */
     @OneToOne
+    @JSONField(serialize = false)
     private MysqlInfo mysqlInfo;
 
     public Configuration getConfig() {
