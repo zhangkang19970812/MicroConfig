@@ -1,5 +1,10 @@
 package com.nju.tutorialtool.util.sql;
 
+import com.nju.tutorialtool.service.ConfigurationService;
+import com.nju.tutorialtool.service.CreateDockerfileService;
+import com.nju.tutorialtool.template.mysql.PrivilegesFile;
+import com.nju.tutorialtool.template.mysql.SetupShFile;
+
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,6 +18,7 @@ import java.util.List;
 public class CreateTable {
 //    public static void main(String[] args) throws Exception {
 //        createSql("account", GetEntityClass.getEntity("C:/Users/zk/Desktop/account_service"), "C:/Users/zk/Desktop/account_service_mysql/schema.sql");
+//        createMysqlProject("C:/Users/zk/Desktop/account_service");
 //    }
 
     public static void createSql(String database, List<Class> cList, String path) {

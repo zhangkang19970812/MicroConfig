@@ -97,7 +97,7 @@ public class GitUtil {
 
 //    public static void main(String[] args) throws Exception {
 //        GitUtil.clone("https://github.com/zhangkang19970812/test", "C:/Users/zk/Desktop/test");
-//        GitUtil.commitAndPush("C:/Users/zk/Desktop/test/.git");
+//        GitUtil.commitAndPush("C:/Users/zk/Desktop/test/.git","zhangkang19970812", "zhang19970812");
 //        GitUtil.addRemoteRepo();
 //    }
 }
