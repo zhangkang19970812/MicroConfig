@@ -87,8 +87,13 @@ public class GeneralController {
         for (ServiceInfo service : services) {
 
             String serviceRootPath = userService.getUserFolder() + File.separator + service.getFolderName();
+
+            //存入数据库
             MysqlInfo mysqlInfo = new MysqlInfo(service.getFolderName() + "_mysql");
             service.setMysqlInfo(mysqlInfo);
+            for (ConfigurationItem configurationItem : service.getConfig().getList()) {
+                configurationService.addConfigurationItem(configurationItem);
+            }
             configurationService.addConfiguration(service.getConfig());
             sqlService.addMysqlInfo(mysqlInfo);
             serviceDirMapService.addServiceDirMap(service);
@@ -149,6 +154,7 @@ public class GeneralController {
         ConfigurationItem configurationItem = new ConfigurationItem("server.port", port);
         elist.add(configurationItem);
         Configuration configuration = new Configuration(elist);
+        configurationService.addConfigurationItem(configurationItem);
         configurationService.addConfiguration(configuration);
         return configuration;
     }

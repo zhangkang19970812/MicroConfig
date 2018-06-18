@@ -2,6 +2,7 @@ package com.nju.tutorialtool.service;
 
 import com.nju.tutorialtool.controller.ConfigurationController;
 import com.nju.tutorialtool.dao.ConfigurationDao;
+import com.nju.tutorialtool.dao.ConfigurationItemDao;
 import com.nju.tutorialtool.model.Configuration;
 import com.nju.tutorialtool.model.ConfigurationItem;
 import com.nju.tutorialtool.model.ServiceInfo;
@@ -23,6 +24,8 @@ public class ConfigurationService {
     private UserService userService;
     @Autowired
     private ConfigurationDao configurationDao;
+    @Autowired
+    private ConfigurationItemDao configurationItemDao;
 
     /**
      * 修改某项目的配置文件
@@ -131,6 +134,10 @@ public class ConfigurationService {
 
     public void addConfiguration(Configuration configuration) {
         configurationDao.save(configuration);
+    }
+
+    public void addConfigurationItem(ConfigurationItem configurationItem) {
+        configurationItemDao.save(configurationItem);
     }
 
 //    /**
