@@ -16,7 +16,7 @@ public class SqlService {
 
     public void createMysqlProject(String projectPath) throws Exception {
         String[] mysql = configurationService.getMysqlInfo(projectPath);
-//        CreateTable.createSql(mysql[0], GetEntityClass.getEntity(projectPath), projectPath + "_mysql/schema.sql");
+        CreateTable.createSql(mysql[0], GetEntityClass.getEntity(projectPath), projectPath + "_mysql/schema.sql");
 
         PrivilegesFile privilegesFile = new PrivilegesFile(projectPath + "_mysql", mysql[1], mysql[2], mysql[0]);
         privilegesFile.generate();
