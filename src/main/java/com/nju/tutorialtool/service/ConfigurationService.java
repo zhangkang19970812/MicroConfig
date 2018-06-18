@@ -71,9 +71,11 @@ public class ConfigurationService {
         String[] str = IO.readFromFile(file).split("\n");
         for (String s : str) {
             s = IO.deleteSpaces(s);
-            String[] c = s.split("=");
-            ConfigurationItem configurationItem = new ConfigurationItem(c[0], c[1]);
-            list.add(configurationItem);
+            if (s.contains("=")){
+                String[] c = s.split("=");
+                ConfigurationItem configurationItem = new ConfigurationItem(c[0], c[1]);
+                list.add(configurationItem);
+            }
         }
         return list;
     }
