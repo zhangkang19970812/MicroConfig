@@ -1,10 +1,5 @@
 package com.nju.tutorialtool.util.sql;
 
-import com.nju.tutorialtool.service.ConfigurationService;
-import com.nju.tutorialtool.service.CreateDockerfileService;
-import com.nju.tutorialtool.template.mysql.PrivilegesFile;
-import com.nju.tutorialtool.template.mysql.SetupShFile;
-
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

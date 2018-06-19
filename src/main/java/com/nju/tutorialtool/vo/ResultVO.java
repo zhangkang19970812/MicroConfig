@@ -1,8 +1,5 @@
 package com.nju.tutorialtool.vo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class ResultVO {
     private String message;
     private int result;

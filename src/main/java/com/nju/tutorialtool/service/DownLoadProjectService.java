@@ -1,17 +1,12 @@
 package com.nju.tutorialtool.service;
 
-import com.nju.tutorialtool.model.ServerInfo;
-import com.nju.tutorialtool.model.ServiceInfo;
 import com.nju.tutorialtool.util.downloadFile.FTPDownload;
 import com.nju.tutorialtool.util.enums.BaseDirConstant;
 import com.nju.tutorialtool.util.enums.ServerMessage;
 import com.nju.tutorialtool.util.ssh.RemoteExecuteCommand;
-import org.apache.catalina.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.InputStream;
 
 @Service

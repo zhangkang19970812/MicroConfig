@@ -1,12 +1,9 @@
 package com.nju.tutorialtool.service;
 
 import com.nju.tutorialtool.model.ServerInfo;
-import com.nju.tutorialtool.util.enums.BaseDirConstant;
 import com.nju.tutorialtool.util.uploadfile.ServerLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.File;
 
 @Service
 public class UploadService {

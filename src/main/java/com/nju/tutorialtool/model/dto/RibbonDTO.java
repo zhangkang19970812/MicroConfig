@@ -2,7 +2,10 @@ package com.nju.tutorialtool.model.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-import javax.persistence.*;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.List;
 
 /**

@@ -1,9 +1,10 @@
 package com.nju.tutorialtool.util.ssh;
 
-import ch.ethz.ssh2.*;
-import jdk.internal.util.xml.impl.Input;
+import ch.ethz.ssh2.Connection;
+import ch.ethz.ssh2.SCPClient;
+import ch.ethz.ssh2.Session;
+import ch.ethz.ssh2.StreamGobbler;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 
 import java.io.*;
 import java.util.logging.Level;

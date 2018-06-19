@@ -1,7 +1,6 @@
 package com.nju.tutorialtool.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.sun.javafx.beans.IDProperty;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

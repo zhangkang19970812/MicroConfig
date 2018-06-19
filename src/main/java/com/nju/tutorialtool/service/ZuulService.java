@@ -2,14 +2,8 @@ package com.nju.tutorialtool.service;
 
 import com.nju.tutorialtool.model.ProjectInfo;
 import com.nju.tutorialtool.model.SpringCloudInfo;
-import com.nju.tutorialtool.util.io.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.List;
 
 @Service
 public class ZuulService {

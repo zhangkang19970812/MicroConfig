@@ -1,18 +1,13 @@
 package com.nju.tutorialtool.service;
 
-import com.nju.tutorialtool.model.Column;
 import com.nju.tutorialtool.model.MysqlInfo;
-import com.nju.tutorialtool.model.Table;
 import com.nju.tutorialtool.template.mysql.PrivilegesFile;
 import com.nju.tutorialtool.template.mysql.SchemaFile;
 import com.nju.tutorialtool.template.mysql.SetupShFile;
-import com.nju.tutorialtool.util.enums.BaseDirConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CreateMysqlProjectService {

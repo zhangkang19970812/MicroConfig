@@ -1,8 +1,5 @@
 package com.nju.tutorialtool.model;
 
-import com.nju.tutorialtool.model.dto.RibbonDTO;
-import com.nju.tutorialtool.util.enums.BaseDirConstant;
-
 import java.util.List;
 
 public class Ribbon {

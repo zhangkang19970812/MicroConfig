@@ -1,12 +1,10 @@
 package com.nju.tutorialtool.service;
 
-import com.nju.tutorialtool.controller.ConfigurationController;
 import com.nju.tutorialtool.dao.ConfigurationDao;
 import com.nju.tutorialtool.dao.ConfigurationItemDao;
 import com.nju.tutorialtool.model.Configuration;
 import com.nju.tutorialtool.model.ConfigurationItem;
 import com.nju.tutorialtool.model.ServiceInfo;
-import com.nju.tutorialtool.util.enums.BaseDirConstant;
 import com.nju.tutorialtool.util.io.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ConfigurationService {

@@ -5,7 +5,6 @@ import com.nju.tutorialtool.model.Column;
 import com.nju.tutorialtool.model.Table;
 
 import java.util.List;
-import java.util.Map;
 
 public class SchemaFile extends SqlFile {
     private static final String FILE_NAME = "schema.sql";

@@ -1,6 +1,5 @@
 package com.nju.tutorialtool.controller;
 
-import com.nju.tutorialtool.model.ProjectInfo;
 import com.nju.tutorialtool.model.ServerInfo;
 import com.nju.tutorialtool.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;

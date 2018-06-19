@@ -1,6 +1,5 @@
 package com.nju.tutorialtool.service;
 
-import com.nju.tutorialtool.model.DockerfileInfo;
 import com.nju.tutorialtool.template.dockerfile.MysqlDockerfile;
 import com.nju.tutorialtool.template.dockerfile.ServiceDockerfile;
 import com.nju.tutorialtool.util.io.IO;

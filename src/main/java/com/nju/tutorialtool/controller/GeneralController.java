@@ -6,7 +6,6 @@ import com.nju.tutorialtool.model.dto.RibbonDTO;
 import com.nju.tutorialtool.service.*;
 import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
 import com.nju.tutorialtool.util.FileUtil;
-import com.nju.tutorialtool.util.enums.BaseDirConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

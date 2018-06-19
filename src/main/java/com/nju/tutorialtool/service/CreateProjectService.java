@@ -4,7 +4,6 @@ import com.nju.tutorialtool.model.ProjectInfo;
 import com.nju.tutorialtool.template.common.PomXmlResourceFile;
 import com.nju.tutorialtool.template.spring.ApplicationClassFile;
 import com.nju.tutorialtool.template.spring.ApplicationPropertiesResourceFile;
-import com.nju.tutorialtool.util.enums.BaseDirConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

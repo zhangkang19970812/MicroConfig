@@ -1,8 +1,5 @@
 package com.nju.tutorialtool.service.HystrixService;
 
-import com.nju.tutorialtool.service.HystrixService.AddMethods;
-
-import java.io.File;
 import java.io.IOException;
 
 /**

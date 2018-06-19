@@ -1,18 +1,10 @@
 package com.nju.tutorialtool.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.nju.tutorialtool.model.*;
-import com.nju.tutorialtool.model.dto.RibbonDTO;
-import com.nju.tutorialtool.util.FileUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.nju.tutorialtool.model.General;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 /**
  * @author Shenmiu
