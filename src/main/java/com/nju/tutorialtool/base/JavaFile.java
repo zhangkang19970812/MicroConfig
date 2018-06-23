@@ -107,200 +107,8 @@ public class JavaFile {
         //startWrite
         File file = makeJavaFile();
         FileWriter fileWriter = new FileWriter(file);
-        //initString
-        StringBuilder stringBuilder = new StringBuilder();
-        //ensureWritePackage
-        stringBuilder.append("package ");
-        stringBuilder.append(packagei);
-        stringBuilder.append(";\n\n");
-        //ensureWriteImport
-        if(imports != null) {
-            Iterator<String> iterator = imports.iterator();
-            while (iterator.hasNext()) {
-                stringBuilder.append("import ");
-                stringBuilder.append(iterator.next());
-                stringBuilder.append(";\n");
-            }
-        }
-        stringBuilder.append("\n");
-        //writeClassAnnotations
-        if(classAnnotations != null){
-            Iterator<String> iterator = classAnnotations.iterator();
-            while(iterator.hasNext()){
-            	stringBuilder.append("@");
-                stringBuilder.append(iterator.next());
-                stringBuilder.append("\n");
-            }
-        }
-        //ensureWriteClassStart
-        stringBuilder.append("public ");
-        stringBuilder.append(type);
-        stringBuilder.append(" ");
-        stringBuilder.append(name);
-        stringBuilder.append(" ");
-        //ensureWriteExtends
-        if(extendss != null) {
-	        Iterator<String> iterator = extendss.iterator();
-	        int count = 0;
-	        while(iterator.hasNext()) {
-	        	if(count==0) {
-	        		stringBuilder.append("extends ");
-	        	}else {
-	        		stringBuilder.append(",");
-	        	}
-	        	stringBuilder.append(iterator.next());
-	        	count++;
-	        }
-	        if(count > 0) {
-	        	stringBuilder.append(" ");
-	        }
-        }
-        //ensureWritesImplements
-        if(implementss != null) {
-	        Iterator<String> iterator = implementss.iterator();
-	        int count = 0;
-	        while(iterator.hasNext()) {
-	        	if(count==0) {
-	        		stringBuilder.append("implements ");
-	        	}else {
-	        		stringBuilder.append(",");
-	        	}
-	        	stringBuilder.append(iterator.next());
-	        	count++;
-	        }
-	        if(count > 0) {
-	        	stringBuilder.append(" ");
-	        }
-        }
-        stringBuilder.append("{\n");
-        //ensureWriteField
-        if(fields != null) {
-            Iterator<Field> iterator = fields.iterator();
-            while (iterator.hasNext()) {
-                Field field = iterator.next();
-                if(field.annotations!=null){
-                    Iterator<String> iteratorAnnotations = field.annotations.iterator();
-                    while(iteratorAnnotations.hasNext()) {
-                        stringBuilder.append("\t");
-                        stringBuilder.append("@");
-                        stringBuilder.append(iteratorAnnotations.next());
-                        stringBuilder.append("\n");
-                    }
-                }
-                if(field.modifier!=null){
-                    stringBuilder.append("\t");
-                    stringBuilder.append(field.modifier);
-                    stringBuilder.append(" ");
-                }
-                if(field.type!=null){
-                    stringBuilder.append(field.type);
-                    stringBuilder.append(" ");
-                }
-                if(field.name!=null){
-                    stringBuilder.append(field.name);
-                }
-                if(field.value!=null){
-                    stringBuilder.append(" = ");
-                    stringBuilder.append(field.value);
-                }
-                stringBuilder.append(";\n");
-            }
-        }
-        //ensureWriteMethod
-        if(type.equals("class")) {
-	        if(methods != null) {
-	            Iterator<Method> iterator = methods.iterator();
-	            while (iterator.hasNext()) {
-	                Method method = iterator.next();
-	                if(method.annotations!=null){
-	                    Iterator<String> iteratorAnnotations = method.annotations.iterator();
-	                    while(iteratorAnnotations.hasNext()) {
-	                        stringBuilder.append("\t");
-	                        stringBuilder.append("@");
-	                        stringBuilder.append(iteratorAnnotations.next());
-	                        stringBuilder.append("\n");
-	                    }
-	                }
-	                if(method.modifier!=null){
-	                    stringBuilder.append("\t");
-	                    stringBuilder.append(method.modifier);
-	                    stringBuilder.append(" ");
-	                }
-	                if(method.resultType!=null){
-	                    stringBuilder.append(method.resultType);
-	                    stringBuilder.append(" ");
-	                }
-	                if(method.name!=null){
-	                    stringBuilder.append(method.name);
-	                }
-	                stringBuilder.append("(");
-	                if(method.args!=null){
-	                    stringBuilder.append(method.args);
-	                }
-	                stringBuilder.append(")");
-	                if(method.exceptions!=null){
-	                    Iterator<String> iteratorExceptions = method.exceptions.iterator();
-	                    int count = 0;
-	                    while(iteratorExceptions.hasNext()) {
-	                        if(count == 0){
-	                            stringBuilder.append(" throws ");
-	                        }else{
-	                            stringBuilder.append(",");
-	                        }
-	                        stringBuilder.append(iteratorExceptions.next());
-	                        count++;
-	                    }
-	                }
-	                stringBuilder.append("{\n");
-	                if(method.methodBody!=null){
-	                    stringBuilder.append(method.methodBody);
-	                }
-	                stringBuilder.append("\t}\n");
-	            }
-	        }
-        }else if(type.equals("interface")) {
-	        if(methods != null) {
-	            Iterator<Method> iterator = methods.iterator();
-	            while (iterator.hasNext()) {
-	                Method method = iterator.next();
-	                if(method.modifier!=null){
-	                    stringBuilder.append("\t");
-	                    stringBuilder.append(method.modifier);
-	                    stringBuilder.append(" ");
-	                }
-	                if(method.resultType!=null){
-	                    stringBuilder.append(method.resultType);
-	                    stringBuilder.append(" ");
-	                }
-	                if(method.name!=null){
-	                    stringBuilder.append(method.name);
-	                    stringBuilder.append("(");
-	                }
-	                if(method.args!=null){
-	                    stringBuilder.append(method.args);
-	                    stringBuilder.append(")");
-	                }
-	                if(method.exceptions!=null){
-	                    Iterator<String> iteratorExceptions = method.exceptions.iterator();
-	                    int count = 0;
-	                    while(iteratorExceptions.hasNext()) {
-	                        if(count == 0){
-	                            stringBuilder.append(" throws ");
-	                        }else{
-	                            stringBuilder.append(",");
-	                        }
-	                        stringBuilder.append(iteratorExceptions.next());
-	                        count++;
-	                    }
-	                }
-	                stringBuilder.append(";\n");
-	            }
-	        }
-        }
-        //ensureWriteClassEnd
-        stringBuilder.append("}");
         //writeAll
-        fileWriter.write(stringBuilder.toString());
+        fileWriter.write(generateResource());
         //endWrite
         fileWriter.flush();
         fileWriter.close();
@@ -325,4 +133,205 @@ public class JavaFile {
         fileWriter.flush();
         fileWriter.close();
     }
+
+    public String generateResource() {
+		//initString
+		StringBuilder stringBuilder = new StringBuilder();
+		//ensureWritePackage
+		stringBuilder.append("package ");
+		stringBuilder.append(packagei);
+		stringBuilder.append(";\n\n");
+		//ensureWriteImport
+		if(imports != null) {
+			Iterator<String> iterator = imports.iterator();
+			while (iterator.hasNext()) {
+				stringBuilder.append("import ");
+				stringBuilder.append(iterator.next());
+				stringBuilder.append(";\n");
+			}
+		}
+		stringBuilder.append("\n");
+		//writeClassAnnotations
+		if(classAnnotations != null){
+			Iterator<String> iterator = classAnnotations.iterator();
+			while(iterator.hasNext()){
+				stringBuilder.append("@");
+				stringBuilder.append(iterator.next());
+				stringBuilder.append("\n");
+			}
+		}
+		//ensureWriteClassStart
+		stringBuilder.append("public ");
+		stringBuilder.append(type);
+		stringBuilder.append(" ");
+		stringBuilder.append(name);
+		stringBuilder.append(" ");
+		//ensureWriteExtends
+		if(extendss != null) {
+			Iterator<String> iterator = extendss.iterator();
+			int count = 0;
+			while(iterator.hasNext()) {
+				if(count==0) {
+					stringBuilder.append("extends ");
+				}else {
+					stringBuilder.append(",");
+				}
+				stringBuilder.append(iterator.next());
+				count++;
+			}
+			if(count > 0) {
+				stringBuilder.append(" ");
+			}
+		}
+		//ensureWritesImplements
+		if(implementss != null) {
+			Iterator<String> iterator = implementss.iterator();
+			int count = 0;
+			while(iterator.hasNext()) {
+				if(count==0) {
+					stringBuilder.append("implements ");
+				}else {
+					stringBuilder.append(",");
+				}
+				stringBuilder.append(iterator.next());
+				count++;
+			}
+			if(count > 0) {
+				stringBuilder.append(" ");
+			}
+		}
+		stringBuilder.append("{\n");
+		//ensureWriteField
+		if(fields != null) {
+			Iterator<Field> iterator = fields.iterator();
+			while (iterator.hasNext()) {
+				Field field = iterator.next();
+				if(field.annotations!=null){
+					Iterator<String> iteratorAnnotations = field.annotations.iterator();
+					while(iteratorAnnotations.hasNext()) {
+						stringBuilder.append("\t");
+						stringBuilder.append("@");
+						stringBuilder.append(iteratorAnnotations.next());
+						stringBuilder.append("\n");
+					}
+				}
+				if(field.modifier!=null){
+					stringBuilder.append("\t");
+					stringBuilder.append(field.modifier);
+					stringBuilder.append(" ");
+				}
+				if(field.type!=null){
+					stringBuilder.append(field.type);
+					stringBuilder.append(" ");
+				}
+				if(field.name!=null){
+					stringBuilder.append(field.name);
+				}
+				if(field.value!=null){
+					stringBuilder.append(" = ");
+					stringBuilder.append(field.value);
+				}
+				stringBuilder.append(";\n");
+			}
+		}
+		//ensureWriteMethod
+		if(type.equals("class")) {
+			if(methods != null) {
+				Iterator<Method> iterator = methods.iterator();
+				while (iterator.hasNext()) {
+					Method method = iterator.next();
+					if(method.annotations!=null){
+						Iterator<String> iteratorAnnotations = method.annotations.iterator();
+						while(iteratorAnnotations.hasNext()) {
+							stringBuilder.append("\t");
+							stringBuilder.append("@");
+							stringBuilder.append(iteratorAnnotations.next());
+							stringBuilder.append("\n");
+						}
+					}
+					if(method.modifier!=null){
+						stringBuilder.append("\t");
+						stringBuilder.append(method.modifier);
+						stringBuilder.append(" ");
+					}
+					if(method.resultType!=null){
+						stringBuilder.append(method.resultType);
+						stringBuilder.append(" ");
+					}
+					if(method.name!=null){
+						stringBuilder.append(method.name);
+					}
+					stringBuilder.append("(");
+					if(method.args!=null){
+						stringBuilder.append(method.args);
+					}
+					stringBuilder.append(")");
+					if(method.exceptions!=null){
+						Iterator<String> iteratorExceptions = method.exceptions.iterator();
+						int count = 0;
+						while(iteratorExceptions.hasNext()) {
+							if(count == 0){
+								stringBuilder.append(" throws ");
+							}else{
+								stringBuilder.append(",");
+							}
+							stringBuilder.append(iteratorExceptions.next());
+							count++;
+						}
+					}
+					stringBuilder.append("{\n");
+					if(method.methodBody!=null){
+						stringBuilder.append(method.methodBody);
+					}
+					stringBuilder.append("\t}\n");
+				}
+			}
+		}else if(type.equals("interface")) {
+			if(methods != null) {
+				Iterator<Method> iterator = methods.iterator();
+				while (iterator.hasNext()) {
+					Method method = iterator.next();
+					if(method.modifier!=null){
+						stringBuilder.append("\t");
+						stringBuilder.append(method.modifier);
+						stringBuilder.append(" ");
+					}
+					if(method.resultType!=null){
+						stringBuilder.append(method.resultType);
+						stringBuilder.append(" ");
+					}
+					if(method.name!=null){
+						stringBuilder.append(method.name);
+						stringBuilder.append("(");
+					}
+					if(method.args!=null){
+						stringBuilder.append(method.args);
+						stringBuilder.append(")");
+					}
+					if(method.exceptions!=null){
+						Iterator<String> iteratorExceptions = method.exceptions.iterator();
+						int count = 0;
+						while(iteratorExceptions.hasNext()) {
+							if(count == 0){
+								stringBuilder.append(" throws ");
+							}else{
+								stringBuilder.append(",");
+							}
+							stringBuilder.append(iteratorExceptions.next());
+							count++;
+						}
+					}
+					stringBuilder.append(";\n");
+				}
+			}
+		}
+		//ensureWriteClassEnd
+		stringBuilder.append("}");
+		return stringBuilder.toString();
+	}
+
+	public String getResource() {
+		init(generateResource());
+		return resource;
+	}
 }

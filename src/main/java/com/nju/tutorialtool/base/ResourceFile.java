@@ -15,6 +15,9 @@ public class ResourceFile {
 	protected void init(String resource) {
 		this.resource = resource;
 	}
+    public String getResource() {
+        return resource;
+    }
 	protected File makeResourceDir() throws Exception{
         File dir = new File(fileDir);
         if (!dir.exists()) {

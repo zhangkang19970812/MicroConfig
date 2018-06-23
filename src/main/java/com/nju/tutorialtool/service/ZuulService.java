@@ -18,6 +18,7 @@ public class ZuulService {
     public void createZuulProject(SpringCloudInfo springCloudInfo) {
         ProjectInfo projectInfo = new ProjectInfo(springCloudInfo);
         projectInfo.addDependency("zuul");
+        projectInfo.addDependency("eurekaDiscovery");
         createProjectService.createProject(projectInfo, "zuul");
     }
 
