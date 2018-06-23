@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Author YZ
  * @Date 2018/5/13
@@ -21,5 +24,10 @@ public class AddHystrixController {
     public boolean addHystrix(@RequestBody String url){
         addHystrixService.add(url);
         return true;
+    }
+
+    @RequestMapping(value = "/getMethods", method = RequestMethod.GET)
+    public Map<String,List<String>> getMethodNames(@RequestBody String url){
+        return addHystrixService.getMethodNames(url);
     }
 }

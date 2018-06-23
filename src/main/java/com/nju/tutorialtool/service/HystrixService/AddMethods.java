@@ -6,7 +6,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -27,6 +29,27 @@ public class AddMethods {
             modifyApplication(a);
         }
     }
+
+    /**
+     * 得到所有逻辑方法名称
+     * @param url
+     * @return
+     * @throws IOException
+     */
+    public Map<String,List<String>> getMethodNames(String url) throws IOException {
+        Map map=new HashMap();
+        List<String> result=new ArrayList<>();
+        List<File> controllers=findControllers.getAllControllers(url);
+        for(File f:controllers){
+            for(String s:getMethodsFromOne(f)) {
+                System.out.println(s);
+                result.add(s);
+            }
+        }
+        map.put(url,result);
+        return map;
+    }
+
 
     /**
      * 对项目的启动类添加断路器支持
@@ -56,6 +79,35 @@ public class AddMethods {
         String annotation="@EnableHystrix\n";
         insertAnnotation(annotationPointer,annotation,applicationFile);
     }
+
+    /**
+     * 得到一个controller中的逻辑方法
+     * @param controllerFile
+     * @return 返回该Controller文件中的逻辑方法名称
+     */
+    public List<String> getMethodsFromOne(File controllerFile) throws IOException {
+        List<String> list=new ArrayList<>();
+        RandomAccessFile raf=new RandomAccessFile(controllerFile,"r");
+        String line=null;
+
+        while((line=raf.readLine())!=null){
+            //找到方法所在的行数及代码
+            if(Pattern.matches(".*RequestMethod.*",line)){
+                String methodLine=raf.readLine();
+                if(!methodLine.contains("@HystrixCommand")) {
+                    List<String> splits = splitMethodLine(methodLine);
+                    String methodName = splits.get(2);
+                    list.add(methodName);
+                }else{
+                    String method=raf.readLine();
+                    List<String> ss=splitMethodLine(method);
+                    list.add(ss.get(2));
+                }
+            }
+        }
+        return list;
+    }
+
     /**
      * 对一个controller代码进行处理
      * @param controllerFile
@@ -110,9 +162,11 @@ public class AddMethods {
         }
         raf.close();
     }
+
     public static void main(String[]args) throws IOException {
         AddMethods ad=new AddMethods();
-        ad.addOnOneController(new File("TestController"));
+//        ad.addOnOneController(new File("TestController"));
+        ad.getMethodNames("/Users/YZ/Desktop/bff_service");
     }
 
     /**
