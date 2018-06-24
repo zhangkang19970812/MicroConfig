@@ -4,6 +4,7 @@ import com.nju.tutorialtool.dao.ConfigurationDao;
 import com.nju.tutorialtool.dao.ConfigurationItemDao;
 import com.nju.tutorialtool.model.Configuration;
 import com.nju.tutorialtool.model.ConfigurationItem;
+import com.nju.tutorialtool.model.PreviewInfo;
 import com.nju.tutorialtool.model.ServiceInfo;
 import com.nju.tutorialtool.util.io.IO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -23,6 +25,84 @@ public class ConfigurationService {
     private ConfigurationDao configurationDao;
     @Autowired
     private ConfigurationItemDao configurationItemDao;
+
+    /**
+     * 后台自动配置服务（默认）
+     * @param serviceInfo
+     */
+    public void editConfiguration(ServiceInfo serviceInfo) {
+        File file = IO.getFile(userService.getUserFolder() + File.separator + serviceInfo.getFolderName() + "/src/main/resources", "application.properties");
+        String[] str = IO.readFromFile(file).split("\n");
+        boolean ret = false;
+
+        for (String s : str) {
+            if ("spring.application.name".equals(s.split("=")[0])) {
+                IO.replaceFileStr(file, s, "spring.application.name=" + getSpringApplicationName(serviceInfo.getServiceName()));
+                ret = true;
+                break;
+            }
+        }
+        String items = "";
+        if (!ret) {
+            items = "spring.application.name=" + getSpringApplicationName(serviceInfo.getServiceName()) + "\n" +
+                    "eureka.client.service-url.defaultZone=http://eureka:8761/eureka/\n" +
+                    "eureka.instance.preferIpAddress=true";
+        }
+        else {
+           items = "eureka.client.service-url.defaultZone=http://eureka:8761/eureka/\n" +
+                    "eureka.instance.preferIpAddress=true";
+        }
+        IO.insertToEnd(file, items);
+    }
+
+    /**
+     * 根据服务名称生成服务的spring-application-name值
+     * @param serviceName
+     * @return
+     */
+    public String getSpringApplicationName(String serviceName) {
+        if (serviceName.contains("_")) {
+            return serviceName.replaceAll("_", "-");
+        }
+        return serviceName;
+    }
+
+    /**
+     * 得到某项目的配置文件中的定义的spring.application.name
+     * @param projectPath
+     * @return
+     */
+    public String getServiceName(String projectPath) {
+        File file = IO.getFile(projectPath + "/src/main/resources", "application.properties");
+        String[] str = IO.readFromFile(file).split("\n");
+        String name = "";
+        if(file.getName().contains("properties")) {
+            for (String s : str) {
+                s = IO.deleteSpaces(s);
+                if (s.contains("spring.application.name")) {
+                    name = s.substring(s.indexOf("=") + 1);
+                    break;
+                }
+            }
+        }
+        else {
+            int sret = 0, aret = 0;
+            for (String s : str) {
+                if (s.equals("spring:")) {
+                    sret = 1;
+                }
+                if (s.equals("application:") && sret == 1) {
+                    aret = 1;
+                }
+                if (s.equals("name:") && sret == 1 && aret == 1) {
+                    s = IO.deleteSpaces(s);
+                    name = s.substring(s.indexOf(":") + 1);
+                    break;
+                }
+            }
+        }
+        return name;
+    }
 
     /**
      * 修改某项目的配置文件
