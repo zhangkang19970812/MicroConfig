@@ -44,15 +44,37 @@ public class ConfigurationService {
         }
         String items = "";
         if (!ret) {
-            items = "spring.application.name=" + getSpringApplicationName(serviceInfo.getServiceName()) + "\n" +
-                    "eureka.client.service-url.defaultZone=http://eureka:8761/eureka/\n" +
-                    "eureka.instance.preferIpAddress=true";
+            items = getDefaultProperties(serviceInfo);
         }
         else {
            items = "eureka.client.service-url.defaultZone=http://eureka:8761/eureka/\n" +
                     "eureka.instance.preferIpAddress=true";
         }
         IO.insertToEnd(file, items);
+    }
+
+
+    /**
+     * 生成默认配置
+     * @return
+     */
+    public String getDefaultProperties(ServiceInfo serviceInfo) {
+        return "spring.application.name=" + getSpringApplicationName(serviceInfo.getServiceName()) + "\n" +
+                "eureka.client.service-url.defaultZone=http://eureka:8761/eureka/\n" +
+                "eureka.instance.preferIpAddress=true";
+    }
+
+    /**
+     * 生成默认配置,返回ConfigurationItem列表
+     * @param serviceInfo
+     * @return
+     */
+    public List<ConfigurationItem> getDefaultPropertiesItems(ServiceInfo serviceInfo) {
+        List<ConfigurationItem> list = new ArrayList<>();
+        for (String s : getDefaultProperties(serviceInfo).split("\n")) {
+            list.add(new ConfigurationItem(s.split("=")[0], s.split("=")[1]));
+        }
+        return list;
     }
 
     /**

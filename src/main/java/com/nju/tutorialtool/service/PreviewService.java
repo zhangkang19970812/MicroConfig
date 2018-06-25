@@ -250,10 +250,10 @@ public class PreviewService {
         return original.substring(0, index) + append + original.substring(index);
     }
 
-    public static void main(String[] args) {
-        String s = "abc";
-        s = s.replace("d", "a");
-        s = s.replace("a", "f");
-        System.out.println(s);
-    }
+//    public static void main(String[] args) {
+//        String s = "abc";
+//        s = s.replace("d", "a");
+//        s = s.replace("a", "f");
+//        System.out.println(s);
+//    }
 }

@@ -90,10 +90,11 @@ public class GeneralController {
             //存入数据库
             MysqlInfo mysqlInfo = new MysqlInfo(service.getFolderName() + "_mysql");
             service.setMysqlInfo(mysqlInfo);
-            for (ConfigurationItem configurationItem : service.getConfig().getList()) {
+            for (ConfigurationItem configurationItem : configurationService.getDefaultPropertiesItems(service)) {
                 configurationService.addConfigurationItem(configurationItem);
             }
-            configurationService.addConfiguration(service.getConfig());
+            Configuration serviceConfiguration = new Configuration(configurationService.getDefaultPropertiesItems(service));
+            configurationService.addConfiguration(serviceConfiguration);
             sqlService.addMysqlInfo(mysqlInfo);
             serviceDirMapService.addServiceDirMap(service);
 
@@ -112,7 +113,8 @@ public class GeneralController {
              * 服务相关
              */
             // config
-            configurationService.editConfiguration(serviceRootPath, service.getConfig().getList());
+            configurationService.editConfiguration(service);
+//            configurationService.editConfiguration(serviceRootPath, service.getConfig().getList());
 //            configurationService.editServicesMysqlConfigurations();
 
             // ribbon
