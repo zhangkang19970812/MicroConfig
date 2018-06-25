@@ -1,7 +1,5 @@
 package com.nju.tutorialtool.model;
 
-import com.nju.tutorialtool.service.PreviewFileInfo;
-
 import java.util.List;
 
 public class PreviewInfo {

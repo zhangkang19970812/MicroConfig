@@ -1,4 +1,4 @@
-package com.nju.tutorialtool.service;
+package com.nju.tutorialtool.model;
 
 import java.util.List;
 
