@@ -1,6 +1,7 @@
 package com.nju.tutorialtool.util.io;
 
 import com.nju.tutorialtool.util.DependencyConstant;
+import com.nju.tutorialtool.util.FileUtil;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -131,6 +132,21 @@ public class IO {
     }
 
     /**
+     * 获取某项目下的某文件
+     * @param path
+     * @param fileName
+     * @return
+     */
+    public static File getFileInProject(String path, String fileName) {
+        for (File file : getAllFiles(path)) {
+            if (file.getName().equals(fileName)) {
+                return file;
+            }
+        }
+        return null;
+    }
+
+    /**
      * 从文件读出内容
      *
      * @param file
@@ -241,16 +257,45 @@ public class IO {
         System.out.println("line number "+linenumber);
     }
 
+    public static void copyfile(File from,String to) throws IOException{
+        BufferedReader in=new BufferedReader(new FileReader(from));
+        BufferedWriter out=new BufferedWriter(new FileWriter(to));
+        String line=null;
+        int linenumber=0;
+        while((line=in.readLine())!=null){
+            out.write(line+"\n");
+            linenumber++;
+        }
+        in.close();
+        out.close();
+
+        System.out.println("line number "+linenumber);
+    }
+
+    /**
+     * 通过Entity注解获取实体类
+     * @param projectPath
+     * @return
+     */
+    public static List<File> getEntityClass(String projectPath) {
+        List<File> resList = new ArrayList<>();
+        List<File> list = getAllFiles(projectPath + "/src/main/java/");
+        for (File file : list) {
+            String content = readFromFile(file);
+            if (content.contains("@Entity")) {
+                resList.add(file);
+            }
+        }
+        return resList;
+    }
+
     public static String deleteSpaces(String s) {
         return s.replace(" ", "");
     }
 
-//    public static void main(String[] args) {
-//        File file = new File("H:/programs/web/tutorial-tool/src/main/resources/application.properties");
-//        String s = readFromFile(file);
-//        System.out.println(s);
-////        for (String c : str) {
-////            System.out.println(c);
-////        }
-//    }
+    public static void main(String[] args) throws IOException {
+        File file = new File("C:\\Users\\zk\\Desktop\\MSConfig\\pom.xml");
+        File newfile = new File("C:\\Users\\zk\\Desktop\\pom.xml");
+        System.out.println(IO.getFileInProject("C:\\Users\\zk\\Desktop\\MSConfig", "CORSConfig.java").getName());
+    }
 }

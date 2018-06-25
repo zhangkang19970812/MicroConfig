@@ -16,26 +16,38 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GetEntityClass {
+    private static String appendix = "./src/main/java/com/nju/tutorialtool/entity/";
+
     public static List<Class> getEntity(String projectPath) throws Exception {
         List<Class> list = new ArrayList<>();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = factory.newDocumentBuilder();
-        Document document = db.parse(new File(projectPath + "/src/main/resources/META-INF/persistence.xml"));
-
-        NodeList node = document.getElementsByTagName("class");
         File dirFile = new File("./src/main/java/com/nju/tutorialtool/entity");
         if (!dirFile.exists()) {
             dirFile.mkdirs();
         }
+        File file = IO.getFileInProject(projectPath, "persistence.xml");
+        if (file != null) {
+            Document document = db.parse(file);
+            NodeList node = document.getElementsByTagName("class");
 
-        for(int i=0;i<node.getLength();i++){
-            Element element = (Element)node.item(i);
-            String content = element.getFirstChild().getNodeValue();
-            String filePath = projectPath + "/src/main/java/" + replace(content) + ".java";
-            IO.copyfile(filePath, "./src/main/java/com/nju/tutorialtool/entity/" + getClassName(content) + ".java");
-            setPackage(content);
-            compiler("./src/main/java/com/nju/tutorialtool/entity/" + getClassName(content) + ".java");
-            list.add(Class.forName("com.nju.tutorialtool.entity." + getClassName(content)));
+            for(int i=0;i<node.getLength();i++){
+                Element element = (Element)node.item(i);
+                String content = element.getFirstChild().getNodeValue();
+                String filePath = projectPath + "/src/main/java/" + replace(content) + ".java";
+                IO.copyfile(filePath, appendix + getClassName(content) + ".java");
+                setPackage(appendix + getClassName(content) + ".java");
+                compiler(appendix + getClassName(content) + ".java");
+                list.add(Class.forName("com.nju.tutorialtool.entity." + getClassName(content)));
+            }
+        }
+        else {
+            for (File entityFile : IO.getEntityClass(projectPath)) {
+                IO.copyfile(entityFile, appendix + entityFile.getName());
+                setPackage(appendix + entityFile.getName());
+                compiler(appendix + entityFile.getName());
+                list.add(Class.forName("com.nju.tutorialtool.entity." + getClassAppendix(entityFile.getName())));
+            }
         }
         GitUtil.deleteFolder(new File("./src/main/java/com/nju/tutorialtool/entity/"));
         GitUtil.deleteFolder(new File("./target/classes/com/nju/tutorialtool/entity/"));
@@ -50,8 +62,12 @@ public class GetEntityClass {
         return content.substring(content.lastIndexOf(".") + 1);
     }
 
-    public static void setPackage(String content) {
-        File file = new File("./src/main/java/com/nju/tutorialtool/entity/" + getClassName(content) + ".java");
+    public static String getClassAppendix(String javaFile) {
+        return javaFile.substring(0, javaFile.indexOf("."));
+    }
+
+    public static void setPackage(String path) {
+        File file = new File(path);
         String[] classContents = IO.readFromFile(file).split("\n");
         for (String s : classContents) {
             if (s.startsWith("package ")) {
