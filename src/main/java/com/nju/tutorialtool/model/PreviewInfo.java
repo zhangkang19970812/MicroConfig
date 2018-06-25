@@ -1,21 +1,16 @@
 package com.nju.tutorialtool.model;
 
+import com.nju.tutorialtool.service.PreviewFileInfo;
+
 import java.util.List;
 
 public class PreviewInfo {
     private String serviceName;
-    private String fileName;
-    private String fileContent;
-    /**
-     * 需要高亮的行数列表
-     */
-    private List<Integer> linesList;
+    private List<PreviewFileInfo> fileInfoList;
 
-    public PreviewInfo(String serviceName, String fileName, String fileContent, List<Integer> linesList) {
+    public PreviewInfo(String serviceName, List<PreviewFileInfo> fileInfoList) {
         this.serviceName = serviceName;
-        this.fileName = fileName;
-        this.fileContent = fileContent;
-        this.linesList = linesList;
+        this.fileInfoList = fileInfoList;
     }
 
     public String getServiceName() {
@@ -26,27 +21,11 @@ public class PreviewInfo {
         this.serviceName = serviceName;
     }
 
-    public String getFileName() {
-        return fileName;
+    public List<PreviewFileInfo> getFileInfoList() {
+        return fileInfoList;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getFileContent() {
-        return fileContent;
-    }
-
-    public void setFileContent(String fileContent) {
-        this.fileContent = fileContent;
-    }
-
-    public List<Integer> getLinesList() {
-        return linesList;
-    }
-
-    public void setLinesList(List<Integer> linesList) {
-        this.linesList = linesList;
+    public void setFileInfoList(List<PreviewFileInfo> fileInfoList) {
+        this.fileInfoList = fileInfoList;
     }
 }

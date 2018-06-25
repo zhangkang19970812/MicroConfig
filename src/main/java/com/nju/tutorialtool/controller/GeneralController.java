@@ -83,6 +83,25 @@ public class GeneralController {
             serviceDirMapService.addServiceDirMap(new ServiceInfo(zuulName, zuulName, zConfiguration));
         }
 
+        // ribbon
+        if (general.isRibbon()) {
+            for (RibbonDTO ribbonDTO  : general.getRibbonDTOList()) {
+                String consumerDir = service2folder.get(ribbonDTO.getConsumer());
+                ribbonService.addRibbon(getProjectPath(consumerDir));
+
+                List<String> providersDir = ribbonDTO.getProviders().stream()
+                        .map(service2folder::get)
+                        .collect(Collectors.toList());
+                List<String> providersPath = new ArrayList<>();
+
+//                Ribbon ribbon = new Ribbon(consumerPath, providersPath);
+                for (String s : providersDir) {
+                    providersPath.add(getProjectPath(s));
+                }
+                ribbonService.replaceUrl(getProjectPath(consumerDir), providersPath);
+            }
+        }
+
         for (ServiceInfo service : services) {
 
             String serviceRootPath = userService.getUserFolder() + File.separator + service.getFolderName();
@@ -117,26 +136,11 @@ public class GeneralController {
 //            configurationService.editConfiguration(serviceRootPath, service.getConfig().getList());
 //            configurationService.editServicesMysqlConfigurations();
 
-            // ribbon
-            if (general.isRibbon()) {
-                ribbonService.addRibbon(serviceRootPath);
-                RibbonDTO ribbonDTO = general.getRibbonDTO();
-
-                String consumerDir = service2folder.get(ribbonDTO.getConsumer());
-                List<String> providersDir = ribbonDTO.getProviders().stream()
-                        .map(service2folder::get)
-                        .collect(Collectors.toList());
-                List<String> providersPath = new ArrayList<>();
-
-//                Ribbon ribbon = new Ribbon(consumerPath, providersPath);
-                for (String s : providersDir) {
-                    providersPath.add(getProjectPath(s));
-                }
-                ribbonService.replaceUrl(getProjectPath(consumerDir), providersPath);
+            // 创建mysql(要检查是否该服务配置了mysql)
+            if (configurationService.checkMysql(serviceRootPath)) {
+                sqlService.createMysqlProject(serviceRootPath);
+                serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getFolderName() + "_mysql", service.getFolderName() + "_mysql"));
             }
-
-            sqlService.createMysqlProject(serviceRootPath);
-            serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getFolderName() + "_mysql", service.getFolderName() + "_mysql"));
 //            createMysqlProjectService.createMysqlProject(service.getMysqlInfo());
 //            serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getMysqlInfo().getProjectName(), service.getMysqlInfo().getProjectName()));
 

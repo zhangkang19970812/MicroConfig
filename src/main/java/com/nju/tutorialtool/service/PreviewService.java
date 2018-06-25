@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,9 +28,10 @@ public class PreviewService {
 
     public List<PreviewInfo> getEurekaInfo(SpringCloudInfo springCloudInfo, List<ServiceInfo> serviceInfoList) {
         List<PreviewInfo> list = new ArrayList<>();
-        list.addAll(getInfo(springCloudInfo, "eurekaServer"));
+        list.add(getInfo(springCloudInfo, "eurekaServer"));
 
         for (ServiceInfo serviceInfo : serviceInfoList) {
+            List<PreviewFileInfo> fileInfoList = new ArrayList<>();
             List<String> dependencies = new ArrayList<>();
             dependencies.add("eurekaDiscovery");
 
@@ -61,8 +61,7 @@ public class PreviewService {
                     findAnnotationPointer = true;
                 }
             }
-            PreviewInfo servicePreview = new PreviewInfo(serviceInfo.getServiceName(), applicationFile.getName(), newContents, new ArrayList<>(Arrays.asList(importCount, annotationCount)));
-            list.add(servicePreview);
+            fileInfoList.add(new PreviewFileInfo(applicationFile.getName(), newContents, new ArrayList<>(Arrays.asList(importCount, annotationCount))));
 
             //pom文件添加依赖
             File file = IO.getFile(getProjectPath(serviceInfo.getFolderName()), "pom.xml");
@@ -82,8 +81,7 @@ public class PreviewService {
                     break;
                 }
             }
-            servicePreview = new PreviewInfo(serviceInfo.getServiceName(), "pom.xml", newContents, getLineList(dependencyCount, dependencyCount + 3));
-            list.add(servicePreview);
+            fileInfoList.add(new PreviewFileInfo("pom.xml", newContents, getLineList(dependencyCount, dependencyCount + 3)));
 
             //配置文件修改
             File proFile = IO.getFile(getProjectPath(serviceInfo.getFolderName()) + "/src/main/resources", "application.properties");
@@ -102,43 +100,40 @@ public class PreviewService {
                 }
                 str += "eureka.client.service-url.defaultZone=http://eureka:8761/eureka/\n" +
                         "eureka.instance.preferIpAddress=true";
-                servicePreview = new PreviewInfo(serviceInfo.getServiceName(), "application.properties", str, new ArrayList<>(Arrays.asList(springCount, fileLines + 1, fileLines + 2)));
-                list.add(servicePreview);
+                fileInfoList.add(new PreviewFileInfo("application.properties", str, new ArrayList<>(Arrays.asList(springCount, fileLines + 1, fileLines + 2))));
             }
             else {
                 str += "spring.application.name=" + configurationService.getSpringApplicationName(serviceInfo.getServiceName()) + "\n" +
                         "eureka.client.service-url.defaultZone=http://eureka:8761/eureka/\n" +
                         "eureka.instance.preferIpAddress=true";
-                servicePreview = new PreviewInfo(serviceInfo.getServiceName(), "application.properties", str, getLineList(fileLines + 1, fileLines + 3));
-                list.add(servicePreview);
+                fileInfoList.add(new PreviewFileInfo("application.properties", str, getLineList(fileLines + 1, fileLines + 3)));
             }
+
+            list.add(new PreviewInfo(serviceInfo.getServiceName(), fileInfoList));
         }
 
         return list;
     }
 
-    public List<PreviewInfo> getZuulInfo(SpringCloudInfo springCloudInfo) {
+    public PreviewInfo getZuulInfo(SpringCloudInfo springCloudInfo) {
         return getInfo(springCloudInfo, "zuul");
     }
 
-    private List<PreviewInfo> getInfo(SpringCloudInfo springCloudInfo, String type) {
-        List<PreviewInfo> list = new ArrayList<>();
+    private PreviewInfo getInfo(SpringCloudInfo springCloudInfo, String type) {
+        List<PreviewFileInfo> list = new ArrayList<>();
         ProjectInfo projectInfo = new ProjectInfo(springCloudInfo);
         projectInfo.addDependency(type);
 
         PomXmlResourceFile pxrf = new PomXmlResourceFile("", projectInfo.getGroupId(), projectInfo.getArtifactId(), projectInfo.getDependencies());
-        PreviewInfo pomPreview = new PreviewInfo(projectInfo.getArtifactId(), "pom.xml", pxrf.getResource(), getLineList(32, ("eurekaServer".equals(type)) ? 35 : 39));
-        list.add(pomPreview);
+        list.add(new PreviewFileInfo("pom.xml", pxrf.getResource(), getLineList(32, ("eurekaServer".equals(type)) ? 35 : 39)));
 
         ApplicationPropertiesResourceFile ayrf = new ApplicationPropertiesResourceFile("", type);
-        PreviewInfo proPreview = new PreviewInfo(projectInfo.getArtifactId(), "application.properties", ayrf.getResource(), getLineList(1, ("eurekaServer".equals(type)) ? 4 : 3));
-        list.add(proPreview);
+        list.add(new PreviewFileInfo("application.properties", ayrf.getResource(), getLineList(1, ("eurekaServer".equals(type)) ? 4 : 3)));
 
         ApplicationClassFile acf = new ApplicationClassFile("", toPackage(projectInfo.getGroupId() + "/" + projectInfo.getArtifactId()), projectInfo.getDependencies());
-        PreviewInfo appPreview = new PreviewInfo(projectInfo.getArtifactId(), "Application.java", acf.getResource(), getLineList(7, 13));
-        list.add(appPreview);
+        list.add(new PreviewFileInfo("Application.java", acf.getResource(), getLineList(7, 13)));
 
-        return list;
+        return new PreviewInfo(projectInfo.getArtifactId(), list);
     }
 
     public List<PreviewInfo> getRibbonInfo(List<RibbonDTO> ribbonDTOList, List<ServiceInfo> serviceInfoList) {
@@ -147,6 +142,8 @@ public class PreviewService {
                 .collect(Collectors.toMap(ServiceInfo::getServiceName, ServiceInfo::getFolderName));
 
         for (RibbonDTO ribbonDTO : ribbonDTOList) {
+            List<PreviewFileInfo> fileInfoList = new ArrayList<>();
+
             //添加Ribbon注解
             File applicationFile = IO.getApplication(getProjectPath(service2folder.get(ribbonDTO.getConsumer())));
             String contents = IO.readFromFile(applicationFile);
@@ -174,8 +171,7 @@ public class PreviewService {
                     }
                 }
             }
-            PreviewInfo servicePreview = new PreviewInfo(ribbonDTO.getConsumer(), applicationFile.getName(), newContents, new ArrayList<>(Arrays.asList(importCount, annotationCount)));
-            list.add(servicePreview);
+            fileInfoList.add(new PreviewFileInfo(applicationFile.getName(), newContents, new ArrayList<>(Arrays.asList(importCount, annotationCount))));
 
             //替换调用的url
             List<File> fileList = IO.getAllFiles(getProjectPath(service2folder.get(ribbonDTO.getConsumer())) + "/src/main/java/");
@@ -210,11 +206,11 @@ public class PreviewService {
                     }
                 }
                 if (ret) {
-                    PreviewInfo urlPreview = new PreviewInfo(ribbonDTO.getConsumer(), file.getName(), str, countList);
-                    list.add(urlPreview);
+                    fileInfoList.add(new PreviewFileInfo(file.getName(), str, countList));
                 }
 
             }
+            list.add(new PreviewInfo(ribbonDTO.getConsumer(), fileInfoList));
         }
 
         return list;

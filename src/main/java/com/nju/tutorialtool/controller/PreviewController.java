@@ -36,12 +36,12 @@ public class PreviewController {
     }
 
     @PostMapping("/zuul")
-    public List<PreviewInfo> getZuulInfo(@RequestBody SpringCloudInfo springCloudInfo) {
+    public PreviewInfo getZuulInfo(@RequestBody SpringCloudInfo springCloudInfo) {
         return previewService.getZuulInfo(springCloudInfo);
     }
 
     /**
-     * 参数ribbonDTOList是一个包含一个消费者，多个提供者的列表（因为微服务系统中会有多个消费者）
+     * 参数ribbonDTOList是包含多个消费者，每个消费者又有多个提供者的列表（因为微服务系统中会有多个消费者）
      * @param ribbonDTOList
      * @param serviceInfoList
      * @return

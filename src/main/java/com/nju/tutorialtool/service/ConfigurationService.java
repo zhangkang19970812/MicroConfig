@@ -198,6 +198,16 @@ public class ConfigurationService {
         return "";
     }
 
+    public boolean checkMysql(String projectPath) {
+        List<ConfigurationItem> list = getConfigurations(projectPath);
+        for (ConfigurationItem configurationItem : list) {
+            if ("spring.datasource.url".equals(configurationItem.getItemName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * 返回某服务的配置项中数据库名称，用户，密码
      * @param projectPath

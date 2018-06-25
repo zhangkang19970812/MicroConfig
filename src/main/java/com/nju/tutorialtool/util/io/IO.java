@@ -293,9 +293,9 @@ public class IO {
         return s.replace(" ", "");
     }
 
-    public static void main(String[] args) throws IOException {
-        File file = new File("C:\\Users\\zk\\Desktop\\MSConfig\\pom.xml");
-        File newfile = new File("C:\\Users\\zk\\Desktop\\pom.xml");
-        System.out.println(IO.getFileInProject("C:\\Users\\zk\\Desktop\\MSConfig", "CORSConfig.java").getName());
-    }
+//    public static void main(String[] args) throws IOException {
+//        File file = new File("C:\\Users\\zk\\Desktop\\MSConfig\\pom.xml");
+//        File newfile = new File("C:\\Users\\zk\\Desktop\\pom.xml");
+//        System.out.println(IO.getFileInProject("C:\\Users\\zk\\Desktop\\MSConfig", "CORSConfig.java").getName());
+//    }
 }

@@ -43,9 +43,9 @@ public class General {
     /**
      * RibbonDTO
      */
-    @JSONField(name = "ribbon")
-    @OneToOne
-    private RibbonDTO ribbonDTO;
+//    @JSONField(name = "ribbon")
+    @OneToMany
+    private List<RibbonDTO> ribbonDTOList;
 
     /**
      * 是否含有hystrix
@@ -131,12 +131,12 @@ public class General {
         this.eurekaServerInfo = eurekaServerInfo;
     }
 
-    public RibbonDTO getRibbonDTO() {
-        return ribbonDTO;
+    public List<RibbonDTO> getRibbonDTOList() {
+        return ribbonDTOList;
     }
 
-    public void setRibbonDTO(RibbonDTO ribbonDTO) {
-        this.ribbonDTO = ribbonDTO;
+    public void setRibbonDTOList(List<RibbonDTO> ribbonDTOList) {
+        this.ribbonDTOList = ribbonDTOList;
     }
 
     public SpringCloudInfo getZuulInfo() {
