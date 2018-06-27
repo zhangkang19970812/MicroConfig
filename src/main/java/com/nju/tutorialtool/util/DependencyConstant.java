@@ -35,6 +35,15 @@ public class DependencyConstant {
             "\t\t\t<groupId>org.springframework.boot</groupId>\r\n" +
             "\t\t\t<artifactId>spring-boot-starter-amqp</artifactId>\r\n" +
             "\t\t</dependency>\r\n";
+    public static String springCloud = "<dependencies>\n" +
+            "\t\t\t<dependency>\n" +
+            "\t\t\t\t<groupId>org.springframework.cloud</groupId>\n" +
+            "\t\t\t\t<artifactId>spring-cloud-dependencies</artifactId>\n" +
+            "\t\t\t\t<version>Edgware.RELEASE</version>\n" +
+            "\t\t\t\t<type>pom</type>\n" +
+            "\t\t\t\t<scope>import</scope>\n" +
+            "\t\t\t</dependency>\n" +
+            "\t\t</dependencies>\n";
 
     private static String getDependency(String name) {
         String res = "";
@@ -59,6 +68,9 @@ public class DependencyConstant {
                 break;
             case "rabbitMQ":
                 res = rabbitMQ;
+                break;
+            case "springCloud":
+                res = springCloud;
                 break;
         }
         return res;

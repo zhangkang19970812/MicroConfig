@@ -1,5 +1,6 @@
 package com.nju.tutorialtool.util.git;
 
+import com.nju.tutorialtool.util.io.IO;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -95,10 +96,11 @@ public class GitUtil {
         remoteAddCommand.call();
     }
 
-//    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 //        GitUtil.clone("https://github.com/zhangkang19970812/test", "C:/Users/zk/Desktop/test");
-//        GitUtil.commitAndPush("C:/Users/zk/Desktop/test/.git","zhangkang19970812", "zhang19970812");
+        GitUtil.commitAndPush("C:/Users/zk/Desktop/test/.git","zhangkang19970812", "zhang19970812");
 //        GitUtil.addRemoteRepo();
 //        System.out.println("1");
-//    }
+
+    }
 }

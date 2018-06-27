@@ -5,6 +5,7 @@ import com.nju.tutorialtool.util.FileUtil;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -195,12 +196,53 @@ public class IO {
         try {
             raf = new RandomAccessFile(file, "rw");
             String line = null;
+            boolean findDependency = false, findDependencies = false, findSpringCloud = false, findDependencyManagement = false;
+            long dependencyPointer = 0, dependenciesPointer = 0, managementPointer = 0;
             while ((line = raf.readLine()) != null) {
-                if (line.contains("</dependency>")) {
-                    long pointer = raf.getFilePointer();
-                    String annotation = "\n"+ DependencyConstant.getDependencies(dependencyList);
-                    IO.insert(pointer, annotation, file);
+                if (line.contains("</dependency>") && !findDependency) {
+                    dependencyPointer = raf.getFilePointer();
+//                    String annotation = "\n"+ DependencyConstant.getDependencies(dependencyList);
+//                    IO.insert(pointer, annotation, file);
+                    findDependency = true;
+                }
+                if (line.contains("</dependencies>") && !findDependencies) {
+                    dependenciesPointer = raf.getFilePointer();
+                    findDependencies = true;
+                }
+                if (line.contains("<dependencyManagement>") && !findDependencyManagement) {
+                    managementPointer = raf.getFilePointer();
+                    findDependencyManagement = true;
+                }
+                if (line.contains("<artifactId>spring-cloud-dependencies</artifactId>")) {
+                    findSpringCloud = true;
                     break;
+                }
+            }
+            if (!findSpringCloud) {
+//                raf = new RandomAccessFile(file, "rw");
+                if (!findDependencyManagement) {
+                    String annotation = "\n    <dependencyManagement>\n"+ DependencyConstant.getDependencies(new ArrayList<>(Arrays.asList("springCloud"))) + "    </dependencyManagement>\n";
+                    IO.insert(dependenciesPointer, annotation, file);
+//                    while ((line = raf.readLine()) != null) {
+//                        if (line.contains("</dependencies>")) {
+//                            long pointer1 = raf.getFilePointer();
+//                            String annotation1 = "\n    <dependencyManagement>\n"+ DependencyConstant.getDependencies(new ArrayList<>(Arrays.asList("springCloud"))) + "    </dependencyManagement>\n";
+//                            IO.insert(pointer1, annotation1, file);
+//                            break;
+//                        }
+//                    }
+                }
+                else {
+                    String annotation = "\n"+ DependencyConstant.getDependencies(new ArrayList<>(Arrays.asList("springCloud")));
+                    IO.insert(managementPointer, annotation, file);
+//                    while ((line = raf.readLine()) != null) {
+//                        if (line.contains("<dependencyManagement>")) {
+//                            long pointer1 = raf.getFilePointer();
+//                            String annotation1 = "\n"+ DependencyConstant.getDependencies(new ArrayList<>(Arrays.asList("springCloud")));
+//                            IO.insert(pointer1, annotation1, file);
+//                            break;
+//                        }
+//                    }
                 }
             }
         } catch (IOException e) {
