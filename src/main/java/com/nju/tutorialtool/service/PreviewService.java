@@ -26,9 +26,12 @@ public class PreviewService {
     @Autowired
     private ConfigurationService configurationService;
 
-    public List<PreviewInfo> getEurekaInfo(SpringCloudInfo springCloudInfo, List<ServiceInfo> serviceInfoList) {
+    public PreviewInfo getEurekaServerInfo(SpringCloudInfo springCloudInfo) {
+        return getInfo(springCloudInfo, "eurekaServer");
+    }
+
+    public List<PreviewInfo> getEurekaClientInfo(List<ServiceInfo> serviceInfoList) {
         List<PreviewInfo> list = new ArrayList<>();
-        list.add(getInfo(springCloudInfo, "eurekaServer"));
 
         for (ServiceInfo serviceInfo : serviceInfoList) {
             List<PreviewFileInfo> fileInfoList = new ArrayList<>();

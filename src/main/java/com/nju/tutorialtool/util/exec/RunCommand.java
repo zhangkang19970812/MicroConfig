@@ -8,9 +8,9 @@ public class RunCommand {
         return (!osName.contains("Windows"));
     }
 
-    public static void main(String[] args) {
-        runCommand("F:\\account_service", "mvn clean package -Dmaven.test.skip=true", "mvn clean package -Dmaven.test.skip=true");
-    }
+//    public static void main(String[] args) {
+//        runCommand("F:\\account_service", "mvn clean package -Dmaven.test.skip=true", "mvn clean package -Dmaven.test.skip=true");
+//    }
 
     public static void runCommand(String path, String windowsCommand, String linuxCommand) {
         try {

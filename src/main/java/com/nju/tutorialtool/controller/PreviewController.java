@@ -1,8 +1,6 @@
 package com.nju.tutorialtool.controller;
 
-import com.nju.tutorialtool.model.PreviewInfo;
-import com.nju.tutorialtool.model.ServiceInfo;
-import com.nju.tutorialtool.model.SpringCloudInfo;
+import com.nju.tutorialtool.model.*;
 import com.nju.tutorialtool.model.dto.RibbonDTO;
 import com.nju.tutorialtool.service.PreviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +22,22 @@ public class PreviewController {
     private PreviewService previewService;
 
     /**
-     * 参数springCloudInfo包含groupId，artifactId
-     * serviceInfoList包含所有服务的服务名称和文件夹名称
+     * 生成eureka Server的overview
      * @param springCloudInfo
+     * @return
+     */
+    public PreviewInfo getEurekaServerInfo(@RequestBody SpringCloudInfo springCloudInfo) {
+        return previewService.getEurekaServerInfo(springCloudInfo);
+    }
+
+    /**
+     * serviceInfoList包含所有服务的服务名称和文件夹名称
      * @param serviceInfoList
      * @return
      */
     @PostMapping("/eureka")
-    public List<PreviewInfo> getEurekaInfo(@RequestBody SpringCloudInfo springCloudInfo, @RequestBody List<ServiceInfo> serviceInfoList) {
-        return previewService.getEurekaInfo(springCloudInfo, serviceInfoList);
+    public List<PreviewInfo> getEurekaClientInfo(@RequestBody ServiceInfoList serviceInfoList) {
+        return previewService.getEurekaClientInfo(serviceInfoList.getServiceInfoList());
     }
 
     @PostMapping("/zuul")
@@ -41,13 +46,13 @@ public class PreviewController {
     }
 
     /**
-     * 参数ribbonDTOList是包含多个消费者，每个消费者又有多个提供者的列表（因为微服务系统中会有多个消费者）
-     * @param ribbonDTOList
+     * 参数ribbont是包含多个消费者，每个消费者又有多个提供者的列表（因为微服务系统中会有多个消费者）
+     * @param ribbon
      * @param serviceInfoList
      * @return
      */
     @PostMapping("/ribbon")
-    public List<PreviewInfo> getRibbonInfo(List<RibbonDTO> ribbonDTOList, List<ServiceInfo> serviceInfoList) {
-        return previewService.getRibbonInfo(ribbonDTOList, serviceInfoList);
+    public List<PreviewInfo> getRibbonInfo(@RequestBody Ribbon ribbon, @RequestBody ServiceInfoList serviceInfoList) {
+        return previewService.getRibbonInfo(ribbon.getRibbonDTOList(), serviceInfoList.getServiceInfoList());
     }
 }

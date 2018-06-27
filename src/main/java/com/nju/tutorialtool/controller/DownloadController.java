@@ -20,29 +20,30 @@ public class DownloadController {
     private DownLoadProjectService downLoadProjectService;
 
 //    @RequestMapping(value = "/download", method = RequestMethod.GET)
-//    ResponseEntity<InputStreamResource> downloadFile() throws Exception {
-//        InputStream inputStream = downLoadProjectService.downloadProject(new ServerInfo("114.115.137.102", "root", "stk0123STK0123", "", ""), "account_service", "H:/programs/spark");
-////        FileSystemResource file = new FileSystemResource(filePath);
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-//        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", "account_service.zip"));
-//        headers.add("Pragma", "no-cache");
-//        headers.add("Expires", "0");
-//
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        InputStreamResource inputStreamResource = objectMapper.readValue(inputStream, InputStreamResource.class);
-//
-//        return ResponseEntity
-//                .ok()
-//                .headers(headers)
-//                .contentLength(inputStream.available())
-//                .contentType(MediaType.parseMediaType("application/octet-stream"))
-//                .body(inputStreamResource);
-//    }
+////    ResponseEntity<InputStreamResource> downloadFile() throws Exception {
+////        InputStream inputStream = downLoadProjectService.downloadProject(new ServerInfo("114.115.137.102", "root", "stk0123STK0123", "", ""), "account_service", "H:/programs/spark");
+//////        FileSystemResource file = new FileSystemResource(filePath);
+////        HttpHeaders headers = new HttpHeaders();
+////        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+////        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", "account_service.zip"));
+////        headers.add("Pragma", "no-cache");
+////        headers.add("Expires", "0");
+////
+////        ObjectMapper objectMapper = new ObjectMapper();
+////        InputStreamResource inputStreamResource = objectMapper.readValue(inputStream, InputStreamResource.class);
+////
+////        return ResponseEntity
+////                .ok()
+////                .headers(headers)
+////                .contentLength(inputStream.available())
+////                .contentType(MediaType.parseMediaType("application/octet-stream"))
+////                .body(inputStreamResource);
+////    }
 
     @RequestMapping(value="/download", method=RequestMethod.GET)
     public void getDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        InputStream inputStream = downLoadProjectService.downloadProjects();
+//        InputStream inputStream = downLoadProjectService.downloadProjects();
+        InputStream inputStream = downLoadProjectService.getDownload();
         ServletContext context = request.getServletContext();
 
         // get MIME type of the file
