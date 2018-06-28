@@ -27,6 +27,7 @@ public class PreviewController {
      * @param springCloudInfo
      * @return
      */
+    @PostMapping("/eurekaServer")
     public PreviewInfo getEurekaServerInfo(@RequestBody SpringCloudInfo springCloudInfo) {
         return previewService.getEurekaServerInfo(springCloudInfo);
     }
@@ -36,7 +37,7 @@ public class PreviewController {
      * @param serviceInfoList
      * @return
      */
-    @PostMapping("/eureka")
+    @PostMapping("/eurekaClient")
     public List<PreviewInfo> getEurekaClientInfo(@RequestBody ServiceInfoList serviceInfoList) {
         return previewService.getEurekaClientInfo(serviceInfoList.getServiceInfoList());
     }

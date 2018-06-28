@@ -19,6 +19,6 @@ public class HystrixTest {
 
     @Test
     public void testMethodNames(){
-        addHystrixService.getMethodNames("/Users/YZ/Desktop/bff_service");
+//        addHystrixService.getMethodNames("/Users/YZ/Desktop/bff_service");
     }
 }
