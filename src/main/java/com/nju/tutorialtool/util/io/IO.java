@@ -201,8 +201,8 @@ public class IO {
             while ((line = raf.readLine()) != null) {
                 if (line.contains("</dependency>") && !findDependency) {
                     dependencyPointer = raf.getFilePointer();
-//                    String annotation = "\n"+ DependencyConstant.getDependencies(dependencyList);
-//                    IO.insert(pointer, annotation, file);
+                    String annotation = "\n"+ DependencyConstant.getDependencies(dependencyList);
+                    IO.insert(dependencyPointer, annotation, file);
                     findDependency = true;
                 }
                 if (line.contains("</dependencies>") && !findDependencies) {
@@ -219,30 +219,13 @@ public class IO {
                 }
             }
             if (!findSpringCloud) {
-//                raf = new RandomAccessFile(file, "rw");
                 if (!findDependencyManagement) {
                     String annotation = "\n    <dependencyManagement>\n"+ DependencyConstant.getDependencies(new ArrayList<>(Arrays.asList("springCloud"))) + "    </dependencyManagement>\n";
                     IO.insert(dependenciesPointer, annotation, file);
-//                    while ((line = raf.readLine()) != null) {
-//                        if (line.contains("</dependencies>")) {
-//                            long pointer1 = raf.getFilePointer();
-//                            String annotation1 = "\n    <dependencyManagement>\n"+ DependencyConstant.getDependencies(new ArrayList<>(Arrays.asList("springCloud"))) + "    </dependencyManagement>\n";
-//                            IO.insert(pointer1, annotation1, file);
-//                            break;
-//                        }
-//                    }
                 }
                 else {
                     String annotation = "\n"+ DependencyConstant.getDependencies(new ArrayList<>(Arrays.asList("springCloud")));
                     IO.insert(managementPointer, annotation, file);
-//                    while ((line = raf.readLine()) != null) {
-//                        if (line.contains("<dependencyManagement>")) {
-//                            long pointer1 = raf.getFilePointer();
-//                            String annotation1 = "\n"+ DependencyConstant.getDependencies(new ArrayList<>(Arrays.asList("springCloud")));
-//                            IO.insert(pointer1, annotation1, file);
-//                            break;
-//                        }
-//                    }
                 }
             }
         } catch (IOException e) {
