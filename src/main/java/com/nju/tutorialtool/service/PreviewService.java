@@ -255,4 +255,9 @@ public class PreviewService {
 //        s = s.replace("a", "f");
 //        System.out.println(s);
 //    }
+
+    public List<PreviewInfo> getHystrixInfo(ServiceInfoList serviceInfoList, Map<String,List<String>> methodsMap){
+        List<PreviewInfo> result=new ArrayList<>();
+        return result;
+    }
 }

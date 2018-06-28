@@ -1,6 +1,11 @@
 package com.nju.tutorialtool.service.HystrixService;
 
+import com.nju.tutorialtool.model.ServiceInfo;
+import com.nju.tutorialtool.model.ServiceInfoList;
+import com.nju.tutorialtool.service.UserService;
 import com.nju.tutorialtool.util.io.IO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +20,11 @@ import java.util.regex.Pattern;
  * @Author YZ
  * @Date 2018/5/11
  */
+@Service
 public class AddMethods {
+    @Autowired
+    private UserService userService;
+
     //针对某一个Controller进行改写
     FindControllers findControllers=new FindControllers();
     public void addMethods(String url, Map<String,List<String>> methods) throws IOException {
@@ -36,21 +45,25 @@ public class AddMethods {
 
     /**
      * 得到所有逻辑方法名称
-     * @param url
+     * @param serviceInfoList
      * @return
      * @throws IOException
      */
-    public Map<String,List<String>> getMethodNames(String url) throws IOException {
+    public Map<String,List<String>> getMethodNames(ServiceInfoList serviceInfoList) throws IOException {
         Map map=new HashMap();
         List<String> result=new ArrayList<>();
-        List<File> controllers=findControllers.getAllControllers(url);
-        for(File f:controllers){
-            for(String s:getMethodsFromOne(f)) {
-                System.out.println(s);
-                result.add(s);
+
+        for (ServiceInfo service : serviceInfoList.getServiceInfoList()) {
+            String serviceRootPath = userService.getUserFolder() + File.separator + service.getFolderName();
+            List<File> controllers = findControllers.getAllControllers(serviceRootPath);
+            for (File f : controllers) {
+                for (String s : getMethodsFromOne(f)) {
+                    System.out.println(s);
+                    result.add(s);
+                }
             }
+            map.put(serviceRootPath, result);
         }
-        map.put(url,result);
         return map;
     }
 
@@ -170,7 +183,7 @@ public class AddMethods {
     public static void main(String[]args) throws IOException {
         AddMethods ad=new AddMethods();
 //        ad.addOnOneController(new File("TestController"));
-        ad.getMethodNames("/Users/YZ/Desktop/bff_service");
+//        ad.getMethodNames("/Users/YZ/Desktop/bff_service");
     }
 
     /**

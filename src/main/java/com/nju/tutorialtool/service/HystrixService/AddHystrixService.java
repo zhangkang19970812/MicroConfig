@@ -1,5 +1,6 @@
 package com.nju.tutorialtool.service.HystrixService;
 
+import com.nju.tutorialtool.model.ServiceInfoList;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,10 +23,10 @@ public class AddHystrixService {
         }
     }
 
-    public Map<String,List<String>> getMethodNames(String url) {
+    public Map<String,List<String>> getMethodNames(ServiceInfoList serviceInfoList) {
         Map<String,List<String>> result=new HashMap<>();
         try {
-            result = addMethods.getMethodNames(url);
+            result = addMethods.getMethodNames(serviceInfoList);
         } catch (IOException e) {
             e.printStackTrace();
         }

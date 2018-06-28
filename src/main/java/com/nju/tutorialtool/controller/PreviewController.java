@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 方法都是返回一个PreviewInfo列表
@@ -53,6 +54,11 @@ public class PreviewController {
     @PostMapping("/ribbon")
     public List<PreviewInfo> getRibbonInfo(@RequestBody Ribbon ribbon) {
         return previewService.getRibbonInfo(ribbon.getRibbonDTOList(), ribbon.getServiceInfoList());
+    }
+
+    @PostMapping("/hystrix")
+    public List<PreviewInfo> getHystrixInfo(@RequestBody ServiceInfoList serviceInfoList, @RequestBody Map<String,List<String>> methodsMap){
+        return previewService.getHystrixInfo(serviceInfoList,methodsMap);
     }
 
 }
