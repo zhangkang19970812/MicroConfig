@@ -11,18 +11,13 @@ import java.util.Map;
  * @Author YZ
  * @Date 2018/5/20
  */
-@Entity
 public class General {
 
-    @Id
-    @GeneratedValue
-    @JSONField(deserialize = false)
     private Long id;
 
     /**
      * Map：服务名称，文件夹名称
      */
-    @OneToMany
     private List<ServiceInfo> services;
 
     /**
@@ -33,7 +28,7 @@ public class General {
     /**
      * 包含创建eureka server的信息
      */
-    @OneToOne
+
     private SpringCloudInfo eurekaServerInfo;
 
     /**
@@ -45,7 +40,7 @@ public class General {
      * RibbonDTO
      */
 //    @JSONField(name = "ribbon")
-    @OneToMany
+
     private List<RibbonDTO> ribbonDTOList;
 
     /**
@@ -61,19 +56,20 @@ public class General {
     /**
      * 创建zuul的信息
      */
-    @OneToOne
+
     private SpringCloudInfo zuulInfo;
 
     /**
      * 创建docker-compose.yml所需信息
      */
-    @OneToOne
+
     private ComposeInfo composeInfo;
 
     /**
      * 指定方法添加熔断，key=某个service，value=该service中需要添加熔断的方法名称
      */
-    private Map<String,List<String>> methods;
+
+    private Map<String, List<String>> methods;
 
     public Map<String, List<String>> getMethods() {
         return methods;

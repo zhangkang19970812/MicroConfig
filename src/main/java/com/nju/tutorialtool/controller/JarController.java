@@ -14,7 +14,7 @@ public class JarController {
     private GenerateJarService generateJarService;
 
     @RequestMapping(value = "/generate", method = RequestMethod.POST)
-    public boolean generateJar(String projectPath) {
+    public boolean generateJar(String projectPath) throws Exception {
         generateJarService.generateJar(projectPath);
         return true;
     }

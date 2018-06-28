@@ -46,14 +46,13 @@ public class PreviewController {
     }
 
     /**
-     * 参数ribbont是包含多个消费者，每个消费者又有多个提供者的列表（因为微服务系统中会有多个消费者）
+     * 参数ribbont是包含多个消费者，每个消费者又有多个提供者的列表（因为微服务系统中会有多个消费者），还包括一个ServiceInfo列表
      * @param ribbon
-     * @param serviceInfoList
      * @return
      */
     @PostMapping("/ribbon")
-    public List<PreviewInfo> getRibbonInfo(@RequestBody Ribbon ribbon, @RequestBody ServiceInfoList serviceInfoList) {
-        return previewService.getRibbonInfo(ribbon.getRibbonDTOList(), serviceInfoList.getServiceInfoList());
+    public List<PreviewInfo> getRibbonInfo(@RequestBody Ribbon ribbon) {
+        return previewService.getRibbonInfo(ribbon.getRibbonDTOList(), ribbon.getServiceInfoList());
     }
 
 }
