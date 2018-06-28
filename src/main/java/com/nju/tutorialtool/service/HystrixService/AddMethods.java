@@ -1,5 +1,6 @@
 package com.nju.tutorialtool.service.HystrixService;
 
+import com.nju.tutorialtool.model.HystrixMethod;
 import com.nju.tutorialtool.model.ServiceInfo;
 import com.nju.tutorialtool.model.ServiceInfoList;
 import com.nju.tutorialtool.service.UserService;
@@ -49,22 +50,27 @@ public class AddMethods {
      * @return
      * @throws IOException
      */
-    public Map<String,List<String>> getMethodNames(ServiceInfoList serviceInfoList) throws IOException {
-        Map map=new HashMap();
-        List<String> result=new ArrayList<>();
+    public List<HystrixMethod> getMethodNames(ServiceInfoList serviceInfoList) throws IOException {
+        List<HystrixMethod> result=new ArrayList<>();
+        List<String> methods=new ArrayList<>();
 
         for (ServiceInfo service : serviceInfoList.getServiceInfoList()) {
             String serviceRootPath = userService.getUserFolder() + File.separator + service.getFolderName();
+            HystrixMethod hystrixMethod=new HystrixMethod();
+
             List<File> controllers = findControllers.getAllControllers(serviceRootPath);
             for (File f : controllers) {
                 for (String s : getMethodsFromOne(f)) {
                     System.out.println(s);
-                    result.add(s);
+                    methods.add(s);
                 }
+                hystrixMethod.setServiceName(serviceRootPath);
+                hystrixMethod.setControllerName(f.getName());
+                hystrixMethod.setMethodNames(methods);
             }
-            map.put(serviceRootPath, result);
+            result.add(hystrixMethod);
         }
-        return map;
+        return result;
     }
 
 

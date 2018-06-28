@@ -58,8 +58,8 @@ public class PreviewController {
     }
 
     @PostMapping("/hystrix")
-    public List<PreviewInfo> getHystrixInfo(@RequestBody ServiceInfoList serviceInfoList, @RequestBody Map<String,List<String>> methodsMap){
-        return previewService.getHystrixInfo(serviceInfoList,methodsMap);
+    public List<PreviewInfo> getHystrixInfo(@RequestBody PreviewHystrix previewHystrix){
+        return previewService.getHystrixInfo(previewHystrix.getServiceInfoList(),previewHystrix.getMethodsMap());
     }
 
 }

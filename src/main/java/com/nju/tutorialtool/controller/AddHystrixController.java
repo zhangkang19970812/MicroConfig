@@ -1,5 +1,6 @@
 package com.nju.tutorialtool.controller;
 
+import com.nju.tutorialtool.model.HystrixMethod;
 import com.nju.tutorialtool.model.ServiceInfoList;
 import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class AddHystrixController {
     }
 
     @RequestMapping(value = "/getMethods", method = RequestMethod.GET)
-    public Map<String,List<String>> getMethodNames(@RequestBody ServiceInfoList serviceInfoList){
+    public List<HystrixMethod> getMethodNames(@RequestBody ServiceInfoList serviceInfoList){
         return addHystrixService.getMethodNames(serviceInfoList);
     }
 }

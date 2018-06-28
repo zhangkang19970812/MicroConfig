@@ -1,9 +1,11 @@
 package com.nju.tutorialtool.service.HystrixService;
 
+import com.nju.tutorialtool.model.HystrixMethod;
 import com.nju.tutorialtool.model.ServiceInfoList;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +25,8 @@ public class AddHystrixService {
         }
     }
 
-    public Map<String,List<String>> getMethodNames(ServiceInfoList serviceInfoList) {
-        Map<String,List<String>> result=new HashMap<>();
+    public List<HystrixMethod> getMethodNames(ServiceInfoList serviceInfoList) {
+        List<HystrixMethod> result=new ArrayList<>();
         try {
             result = addMethods.getMethodNames(serviceInfoList);
         } catch (IOException e) {

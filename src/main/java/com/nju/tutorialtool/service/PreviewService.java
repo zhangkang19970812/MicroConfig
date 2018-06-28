@@ -11,10 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -256,8 +260,129 @@ public class PreviewService {
 //        System.out.println(s);
 //    }
 
-    public List<PreviewInfo> getHystrixInfo(ServiceInfoList serviceInfoList, Map<String,List<String>> methodsMap){
+    public List<PreviewInfo> getHystrixInfo(ServiceInfoList serviceInfoList, Map<String,List<String>> methodsMap) {
         List<PreviewInfo> result=new ArrayList<>();
+        List<ServiceInfo> serviceInfos=serviceInfoList.getServiceInfoList();
+        for(ServiceInfo info:serviceInfos){
+            List<PreviewFileInfo> servicePreview=new ArrayList<>();
+            String servicePath=getProjectPath(info.getFolderName());
+            //下面对一个service进行处理
+            if(methodsMap.containsKey(servicePath)){
+                List<String> serviceMethods=methodsMap.get(servicePath);
+                List<File> controllers=getAllControllers(servicePath);
+                for(File controllerFile:controllers){
+                    List<String> methods=getMethodsFromOne(controllerFile);
+                    for(String s:methods){
+                        //是要加fallback的方法
+                        if(serviceMethods.contains(s)){
+
+                        }
+                    }
+                }
+            }
+        }
         return result;
     }
+
+    static List<File> controllerFiles=new ArrayList<>();
+
+    /**
+     * 得到某个service目录下所有的controller文件
+     * @param url
+     * @return
+     */
+    public List<File> getAllControllers(String url){
+        List<File> files=new ArrayList<>();
+        getAllFiles(url);
+        String pattern=".*Controller\\.java";
+        for(File f:controllerFiles){
+            if(Pattern.matches(pattern,f.getName())){
+                files.add(f);
+            }
+        }
+        return files;
+    }
+    /**
+     * 已知目录，得到下面所有文件名.java
+     * @param url
+     * @return
+     */
+    public static List<File> getAllFiles(String url){
+        List<File> files=new ArrayList<>();
+        File file=new File(url);
+        File[] files1=file.listFiles();
+        if(files1==null){
+            return files;
+        }
+        for(File f:files1){
+            if(f.isFile() && Pattern.matches(".*java",f.getName())){
+                files.add(f);
+            }else if(f.isDirectory()){
+                getAllFiles(f.getAbsolutePath());
+            }
+        }
+        return files;
+    }
+
+    /**
+     * 得到一个Controller文件中的所有方法名
+     * @param f
+     * @return
+     * @throws IOException
+     */
+    public List<String> getMethodsFromOne(File f) {
+        List<String> result=new ArrayList<>();
+        RandomAccessFile raf= null;
+        try {
+            raf = new RandomAccessFile(f,"rw");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String line=null;
+        String lastLine=null;
+
+        try {
+            while((line=raf.readLine())!=null){
+                lastLine=line;
+                if(Pattern.matches(".*RequestMethod.*",line)){
+                    String methodLine=raf.readLine();
+                    if(!methodLine.contains("@HystrixCommand")) {
+                        List<String> splits = splitMethodLine(methodLine);
+                        String methodName = splits.get(2);
+                        result.add(methodName);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(result);
+        return result;
+    }
+    /**
+     * 得到方法中的片段
+     * @param methodLine
+     * @return
+     */
+    public static List<String> splitMethodLine(String methodLine){
+        List<String> result=new ArrayList<>();
+        int space=0;
+        for(int i=0;i<methodLine.length();i++){
+            if(result.size()==0 && methodLine.charAt(i)==' '){
+                space++;
+            }
+            if(methodLine.charAt(i)!=' '){
+                String news=methodLine.charAt(i)+"";
+                while(i<methodLine.length()-1 && methodLine.charAt(++i)!=' ' && methodLine.charAt(i)!='(' && methodLine.charAt(i)!=')'){
+                    news+=methodLine.charAt(i);
+                }
+                result.add(news);
+            }
+        }
+        result.add(space+"");
+        return result;
+    }
+
+
 }
+
