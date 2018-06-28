@@ -1,16 +1,15 @@
 package com.nju.tutorialtool.util.exec;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RunCommand {
     public static boolean isLinux() {
         String osName = System.getProperty("os.name");
         return (!osName.contains("Windows"));
     }
-
-//    public static void main(String[] args) {
-//        runCommand("F:\\account_service", "mvn clean package -Dmaven.test.skip=true", "mvn clean package -Dmaven.test.skip=true");
-//    }
 
     public static void runCommand(String path, String windowsCommand, String linuxCommand) {
         try {
@@ -21,9 +20,10 @@ public class RunCommand {
                 cmd[2] = path.substring(0, path.indexOf(":") + 1) + " && cd " + path + " && " + windowsCommand;
             }
             else {
-                cmd[0] = "/bin/bash";
-                cmd[1] = "/C";
-                cmd[2] = "cd " + path + " && " + linuxCommand;
+                String cd = "cd " + path;
+                System.out.println(path);
+                executeNewFlow(new ArrayList<>(Arrays.asList(cd, linuxCommand)));
+                return;
             }
             Runtime runtime=Runtime.getRuntime();
 //            runtime.exec("cd "+ projectPath +" && mvn clean package -Dmaven.test.skip=true");
@@ -42,6 +42,37 @@ public class RunCommand {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<String> executeNewFlow(List<String> commands) {
+        List<String> rspList = new ArrayList<String>();
+        Runtime run = Runtime.getRuntime();
+        try {
+            Process proc = run.exec("/bin/bash", null, null);
+            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(proc.getOutputStream())), true);
+            for (String line : commands) {
+                out.println(line);
+            }
+            // out.println("cd /home/test");
+            // out.println("pwd");
+            // out.println("rm -fr /home/proxy.log");
+            out.println("exit");// 这个命令必须执行，否则in流不结束。
+            String rspLine = "";
+            while ((rspLine = in.readLine()) != null) {
+                System.out.println(rspLine);
+                rspList.add(rspLine);
+            }
+            proc.waitFor();
+            in.close();
+            out.close();
+            proc.destroy();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return rspList;
     }
 
     /**

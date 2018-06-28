@@ -4,6 +4,7 @@ import com.nju.tutorialtool.service.GenerateJarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -14,7 +15,7 @@ public class JarController {
     private GenerateJarService generateJarService;
 
     @RequestMapping(value = "/generate", method = RequestMethod.POST)
-    public boolean generateJar(String projectPath) throws Exception {
+    public boolean generateJar(@RequestParam("projectPath")String projectPath) {
         generateJarService.generateJar(projectPath);
         return true;
     }

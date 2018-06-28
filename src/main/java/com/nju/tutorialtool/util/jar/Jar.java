@@ -11,7 +11,4 @@ public class Jar {
         RunCommand.runCommand(projectPath, "mvn clean package -Dmaven.test.skip=true", "mvn clean package -Dmaven.test.skip=true");
     }
 
-//    public static void main(String[] args) {
-//        execCMD("C:/Users/zk/Desktop/test/account_service");
-//    }
 }

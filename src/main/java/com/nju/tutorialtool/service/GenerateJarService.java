@@ -38,35 +38,40 @@ public class GenerateJarService {
             "\t\t\t</resource>\n" +
             "\t\t</resources>\n";
 
-    public void generateJar(String projectPath) throws IOException {
+    public void generateJar(String projectPath) {
         addPre(projectPath);
         Jar.execCMD(projectPath);
     }
 
-    public void addPre(String projectPath) throws IOException {
-        File file = new File(projectPath + "/pom.xml");
-        RandomAccessFile raf=new RandomAccessFile(file,"rw");
-        String line=null;
-        boolean findBuild = false, findDependencies = false;
-        long buildPointer = 0, dependenciesPointer = 0;
-        while((line=raf.readLine())!=null){
-            if (line.contains("</dependencies>") && !findDependencies) {
-                dependenciesPointer = raf.getFilePointer();
-                findDependencies = true;
+    public void addPre(String projectPath) {
+        try {
+            File file = new File(projectPath + "/pom.xml");
+            RandomAccessFile raf=new RandomAccessFile(file,"rw");
+            String line=null;
+            boolean findBuild = false, findDependencies = false;
+            long buildPointer = 0, dependenciesPointer = 0;
+            while((line=raf.readLine())!=null){
+                if (line.contains("</dependencies>") && !findDependencies) {
+                    dependenciesPointer = raf.getFilePointer();
+                    findDependencies = true;
+                }
+                if (line.contains("<build>")) {
+                    buildPointer = raf.getFilePointer();
+                    findBuild = true;
+                    break;
+                }
             }
-            if (line.contains("<build>")) {
-                buildPointer = raf.getFilePointer();
-                findBuild = true;
-                break;
+            if (!findBuild) {
+                String addbuild = "\n    <build>\n" + build + "    </build>";
+                IO.insert(dependenciesPointer, addbuild, file);
             }
+            else {
+                IO.insert(buildPointer, build, file);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        if (!findBuild) {
-            String addbuild = "\n    <build>\n" + build + "    </build>";
-            IO.insert(dependenciesPointer, addbuild, file);
-        }
-        else {
-            IO.insert(buildPointer, build, file);
-        }
+
     }
 
     public String getServiceName(String projectPath) {
