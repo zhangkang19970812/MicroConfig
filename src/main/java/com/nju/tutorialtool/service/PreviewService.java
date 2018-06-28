@@ -14,10 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -275,13 +272,82 @@ public class PreviewService {
                     for(String s:methods){
                         //是要加fallback的方法
                         if(serviceMethods.contains(s)){
+                            PreviewFileInfo fileInfo=new PreviewFileInfo(controllerFile.getName(),getMethodContent(controllerFile,s),new ArrayList<>(1));
+                            servicePreview.add(fileInfo);
+                        }
+                    }
 
+                }
+            }
+            PreviewInfo previewInfo=new PreviewInfo(info.getServiceName(),servicePreview);
+            result.add(previewInfo);
+        }
+        return result;
+    }
+
+    /**
+     * 已知controller文件名称和方法名称，返回修改过的代码片段
+     * @param controllerFile
+     * @param methodName
+     * @return
+     */
+    public String getMethodContent(File controllerFile, String methodName){
+        String content="";
+        Stack s=new Stack();
+        RandomAccessFile raf= null;
+        try {
+            raf = new RandomAccessFile(controllerFile,"rw");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String line=null;
+        String lastLine=null;
+
+        int o=0;
+        try {
+            while((line=raf.readLine())!=null){
+                lastLine=line;
+                if(Pattern.matches(".*RequestMethod.*",line)){
+                    content+=line;
+                    content+='\n';
+
+                    String methodLine=raf.readLine();
+                    if(!methodLine.contains("@HystrixCommand")) {
+                        List<String> splits = splitMethodLine(methodLine);
+                        String method = splits.get(2);
+                        if (method.equals(methodName)){
+                            s.push("{");
+                            content+=methodLine;
+                            content+='\n';
+
+                            while(!s.isEmpty()){
+                                line=raf.readLine();
+                                if (!line.equals("")) {
+
+                                    if (line.contains("{")) {
+                                        s.push('{');
+                                    }
+                                    if (line.contains("}") && !s.isEmpty()) {
+                                        s.pop();
+                                    }
+                                    content += line;
+                                    content += '\n';
+                                }
+                            }
+                            o=1;
                         }
                     }
                 }
+//                break;
+                if (o==1){
+                    break;
+                }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return result;
+        System.out.println(content);
+        return content;
     }
 
     static List<File> controllerFiles=new ArrayList<>();
