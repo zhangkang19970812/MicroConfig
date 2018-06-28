@@ -1,6 +1,6 @@
 package com.nju.tutorialtool.service.HystrixService;
 
-import java.io.IOException;
+import com.nju.tutorialtool.service.AddMethods;
 
 /**
  * @Author YZ

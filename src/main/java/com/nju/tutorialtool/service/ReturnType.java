@@ -1,4 +1,4 @@
-package com.nju.tutorialtool.service.HystrixService;
+package com.nju.tutorialtool.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,7 +16,7 @@ public class ReturnType {
         String code="return new "+type+"(";
         RandomAccessFile raf= null;
 
-        for(File file:FindControllers.vos){
+        for(File file: FindControllers.vos){
             if((file.getName().substring(0,file.getName().indexOf('.'))).equals(type)){
                 try {
                     raf=new RandomAccessFile(file,"r");
@@ -34,7 +34,7 @@ public class ReturnType {
             while((line=raf.readLine())!=null){
                 //找到方法所在的行数及代码
                 if(line.contains("public "+type+"(")){
-                    List<String> s=AddMethods.splitMethodLine(line);
+                    List<String> s= AddMethods.splitMethodLine(line);
                     for(String tmp:s){
                         if(tmp.equals("String")){
                             code+="\"默认字符串\",";

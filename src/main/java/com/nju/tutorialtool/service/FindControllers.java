@@ -1,4 +1,4 @@
-package com.nju.tutorialtool.service.HystrixService;
+package com.nju.tutorialtool.service;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,12 +1,12 @@
-package com.nju.tutorialtool.service.HystrixService;
+package com.nju.tutorialtool.service;
 
 import com.nju.tutorialtool.model.HystrixMethod;
 import com.nju.tutorialtool.model.ServiceInfoList;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +16,8 @@ import java.util.Map;
  */
 @Service
 public class AddHystrixService {
+    @Autowired
+    private UserService userService;
     AddMethods addMethods=new AddMethods();
     public void add(String url,Map<String,List<String>> methods){
         try {
@@ -28,7 +30,8 @@ public class AddHystrixService {
     public List<HystrixMethod> getMethodNames(ServiceInfoList serviceInfoList) {
         List<HystrixMethod> result=new ArrayList<>();
         try {
-            result = addMethods.getMethodNames(serviceInfoList);
+            System.out.println(userService.getUserFolder());
+            result = addMethods.getMethodNames(serviceInfoList,userService.getUserFolder());
         } catch (IOException e) {
             e.printStackTrace();
         }

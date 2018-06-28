@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.nju.tutorialtool.model.*;
 import com.nju.tutorialtool.model.dto.RibbonDTO;
 import com.nju.tutorialtool.service.*;
-import com.nju.tutorialtool.service.HystrixService.AddHystrixService;
+import com.nju.tutorialtool.service.AddHystrixService;
 import com.nju.tutorialtool.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

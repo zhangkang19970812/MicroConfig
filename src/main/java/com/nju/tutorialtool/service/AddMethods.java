@@ -1,9 +1,8 @@
-package com.nju.tutorialtool.service.HystrixService;
+package com.nju.tutorialtool.service;
 
 import com.nju.tutorialtool.model.HystrixMethod;
 import com.nju.tutorialtool.model.ServiceInfo;
 import com.nju.tutorialtool.model.ServiceInfoList;
-import com.nju.tutorialtool.service.UserService;
 import com.nju.tutorialtool.util.io.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -23,8 +21,6 @@ import java.util.regex.Pattern;
  */
 @Service
 public class AddMethods {
-    @Autowired
-    private UserService userService;
 
     //针对某一个Controller进行改写
     FindControllers findControllers=new FindControllers();
@@ -50,14 +46,17 @@ public class AddMethods {
      * @return
      * @throws IOException
      */
-    public List<HystrixMethod> getMethodNames(ServiceInfoList serviceInfoList) throws IOException {
+    public List<HystrixMethod> getMethodNames(ServiceInfoList serviceInfoList,String urlPre) throws IOException {
+        System.out.println("参数:"+serviceInfoList);
         List<HystrixMethod> result=new ArrayList<>();
         List<String> methods=new ArrayList<>();
 
+        System.out.println(urlPre);
         for (ServiceInfo service : serviceInfoList.getServiceInfoList()) {
-            String serviceRootPath = userService.getUserFolder() + File.separator + service.getFolderName();
+            String serviceRootPath = urlPre + File.separator + service.getFolderName();
             HystrixMethod hystrixMethod=new HystrixMethod();
 
+            System.out.println("路径:"+serviceRootPath);
             List<File> controllers = findControllers.getAllControllers(serviceRootPath);
             for (File f : controllers) {
                 for (String s : getMethodsFromOne(f)) {
