@@ -21,8 +21,8 @@ public class AddHystrixController {
     private AddHystrixService addHystrixService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public boolean addHystrix(@RequestBody String url){
-        addHystrixService.add(url);
+    public boolean addHystrix(@RequestBody String url, Map<String,List<String>> map){
+        addHystrixService.add(url,map);
         return true;
     }
 

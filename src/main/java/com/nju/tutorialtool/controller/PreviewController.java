@@ -56,5 +56,4 @@ public class PreviewController {
         return previewService.getRibbonInfo(ribbon.getRibbonDTOList(), serviceInfoList.getServiceInfoList());
     }
 
-
 }
