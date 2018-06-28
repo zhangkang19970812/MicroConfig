@@ -2,6 +2,7 @@ package com.nju.tutorialtool.service;
 
 import com.nju.tutorialtool.util.io.IO;
 import com.nju.tutorialtool.util.jar.Jar;
+import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -37,8 +38,8 @@ public class GenerateJarService {
             "\t\t\t</resource>\n" +
             "\t\t</resources>\n";
 
-    public void generateJar(String projectPath) {
-
+    public void generateJar(String projectPath) throws IOException {
+        addPre(projectPath);
         Jar.execCMD(projectPath);
     }
 
@@ -46,21 +47,26 @@ public class GenerateJarService {
         File file = new File(projectPath + "/pom.xml");
         RandomAccessFile raf=new RandomAccessFile(file,"rw");
         String line=null;
-        boolean findBuild = false;
-        long pointer = 0;
+        boolean findBuild = false, findDependencies = false;
+        long buildPointer = 0, dependenciesPointer = 0;
         while((line=raf.readLine())!=null){
+            if (line.contains("</dependencies>") && !findDependencies) {
+                dependenciesPointer = raf.getFilePointer();
+                findDependencies = true;
+            }
             if (line.contains("<build>")) {
-                pointer = raf.getFilePointer();
-                IO.insert(pointer, build, file);
+                buildPointer = raf.getFilePointer();
                 findBuild = true;
                 break;
             }
         }
         if (!findBuild) {
-
+            String addbuild = "\n    <build>\n" + build + "    </build>";
+            IO.insert(dependenciesPointer, addbuild, file);
         }
-        String importPackage = "import org.springframework.cloud.client.loadbalancer.LoadBalanced;\n";
-//        IO.insert(importPointer, importPackage, applicationFile);
+        else {
+            IO.insert(buildPointer, build, file);
+        }
     }
 
     public String getServiceName(String projectPath) {

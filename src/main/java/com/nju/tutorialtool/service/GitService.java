@@ -2,6 +2,7 @@ package com.nju.tutorialtool.service;
 
 import com.nju.tutorialtool.model.ServiceInfo;
 import com.nju.tutorialtool.util.git.GitUtil;
+import com.nju.tutorialtool.util.io.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,21 @@ public class GitService {
     }
 
     public void pushToGithub(String username, String password) throws Exception {
+        removeIgnoreTarget();
         GitUtil.commitAndPush(userService.getUserFolder() + File.separator + ".git", username, password);
+    }
+
+    public void removeIgnoreTarget() {
+        for (ServiceInfo serviceInfo : getAllService()) {
+            File file = new File(userService.getUserFolder() + File.separator + serviceInfo.getFolderName() + File.separator + ".gitignore");
+            String str = IO.readFromFile(file);
+            if (str.contains("/target/")) {
+                IO.replaceFileStr(file, "/target/", "");
+            }
+            else if (str.contains("target/")) {
+                IO.replaceFileStr(file, "target/", "");
+            }
+        }
     }
 
     public List<ServiceInfo> getAllService() {
