@@ -14,9 +14,9 @@ import java.util.Map;
 @Service
 public class AddHystrixService {
     AddMethods addMethods=new AddMethods();
-    public void add(String url){
+    public void add(String url,Map<String,List<String>> methods){
         try {
-            addMethods.addMethods(url);
+            addMethods.addMethods(url, methods);
         } catch (IOException e) {
             System.out.println("文件不存在～");
         }

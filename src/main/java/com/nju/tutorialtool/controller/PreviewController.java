@@ -55,4 +55,6 @@ public class PreviewController {
     public List<PreviewInfo> getRibbonInfo(@RequestBody Ribbon ribbon, @RequestBody ServiceInfoList serviceInfoList) {
         return previewService.getRibbonInfo(ribbon.getRibbonDTOList(), serviceInfoList.getServiceInfoList());
     }
+
+
 }

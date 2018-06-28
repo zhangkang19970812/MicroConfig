@@ -71,7 +71,7 @@ public class General {
     private ComposeInfo composeInfo;
 
     /**
-     * 指定方法添加熔断，key=**Controller，value=该controller中的方法列表
+     * 指定方法添加熔断，key=某个service，value=该service中需要添加熔断的方法名称
      */
     private Map<String,List<String>> methods;
 

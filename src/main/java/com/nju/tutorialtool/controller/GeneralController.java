@@ -125,7 +125,7 @@ public class GeneralController {
 
             // hystrix
             if (general.isHystrix()) {
-                addHystrixService.add(serviceRootPath);
+                addHystrixService.add(serviceRootPath,general.getMethods());
             }
 
             /**

@@ -18,11 +18,15 @@ import java.util.regex.Pattern;
 public class AddMethods {
     //针对某一个Controller进行改写
     FindControllers findControllers=new FindControllers();
-    public void addMethods(String url) throws IOException {
+    public void addMethods(String url, Map<String,List<String>> methods) throws IOException {
         List<File> controllers=findControllers.getAllControllers(url);
-        for(File f:controllers){
-            addOnOneController(f);
+
+        if(methods.keySet().contains(url)){
+            for(File f:controllers){
+                addOnOneController(f,methods);
+            }
         }
+
         //applications需要在getAllControllers的基础上获得；所以需要写在后面
         List<File> applications=findControllers.applications;
         for(File a:applications){
@@ -113,20 +117,16 @@ public class AddMethods {
      * @param controllerFile
      * @throws IOException
      */
-    public void addOnOneController(File controllerFile) throws IOException {
+    public void addOnOneController(File controllerFile, Map<String,List<String>> methods) throws IOException {
+        System.out.println(getMids(methods));
+        List<String> allMethods=getMids(methods);
         String fallback="";
         RandomAccessFile raf=new RandomAccessFile(controllerFile,"rw");
         String line=null;
         String lastLine=null;
         int signal=0;//表示该代码还未加过熔断
-        boolean findImportPointer = false; //是否找到Import包
+
         while((line=raf.readLine())!=null){
-            if (line.contains("import ") && !findImportPointer) {
-                long pointer = raf.getFilePointer();
-                String importPackage = "import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;\n";
-                IO.insert(pointer, importPackage, controllerFile);
-                findImportPointer = true;
-            }
             lastLine=line;
             //找到方法所在的行数及代码
             if(Pattern.matches(".*RequestMethod.*",line)){
@@ -138,15 +138,18 @@ public class AddMethods {
                     String authority = splits.get(0);
                     String returnTye = splits.get(1);
                     String methodName = splits.get(2);
-                    String parameter = getParameters(methodLine);
-                    int spaceNum = Integer.parseInt(splits.get(splits.size() - 1));
+//                    list.add(methodName);
+                    if (allMethods.contains(methodName)) {
+                        String parameter = getParameters(methodLine);
+                        int spaceNum = Integer.parseInt(splits.get(splits.size() - 1));
 
-                    //这里缩进减1，是因为raf的pointer已经有一位了
-                    String annotation = getSpaces(spaceNum - 1) + "@HystrixCommand(fallbackMethod = \"" + methodName + "Fallback\")\n ";
+                        //这里缩进减1，是因为raf的pointer已经有一位了
+                        String annotation = getSpaces(spaceNum - 1) + "@HystrixCommand(fallbackMethod = \"" + methodName + "Fallback\")\n ";
 
-                    insertAnnotation(getInsertPointer(lastPointer, methodLine), annotation, controllerFile);
+                        insertAnnotation(getInsertPointer(lastPointer, methodLine), annotation, controllerFile);
 
-                    fallback += "\n" + getSpaces(spaceNum) + authority + " " + returnTye + " " + methodName + "Fallback(" + parameter + "){\n" + getSpaces(spaceNum + 4) + ReturnType.getFallbackReturns(returnTye) + "\n" + getSpaces(spaceNum) + "}\n" + "\n";
+                        fallback += "\n" + getSpaces(spaceNum) + authority + " " + returnTye + " " + methodName + "Fallback(" + parameter + "){\n" + getSpaces(spaceNum + 4) + ReturnType.getFallbackReturns(returnTye) + "\n" + getSpaces(spaceNum) + "}\n" + "\n";
+                    }
                 }else{
                     signal=1;
                 }
@@ -161,6 +164,7 @@ public class AddMethods {
             raf.write(fallback.getBytes());
         }
         raf.close();
+//        return list;
     }
 
     public static void main(String[]args) throws IOException {
@@ -252,5 +256,15 @@ public class AddMethods {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<String> getMids(Map<String,List<String>> map){
+        List<String> result=new ArrayList<>();
+        for(List<String> value:map.values()){
+            for(String s:value){
+                result.add(s);
+            }
+        }
+        return result;
     }
 }
