@@ -49,16 +49,17 @@ public class AddMethods {
     public List<HystrixMethod> getMethodNames(ServiceInfoList serviceInfoList,String urlPre) throws IOException {
         System.out.println("参数:"+serviceInfoList);
         List<HystrixMethod> result=new ArrayList<>();
-        List<String> methods=new ArrayList<>();
+
 
         System.out.println(urlPre);
         for (ServiceInfo service : serviceInfoList.getServiceInfoList()) {
             String serviceRootPath = urlPre + File.separator + service.getFolderName();
-            HystrixMethod hystrixMethod=new HystrixMethod();
 
             System.out.println("路径:"+serviceRootPath);
             List<File> controllers = findControllers.getAllControllers(serviceRootPath);
             for (File f : controllers) {
+                HystrixMethod hystrixMethod=new HystrixMethod();
+                List<String> methods=new ArrayList<>();
                 for (String s : getMethodsFromOne(f)) {
                     System.out.println(s);
                     methods.add(s);
@@ -66,8 +67,9 @@ public class AddMethods {
                 hystrixMethod.setServiceName(serviceRootPath);
                 hystrixMethod.setControllerName(f.getName());
                 hystrixMethod.setMethodNames(methods);
+                result.add(hystrixMethod);
             }
-            result.add(hystrixMethod);
+
         }
         return result;
     }
