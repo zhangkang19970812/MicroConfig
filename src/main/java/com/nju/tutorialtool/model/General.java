@@ -5,6 +5,7 @@ import com.nju.tutorialtool.model.dto.RibbonDTO;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author YZ
@@ -68,6 +69,19 @@ public class General {
      */
     @OneToOne
     private ComposeInfo composeInfo;
+
+    /**
+     * 指定方法添加熔断，key=**Controller，value=该controller中的方法列表
+     */
+    private Map<String,List<String>> methods;
+
+    public Map<String, List<String>> getMethods() {
+        return methods;
+    }
+
+    public void setMethods(Map<String, List<String>> methods) {
+        this.methods = methods;
+    }
 
     public General() {
     }
