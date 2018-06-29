@@ -71,16 +71,16 @@ public class GeneralController {
         eurekaService.createEurekaServer(general.getEurekaServerInfo());
         createDockerfileService.createDockerfile(userService.getUserFolder() + File.separator + general.getEurekaServerInfo().getArtifactId(), "service");
         String eurekaServerName = general.getEurekaServerInfo().getArtifactId();
-        Configuration eConfiguration = generateConfiguration("8761");
-        serviceDirMapService.addServiceDirMap(new ServiceInfo(eurekaServerName, eurekaServerName, eConfiguration));
+//        Configuration eConfiguration = generateConfiguration("8761");
+        serviceDirMapService.addServiceDirMap(new ServiceInfo(eurekaServerName, eurekaServerName, "eureka"));
 
         // zuul
         if (general.isZuul()) {
             zuulService.createZuulProject(general.getZuulInfo());
             createDockerfileService.createDockerfile(userService.getUserFolder() + File.separator + general.getZuulInfo().getArtifactId(), "service");
             String zuulName = general.getZuulInfo().getArtifactId();
-            Configuration zConfiguration = generateConfiguration("8040");
-            serviceDirMapService.addServiceDirMap(new ServiceInfo(zuulName, zuulName, zConfiguration));
+//            Configuration zConfiguration = generateConfiguration("8040");
+            serviceDirMapService.addServiceDirMap(new ServiceInfo(zuulName, zuulName, "zuul"));
         }
 
         // ribbon
@@ -107,15 +107,15 @@ public class GeneralController {
             String serviceRootPath = userService.getUserFolder() + File.separator + service.getFolderName();
 
             //存入数据库
-            MysqlInfo mysqlInfo = new MysqlInfo(service.getFolderName() + "_mysql");
-            service.setMysqlInfo(mysqlInfo);
-            for (ConfigurationItem configurationItem : configurationService.getDefaultPropertiesItems(service)) {
-                configurationService.addConfigurationItem(configurationItem);
-            }
-            Configuration serviceConfiguration = new Configuration(configurationService.getDefaultPropertiesItems(service));
-            configurationService.addConfiguration(serviceConfiguration);
-            sqlService.addMysqlInfo(mysqlInfo);
-            serviceDirMapService.addServiceDirMap(service);
+//            MysqlInfo mysqlInfo = new MysqlInfo(service.getFolderName() + "_mysql");
+//            service.setMysqlInfo(mysqlInfo);
+//            for (ConfigurationItem configurationItem : configurationService.getDefaultPropertiesItems(service)) {
+//                configurationService.addConfigurationItem(configurationItem);
+//            }
+//            Configuration serviceConfiguration = new Configuration(configurationService.getDefaultPropertiesItems(service));
+//            configurationService.addConfiguration(serviceConfiguration);
+//            sqlService.addMysqlInfo(mysqlInfo);
+            serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getServiceName(), service.getFolderName(), "service"));
 
             /**
              * 组件
@@ -137,7 +137,7 @@ public class GeneralController {
             // 创建mysql(要检查是否该服务配置了mysql)
             if (configurationService.checkMysql(serviceRootPath)) {
                 sqlService.createMysqlProject(serviceRootPath);
-                serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getFolderName() + "_mysql", service.getFolderName() + "_mysql"));
+                serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getFolderName() + "_mysql", service.getFolderName() + "_mysql", "mysql"));
             }
 
             createDockerfileService.createDockerfile(serviceRootPath, "service");

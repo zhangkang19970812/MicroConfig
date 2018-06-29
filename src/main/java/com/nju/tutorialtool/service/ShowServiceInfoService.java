@@ -26,7 +26,7 @@ public class ShowServiceInfoService {
         List<ServiceInfo> serviceInfoList = serviceDirMapService.getAllServices();
         for (ServiceInfo serviceInfo : serviceInfoList) {
             String serviceName = serviceInfo.getServiceName();
-            if (serviceInfo.getConfig() != null) {
+            if (!"mysql".equals(serviceInfo.getType())) {
                 String port = IO.getServicePort(userService.getUserFolder() + File.separator + serviceInfo.getFolderName());
                 list.add(new ServiceShowInfo(serviceName, port, ""));
             }

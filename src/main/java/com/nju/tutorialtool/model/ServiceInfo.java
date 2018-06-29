@@ -31,6 +31,8 @@ public class ServiceInfo {
     @JSONField(serialize = false)
     private MysqlInfo mysqlInfo;
 
+    private String type;
+
     public Configuration getConfig() {
         return config;
     }
@@ -61,6 +63,12 @@ public class ServiceInfo {
         this.config = config;
     }
 
+    public ServiceInfo(String serviceName, String folderName, String type) {
+        this.serviceName = serviceName;
+        this.folderName = folderName;
+        this.type = type;
+    }
+
     public String getServiceName() {
         return serviceName;
     }
@@ -75,5 +83,13 @@ public class ServiceInfo {
 
     public void setFolderName(String folderName) {
         this.folderName = folderName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

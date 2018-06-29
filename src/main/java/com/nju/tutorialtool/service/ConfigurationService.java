@@ -189,17 +189,17 @@ public class ConfigurationService {
 
     /**
      * 从数据库中得到某服务的port
-     * @param serviceInfo
+//     * @param serviceInfo
      * @return
      */
-    public String getPort(ServiceInfo serviceInfo) {
-        for (ConfigurationItem configurationItem : serviceInfo.getConfig().getList()) {
-            if (configurationItem.getItemName().equals("server.port")) {
-                return configurationItem.getValue();
-            }
-        }
-        return "";
-    }
+//    public String getPort(ServiceInfo serviceInfo) {
+//        for (ConfigurationItem configurationItem : serviceInfo.getConfig().getList()) {
+//            if (configurationItem.getItemName().equals("server.port")) {
+//                return configurationItem.getValue();
+//            }
+//        }
+//        return "";
+//    }
 
     public boolean checkMysql(String projectPath) {
         List<ConfigurationItem> list = getConfigurations(projectPath);
