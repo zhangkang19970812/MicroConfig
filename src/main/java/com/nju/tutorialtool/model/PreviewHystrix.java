@@ -9,15 +9,15 @@ import java.util.Map;
  */
 public class PreviewHystrix {
     //包含service name，文件夹name
-    private ServiceInfoList serviceInfoList;
+    private List<ServiceInfo> serviceInfoList;
     //指定的方法名列表
     private Map<String,List<String>> methodsMap;
 
-    public ServiceInfoList getServiceInfoList() {
+    public List<ServiceInfo> getServiceInfoList() {
         return serviceInfoList;
     }
 
-    public void setServiceInfoList(ServiceInfoList serviceInfoList) {
+    public void setServiceInfoList(List<ServiceInfo> serviceInfoList) {
         this.serviceInfoList = serviceInfoList;
     }
 

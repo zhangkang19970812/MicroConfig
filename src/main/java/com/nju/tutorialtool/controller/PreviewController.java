@@ -59,6 +59,9 @@ public class PreviewController {
 
     @PostMapping("/hystrix")
     public List<PreviewInfo> getHystrixInfo(@RequestBody PreviewHystrix previewHystrix){
+//        System.out.println(previewHystrix.getServiceInfoList());
+//        {"serviceName":"account_service","folderName":"account_service"},{"serviceName":"bff_service","folderName":"bff_service"},{"serviceName":"category_service","folderName":"category_service"},{"serviceName":"order_service","folderName":"order_service"},{"serviceName":"pet_service","folderName":"pet_service"}]
+//        {"account_service":"add"}
         return previewService.getHystrixInfo(previewHystrix.getServiceInfoList(),previewHystrix.getMethodsMap());
     }
 

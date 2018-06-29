@@ -257,18 +257,30 @@ public class PreviewService {
 //        System.out.println(s);
 //    }
 
-    public List<PreviewInfo> getHystrixInfo(ServiceInfoList serviceInfoList, Map<String,List<String>> methodsMap) {
+    public List<PreviewInfo> getHystrixInfo(List<ServiceInfo> serviceInfos, Map<String,List<String>> methodsMap) {
         List<PreviewInfo> result=new ArrayList<>();
-        List<ServiceInfo> serviceInfos=serviceInfoList.getServiceInfoList();
+//        List<ServiceInfo> serviceInfos=serviceInfoList.getServiceInfoList();
+
+//        public class PreviewInfo {
+//            private String serviceName;
+//            private List<PreviewFileInfo> fileInfoList;
+
         for(ServiceInfo info:serviceInfos){
+            //这个是每个 service有的
             List<PreviewFileInfo> servicePreview=new ArrayList<>();
             String servicePath=getProjectPath(info.getFolderName());
+            String serviceName=info.getServiceName();
+
             //下面对一个service进行处理
-            if(methodsMap.containsKey(servicePath)){
-                List<String> serviceMethods=methodsMap.get(servicePath);
+//            System.out.println(servicePath);
+            if(methodsMap.containsKey(serviceName)){
+                List<String> serviceMethods=methodsMap.get(serviceName);
                 List<File> controllers=getAllControllers(servicePath);
+                System.out.println("account_service的controllers:"+controllers);
+
                 for(File controllerFile:controllers){
                     List<String> methods=getMethodsFromOne(controllerFile);
+                    System.out.println("methods!~~~~:"+methods);
                     for(String s:methods){
                         //是要加fallback的方法
                         if(serviceMethods.contains(s)){
@@ -282,6 +294,7 @@ public class PreviewService {
             PreviewInfo previewInfo=new PreviewInfo(info.getServiceName(),servicePreview);
             result.add(previewInfo);
         }
+        System.out.println(result);
         return result;
     }
 
@@ -306,16 +319,21 @@ public class PreviewService {
         int o=0;
         try {
             while((line=raf.readLine())!=null){
-                lastLine=line;
+
                 if(Pattern.matches(".*RequestMethod.*",line)){
-                    content+=line;
-                    content+='\n';
+                    lastLine=line;
 
                     String methodLine=raf.readLine();
                     if(!methodLine.contains("@HystrixCommand")) {
                         List<String> splits = splitMethodLine(methodLine);
                         String method = splits.get(2);
+                        String returnTye = splits.get(1);
+
                         if (method.equals(methodName)){
+                            content+=lastLine;
+                            content+='\n';
+
+                            content+="    @HystrixCommand(fallbackMethod = "+"\""+methodName+"Fallback"+"\")";
                             s.push("{");
                             content+=methodLine;
                             content+='\n';
@@ -335,6 +353,8 @@ public class PreviewService {
                                 }
                             }
                             o=1;
+
+                            content+="    public "+returnTye+" "+methodName+"Fallback(){\n"+"        return null;\n"+"    }\n";
                         }
                     }
                 }
@@ -383,6 +403,7 @@ public class PreviewService {
         for(File f:files1){
             if(f.isFile() && Pattern.matches(".*java",f.getName())){
                 files.add(f);
+                controllerFiles.add(f);
             }else if(f.isDirectory()){
                 getAllFiles(f.getAbsolutePath());
             }

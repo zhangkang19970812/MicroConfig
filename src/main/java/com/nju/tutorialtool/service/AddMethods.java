@@ -51,7 +51,7 @@ public class AddMethods {
         List<HystrixMethod> result=new ArrayList<>();
 
 
-        System.out.println(urlPre);
+//        System.out.println(urlPre);
         for (ServiceInfo service : serviceInfoList.getServiceInfoList()) {
             String serviceRootPath = urlPre + File.separator + service.getFolderName();
 
