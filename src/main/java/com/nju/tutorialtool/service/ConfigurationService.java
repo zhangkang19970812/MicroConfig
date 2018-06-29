@@ -36,10 +36,13 @@ public class ConfigurationService {
         boolean ret = false;
 
         for (String s : str) {
+            if ("spring.datasource.url".equals(s.split("=")[0])) {
+                String replace = "jdbc:mysql://"+ serviceInfo.getFolderName() + "_mysql";
+                IO.replaceFileStr(file, s.split("=")[1].substring(0, s.indexOf(":3306")), replace);
+            }
             if ("spring.application.name".equals(s.split("=")[0])) {
                 IO.replaceFileStr(file, s, "spring.application.name=" + getSpringApplicationName(serviceInfo.getServiceName()));
                 ret = true;
-                break;
             }
         }
         String items = "";

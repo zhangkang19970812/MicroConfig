@@ -133,16 +133,12 @@ public class GeneralController {
              */
             // config
             configurationService.editConfiguration(service);
-//            configurationService.editConfiguration(serviceRootPath, service.getConfig().getList());
-//            configurationService.editServicesMysqlConfigurations();
 
             // 创建mysql(要检查是否该服务配置了mysql)
             if (configurationService.checkMysql(serviceRootPath)) {
                 sqlService.createMysqlProject(serviceRootPath);
                 serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getFolderName() + "_mysql", service.getFolderName() + "_mysql"));
             }
-//            createMysqlProjectService.createMysqlProject(service.getMysqlInfo());
-//            serviceDirMapService.addServiceDirMap(new ServiceInfo(service.getMysqlInfo().getProjectName(), service.getMysqlInfo().getProjectName()));
 
             createDockerfileService.createDockerfile(serviceRootPath, "service");
 

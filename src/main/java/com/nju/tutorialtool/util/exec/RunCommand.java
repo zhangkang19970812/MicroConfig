@@ -26,7 +26,6 @@ public class RunCommand {
                 return;
             }
             Runtime runtime=Runtime.getRuntime();
-//            runtime.exec("cd "+ projectPath +" && mvn clean package -Dmaven.test.skip=true");
             Process process = runtime.exec(cmd);
             // 打印程序输出
             readProcessOutput(process);
@@ -34,11 +33,6 @@ public class RunCommand {
             // 等待程序执行结束并输出状态
             int exitCode = process.waitFor();
 
-//            if (exitCode == SUCCESS) {
-//                System.out.println(SUCCESS_MESSAGE);
-//            } else {
-//                System.err.println(ERROR_MESSAGE + exitCode);
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,9 +48,6 @@ public class RunCommand {
             for (String line : commands) {
                 out.println(line);
             }
-            // out.println("cd /home/test");
-            // out.println("pwd");
-            // out.println("rm -fr /home/proxy.log");
             out.println("exit");// 这个命令必须执行，否则in流不结束。
             String rspLine = "";
             while ((rspLine = in.readLine()) != null) {
