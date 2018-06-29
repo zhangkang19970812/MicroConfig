@@ -16,6 +16,10 @@ public class FindControllers {
      * 因为递归方法难以返回数据
      */
     static List<File> controllerFiles=new ArrayList<>();
+
+    public void setZ(){
+        controllerFiles=new ArrayList<>();
+    }
     /**
      * 用户选择待搜索的文件目录
      * @param url

@@ -53,10 +53,13 @@ public class AddMethods {
 
 //        System.out.println(urlPre);
         for (ServiceInfo service : serviceInfoList.getServiceInfoList()) {
+            FindControllers findCon=new FindControllers();
+            findCon.setZ();
             String serviceRootPath = urlPre + File.separator + service.getFolderName();
 
             System.out.println("路径:"+serviceRootPath);
-            List<File> controllers = findControllers.getAllControllers(serviceRootPath);
+            List<File> controllers = findCon.getAllControllers(serviceRootPath);
+
             for (File f : controllers) {
                 HystrixMethod hystrixMethod=new HystrixMethod();
                 List<String> methods=new ArrayList<>();
