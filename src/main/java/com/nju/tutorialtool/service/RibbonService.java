@@ -37,33 +37,26 @@ public class RibbonService {
      */
     public void addRibbon(String projectPath) throws IOException {
         File applicationFile = IO.getApplication(projectPath);
-        RandomAccessFile raf=new RandomAccessFile(applicationFile,"rw");
-        String line=null;
+        String importPackage = "import org.springframework.cloud.client.loadbalancer.LoadBalanced;";
+        String annotation="    @LoadBalanced";
         boolean findImportPointer = false;
         boolean findAnnotationPointer = false;
-        long importPointer = 0;
-        long annotationPointer = 0;
-        while((line=raf.readLine())!=null && (!findImportPointer || !findAnnotationPointer)){
-            if (line.contains("import org.") && !findImportPointer) {
-                importPointer = raf.getFilePointer();
+        String[] content = IO.readFromFile(applicationFile).split("\n");
+        for (int i = 0; i < content.length; i ++) {
+            if (findImportPointer && findAnnotationPointer) {
+                break;
+            }
+            if (content[i].contains("import org.") && !findImportPointer) {
+                IO.replaceFileStr(applicationFile, content[i], content[i] + "\n" + importPackage);
                 findImportPointer = true;
             }
-
-            if(line.contains("@Bean") && !findAnnotationPointer){
-                line = raf.readLine();
-                annotationPointer = raf.getFilePointer();
-                if (line.toLowerCase().contains("resttemplate")) {
+            if(content[i].contains("@Bean") && !findAnnotationPointer){
+                if (content[i + 1].toLowerCase().contains("resttemplate")) {
+                    IO.replaceFileStr(applicationFile, content[i] + "\n" + content[i + 1], content[i] + "\n" + annotation + "\n" + content[i + 1]);
                     findAnnotationPointer = true;
-                }
-                else {
-                    annotationPointer = 0;
                 }
             }
         }
-        String importPackage = "import org.springframework.cloud.client.loadbalancer.LoadBalanced;\n";
-        IO.insert(importPointer, importPackage, applicationFile);
-        String annotation="    @LoadBalanced\n";
-        IO.insert(annotationPointer,annotation,applicationFile);
     }
 
 //    public static void main(String[] args) throws Exception {

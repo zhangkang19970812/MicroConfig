@@ -51,32 +51,26 @@ public class EurekaService {
         assert applicationFile != null;
 
         // 2. 添加@EnableDiscoveryClient注解
-        RandomAccessFile raf = null;
         try {
-            raf = new RandomAccessFile(applicationFile, "rw");
-            String line = null;
+            String importPackage = "import org.springframework.cloud.client.discovery.EnableDiscoveryClient;";
+            String annotation = "@EnableDiscoveryClient";
             boolean findImportPointer = false;
             boolean findAnnotationPointer = false;
-            long importPointer = 0;
-            long annotationPointer = 0;
-            while ((line = raf.readLine()) != null && (!findImportPointer || !findAnnotationPointer)) {
+            String content = IO.readFromFile(applicationFile);
+            for (String line : content.split("\n")) {
+                if (findImportPointer && findAnnotationPointer) {
+                    break;
+                }
                 if (line.contains("import org.") && !findImportPointer) {
-                    importPointer = raf.getFilePointer();
+                    IO.replaceFileStr(applicationFile, line, line + "\n" + importPackage);
                     findImportPointer = true;
                 }
                 if (line.contains("@SpringBootApplication") && !findAnnotationPointer) {
-                    annotationPointer = raf.getFilePointer();
+                    IO.replaceFileStr(applicationFile, line, line + "\n" + annotation);
                     findAnnotationPointer = true;
                 }
             }
-
-            String importPackage = "import org.springframework.cloud.client.discovery.EnableDiscoveryClient;\n";
-            IO.insert(importPointer, importPackage, applicationFile);
-
-            String annotation = "@EnableDiscoveryClient\n";
-            IO.insert(annotationPointer, annotation, applicationFile);
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -86,8 +80,6 @@ public class EurekaService {
 
 //    public static void main(String[] args) {
 //        EurekaService eurekaService = new EurekaService();
-//        List<String> serviceRootPaths = new ArrayList<>();
-//        serviceRootPaths.add("/Users/harvey/Projects/IdeaProjects/tutorial-tool");
-//        eurekaService.addEurekaClient(serviceRootPaths);
+//        eurekaService.addEurekaClient("C:\\Users\\zk\\Desktop\\account_service");
 //    }
 }

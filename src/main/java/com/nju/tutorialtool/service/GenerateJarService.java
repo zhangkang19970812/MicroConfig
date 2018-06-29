@@ -11,7 +11,7 @@ import java.io.RandomAccessFile;
 
 @Service
 public class GenerateJarService {
-    private static String build = "<finalName>msconfig</finalName>\n" +
+    private static String build = "\t\t<finalName>msconfig</finalName>\n" +
             "\t\t<sourceDirectory>src/main/java</sourceDirectory>\n" +
             "\t\t<resources>\n" +
             "\t\t\t<!-- 控制资源文件的拷贝 -->\n" +
@@ -77,4 +77,9 @@ public class GenerateJarService {
     public String getServiceName(String projectPath) {
         return projectPath.substring(projectPath.lastIndexOf("/") + 1);
     }
+
+//    public static void main(String[] args) {
+//        GenerateJarService generateJarService = new GenerateJarService();
+//        generateJarService.addPre("C:\\Users\\zk\\Desktop\\account_service");
+//    }
 }

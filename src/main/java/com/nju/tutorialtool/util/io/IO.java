@@ -44,7 +44,25 @@ public class IO {
             e.printStackTrace();
             return false;
         }
+    }
 
+    public static boolean replaceFileStr(File file, int line, String targetStr) {
+        String[] contents = readFromFile(file).split("\n");
+        contents[line] = targetStr;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String str : contents) {
+            stringBuilder.append(str + "\n");
+        }
+        try {
+            FileWriter fout = new FileWriter(file);// 创建文件输出流
+            fout.write(stringBuilder.toString().toCharArray());// 把替换完成的字符串写入文件内
+            fout.close();// 关闭输出流
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**
@@ -196,38 +214,40 @@ public class IO {
         try {
             raf = new RandomAccessFile(file, "rw");
             String line = null;
-            boolean findDependency = false, findDependencies = false, findSpringCloud = false, findDependencyManagement = false;
-            long dependencyPointer = 0, dependenciesPointer = 0, managementPointer = 0;
+            String content = readFromFile(file);
             while ((line = raf.readLine()) != null) {
-                if (line.contains("</dependency>") && !findDependency) {
-                    dependencyPointer = raf.getFilePointer();
+                if (line.contains("</dependency>")) {
+                    long dependencyPointer = raf.getFilePointer();
                     String annotation = "\n"+ DependencyConstant.getDependencies(dependencyList);
                     IO.insert(dependencyPointer, annotation, file);
-                    findDependency = true;
-                }
-                if (line.contains("</dependencies>") && !findDependencies) {
-                    dependenciesPointer = raf.getFilePointer();
-                    findDependencies = true;
-                }
-                if (line.contains("<dependencyManagement>") && !findDependencyManagement) {
-                    managementPointer = raf.getFilePointer();
-                    findDependencyManagement = true;
-                }
-                if (line.contains("<artifactId>spring-cloud-dependencies</artifactId>")) {
-                    findSpringCloud = true;
                     break;
                 }
             }
-            if (!findSpringCloud) {
-                if (!findDependencyManagement) {
-                    String annotation = "\n    <dependencyManagement>\n"+ DependencyConstant.getDependencies(new ArrayList<>(Arrays.asList("springCloud"))) + "    </dependencyManagement>\n";
-                    IO.insert(dependenciesPointer, annotation, file);
+
+            if (!content.contains("<artifactId>spring-cloud-dependencies</artifactId>")) {
+                raf = new RandomAccessFile(file, "rw");
+                if (content.contains("<dependencyManagement>")) {
+                    while ((line = raf.readLine()) != null) {
+                        if (line.contains("<dependencyManagement>")) {
+                            long dependencyManagementPointer = raf.getFilePointer();
+                            String annotation = "\n"+ DependencyConstant.getDependencies(new ArrayList<>(Arrays.asList("springCloud")));
+                            IO.insert(dependencyManagementPointer, annotation, file);
+                            break;
+                        }
+                    }
                 }
                 else {
-                    String annotation = "\n"+ DependencyConstant.getDependencies(new ArrayList<>(Arrays.asList("springCloud")));
-                    IO.insert(managementPointer, annotation, file);
+                    while ((line = raf.readLine()) != null) {
+                        if (line.contains("</dependencies>")) {
+                            long dependenciesPointer = raf.getFilePointer();
+                            String annotation = "\n    <dependencyManagement>\n"+ DependencyConstant.getDependencies(new ArrayList<>(Arrays.asList("springCloud"))) + "    </dependencyManagement>\n";
+                            IO.insert(dependenciesPointer, annotation, file);
+                            break;
+                        }
+                    }
                 }
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -318,9 +338,9 @@ public class IO {
         return s.replace(" ", "");
     }
 
-//    public static void main(String[] args) throws IOException {
-//        File file = new File("C:\\Users\\zk\\Desktop\\MSConfig\\pom.xml");
-//        File newfile = new File("C:\\Users\\zk\\Desktop\\pom.xml");
-//        System.out.println(IO.getFileInProject("C:\\Users\\zk\\Desktop\\MSConfig", "CORSConfig.java").getName());
-//    }
+    public static void main(String[] args) throws IOException {
+        File file = new File("C:\\Users\\zk\\Desktop\\MSConfig\\pom.xml");
+        File newfile = new File("C:\\Users\\zk\\Desktop\\pom.xml");
+        IO.addDependencyToPom("C:\\Users\\zk\\Desktop\\account_service", new ArrayList<>(Arrays.asList("eurekaDiscovery")));
+    }
 }
