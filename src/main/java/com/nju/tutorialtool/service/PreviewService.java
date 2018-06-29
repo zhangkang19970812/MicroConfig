@@ -328,12 +328,14 @@ public class PreviewService {
                         List<String> splits = splitMethodLine(methodLine);
                         String method = splits.get(2);
                         String returnTye = splits.get(1);
+                        String parameter = getParameters(methodLine);
+
 
                         if (method.equals(methodName)){
                             content+=lastLine;
                             content+='\n';
 
-                            content+="    @HystrixCommand(fallbackMethod = "+"\""+methodName+"Fallback"+"\")";
+                            content+="    @HystrixCommand(fallbackMethod = "+"\""+methodName+"Fallback"+"\")\n";
                             s.push("{");
                             content+=methodLine;
                             content+='\n';
@@ -354,7 +356,7 @@ public class PreviewService {
                             }
                             o=1;
 
-                            content+="    public "+returnTye+" "+methodName+"Fallback(){\n"+"        return null;\n"+"    }\n";
+                            content+="    public "+returnTye+" "+methodName+"Fallback("+parameter+"){\n"+"        "+ReturnType.getFallbackReturns(returnTye)+"\n"+"    }\n";
                         }
                     }
                 }
@@ -409,6 +411,18 @@ public class PreviewService {
             }
         }
         return files;
+    }
+
+    public static String getParameters(String methodLine){
+        String result=methodLine.substring(methodLine.indexOf('(')+1,methodLine.indexOf(')'));
+        if(result.contains("@RequestBody")){
+            result=result.replace("@RequestBody ","");
+        }
+        if(result.contains("@PathVariable")){
+            result=result.replace("@PathVariable ","");
+        }
+//        System.out.print(result);
+        return result;
     }
 
     /**

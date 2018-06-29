@@ -58,7 +58,7 @@ public class ReturnType {
             code="return null;";
         }else {
             code = code.substring(0, code.length() - 1);
-            code+=");\n";
+            code+=");";
         }
 
         return code;
