@@ -101,6 +101,8 @@ public class AddMethods {
         boolean findAnnotationPointer = false;
         long importPointer = 0;
         long annotationPointer = 0;
+        int hasimport=0;
+        int hasanno=0;
         while((line=raf.readLine())!=null && (!findImportPointer || !findAnnotationPointer)){
             if (line.contains("import org.") && !findImportPointer) {
                 importPointer = raf.getFilePointer();
@@ -110,12 +112,22 @@ public class AddMethods {
                 annotationPointer = raf.getFilePointer();
                 findAnnotationPointer = true;
             }
+            if (line.contains("import org.springframework.cloud.netflix.hystrix.EnableHystrix;")){
+                hasimport=1;
+            }
+            if (line.contains("@EnableHystrix")){
+                hasanno=1;
+            }
         }
 
         String importPackage = "import org.springframework.cloud.netflix.hystrix.EnableHystrix;\n";
-        IO.insert(importPointer, importPackage, applicationFile);
+        if(hasimport==0) {
+            IO.insert(importPointer, importPackage, applicationFile);
+        }
         String annotation="@EnableHystrix\n";
-        insertAnnotation(annotationPointer,annotation,applicationFile);
+        if(hasanno==0) {
+            insertAnnotation(annotationPointer, annotation, applicationFile);
+        }
     }
 
     /**
