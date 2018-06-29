@@ -266,6 +266,7 @@ public class PreviewService {
 //            private List<PreviewFileInfo> fileInfoList;
 
         for(ServiceInfo info:serviceInfos){
+            int hasMethod=0;
             //这个是每个 service有的
             List<PreviewFileInfo> servicePreview=new ArrayList<>();
             String servicePath=getProjectPath(info.getFolderName());
@@ -286,6 +287,7 @@ public class PreviewService {
                     for(String s:methods){
                         //是要加fallback的方法
                         if(serviceMethods.contains(s)){
+                            hasMethod=1;
                             newContent+=getMethodContent(controllerFile,s);
                             newContent+="\n";
                         }
@@ -294,8 +296,10 @@ public class PreviewService {
                     servicePreview.add(fileInfo);
                 }
             }
-            PreviewInfo previewInfo=new PreviewInfo(info.getServiceName(),servicePreview);
-            result.add(previewInfo);
+            if(hasMethod==1) {
+                PreviewInfo previewInfo = new PreviewInfo(info.getServiceName(), servicePreview);
+                result.add(previewInfo);
+            }
         }
         System.out.println(result);
         return result;
