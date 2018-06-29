@@ -274,6 +274,7 @@ public class PreviewService {
             //下面对一个service进行处理
 //            System.out.println(servicePath);
             if(methodsMap.containsKey(serviceName)){
+                controllerFiles=new ArrayList<>();
                 List<String> serviceMethods=methodsMap.get(serviceName);
                 List<File> controllers=getAllControllers(servicePath);
                 System.out.println("account_service的controllers:"+controllers);
