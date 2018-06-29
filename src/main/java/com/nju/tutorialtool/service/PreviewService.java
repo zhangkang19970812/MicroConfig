@@ -280,15 +280,17 @@ public class PreviewService {
 
                 for(File controllerFile:controllers){
                     List<String> methods=getMethodsFromOne(controllerFile);
+                    String newContent="";
                     System.out.println("methods!~~~~:"+methods);
                     for(String s:methods){
                         //是要加fallback的方法
                         if(serviceMethods.contains(s)){
-                            PreviewFileInfo fileInfo=new PreviewFileInfo(controllerFile.getName(),getMethodContent(controllerFile,s),new ArrayList<>(1));
-                            servicePreview.add(fileInfo);
+                            newContent+=getMethodContent(controllerFile,s);
+                            newContent+="\n";
                         }
                     }
-
+                    PreviewFileInfo fileInfo=new PreviewFileInfo(controllerFile.getName(),newContent,new ArrayList<>(1));
+                    servicePreview.add(fileInfo);
                 }
             }
             PreviewInfo previewInfo=new PreviewInfo(info.getServiceName(),servicePreview);
