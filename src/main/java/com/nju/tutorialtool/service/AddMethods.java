@@ -97,21 +97,24 @@ public class AddMethods {
     public void modifyApplication(File applicationFile) throws IOException {
         RandomAccessFile raf=new RandomAccessFile(applicationFile,"rw");
         String line=null;
+        String importPackage = "import org.springframework.cloud.netflix.hystrix.EnableHystrix;\n";
+        String annotation="@EnableHystrix";
         boolean findImportPointer = false;
         boolean findAnnotationPointer = false;
         long importPointer = 0;
         long annotationPointer = 0;
         int hasimport=0;
         int hasanno=0;
+
         while((line=raf.readLine())!=null && (!findImportPointer || !findAnnotationPointer)){
-            if (line.contains("import org.") && !findImportPointer) {
-                importPointer = raf.getFilePointer();
-                findImportPointer = true;
-            }
-            if(line.contains("@SpringBootApplication") && !findAnnotationPointer){
-                annotationPointer = raf.getFilePointer();
-                findAnnotationPointer = true;
-            }
+//            if (line.contains("import org.") && !findImportPointer) {
+//                importPointer = raf.getFilePointer();
+//                findImportPointer = true;
+//            }
+//            if(line.contains("@SpringBootApplication") && !findAnnotationPointer){
+//                annotationPointer = raf.getFilePointer();
+//                findAnnotationPointer = true;
+//            }
             if (line.contains("import org.springframework.cloud.netflix.hystrix.EnableHystrix;")){
                 hasimport=1;
             }
@@ -119,15 +122,30 @@ public class AddMethods {
                 hasanno=1;
             }
         }
+        if(hasimport==0&&hasanno==0) {
+            String[] content = IO.readFromFile(applicationFile).split("\n");
+            for (int i = 0; i < content.length; i++) {
+                if (findImportPointer && findAnnotationPointer) {
+                    break;
+                }
+                if (content[i].contains("import org.") && !findImportPointer) {
+                    IO.replaceFileStr(applicationFile, content[i], content[i] + "\n" + importPackage);
+                    findImportPointer = true;
+                }
+                if (content[i].contains("@SpringBootApplication") && !findAnnotationPointer) {
+                    IO.replaceFileStr(applicationFile, content[i], content[i] + "\n" + annotation);
+                    findAnnotationPointer = true;
+                }
+            }
+        }
 
-        String importPackage = "import org.springframework.cloud.netflix.hystrix.EnableHystrix;\n";
-        if(hasimport==0) {
-            IO.insert(importPointer, importPackage, applicationFile);
-        }
-        String annotation="@EnableHystrix\n";
-        if(hasanno==0) {
-            insertAnnotation(annotationPointer, annotation, applicationFile);
-        }
+
+//        if(hasimport==0) {
+//            IO.insert(importPointer, importPackage, applicationFile);
+//        }
+//        if(hasanno==0) {
+//            insertAnnotation(annotationPointer, annotation, applicationFile);
+//        }
     }
 
     /**
@@ -217,6 +235,7 @@ public class AddMethods {
         AddMethods ad=new AddMethods();
 //        ad.addOnOneController(new File("TestController"));
 //        ad.getMethodNames("/Users/YZ/Desktop/bff_service");
+        ad.modifyApplication(new File("a"));
     }
 
     /**
