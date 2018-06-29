@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -35,9 +33,22 @@ public class AddMethods {
 
         //applications需要在getAllControllers的基础上获得；所以需要写在后面
         List<File> applications=findControllers.applications;
-        for(File a:applications){
+        for(File a:getSingleOnes(applications)){
             modifyApplication(a);
         }
+    }
+
+    /**
+     * 对list去重
+     * @param files
+     * @return
+     */
+    public List<File> getSingleOnes(List<File> files) {
+        Set<File> set = new LinkedHashSet<>();
+        set.addAll(files);
+        files.clear();
+        files.addAll(set);
+        return files;
     }
 
     /**
