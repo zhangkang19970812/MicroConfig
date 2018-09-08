@@ -6,6 +6,7 @@ import com.nju.tutorialtool.model.dto.RibbonDTO;
 import com.nju.tutorialtool.service.*;
 import com.nju.tutorialtool.service.AddHystrixService;
 import com.nju.tutorialtool.util.FileUtil;
+import org.eclipse.jdt.internal.compiler.ast.ArrayReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +90,11 @@ public class GeneralController {
                 String consumerDir = service2folder.get(ribbonDTO.getConsumer());
                 ribbonService.addRibbon(getProjectPath(consumerDir));
 
-                List<String> providersDir = ribbonDTO.getProviders().stream()
+                List<String> providersName = ribbonDTO.getProviders().stream()
+                        .map(RibbonRule::getProvider)
+                        .collect(Collectors.toList());
+
+                List<String> providersDir = providersName.stream()
                         .map(service2folder::get)
                         .collect(Collectors.toList());
                 List<String> providersPath = new ArrayList<>();
@@ -99,6 +104,7 @@ public class GeneralController {
                     providersPath.add(getProjectPath(s));
                 }
                 ribbonService.replaceUrl(getProjectPath(consumerDir), providersPath);
+                ribbonService.configureLoadBalancerRule(getProjectPath(consumerDir), ribbonDTO.getProviders());
             }
         }
 

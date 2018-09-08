@@ -1,11 +1,9 @@
 package com.nju.tutorialtool.model.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.nju.tutorialtool.model.RibbonRule;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -24,10 +22,10 @@ public class RibbonDTO {
     private String consumer;
 
     /**
-     * 所有ribbon providers的服务名称
+     * 所有ribbon providers的服务名称和各自对应的负载均衡规则
      */
-    @ElementCollection
-    private List<String> providers;
+    @OneToMany
+    private List<RibbonRule> providers;
 
     public RibbonDTO() {
     }
@@ -40,11 +38,11 @@ public class RibbonDTO {
         this.consumer = consumer;
     }
 
-    public List<String> getProviders() {
+    public List<RibbonRule> getProviders() {
         return providers;
     }
 
-    public void setProviders(List<String> providers) {
+    public void setProviders(List<RibbonRule> providers) {
         this.providers = providers;
     }
 }

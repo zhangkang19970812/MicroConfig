@@ -101,7 +101,7 @@ public class ConfigurationService {
         File file = IO.getFile(projectPath + "/src/main/resources", "application.properties");
         String[] str = IO.readFromFile(file).split("\n");
         String name = "";
-        if(file.getName().contains("properties")) {
+
             for (String s : str) {
                 s = IO.deleteSpaces(s);
                 if (s.contains("spring.application.name")) {
@@ -109,23 +109,8 @@ public class ConfigurationService {
                     break;
                 }
             }
-        }
-        else {
-            int sret = 0, aret = 0;
-            for (String s : str) {
-                if (s.equals("spring:")) {
-                    sret = 1;
-                }
-                if (s.equals("application:") && sret == 1) {
-                    aret = 1;
-                }
-                if (s.equals("name:") && sret == 1 && aret == 1) {
-                    s = IO.deleteSpaces(s);
-                    name = s.substring(s.indexOf(":") + 1);
-                    break;
-                }
-            }
-        }
+
+
         return name;
     }
 

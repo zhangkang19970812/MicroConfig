@@ -1,5 +1,6 @@
 package com.nju.tutorialtool.service;
 
+import com.nju.tutorialtool.model.RibbonRule;
 import com.nju.tutorialtool.util.io.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,14 @@ public class RibbonService {
                     findAnnotationPointer = true;
                 }
             }
+        }
+    }
+
+    public void configureLoadBalancerRule(String projectPath, List<RibbonRule> providers) {
+        File file = IO.getFile(projectPath + "/src/main/resources", "application.properties");
+        for (RibbonRule r : providers) {
+            String rule = r.getProvider() + ".ribbon.NFLoadBalancerClassName: com.netflix.loadbalancer." + r.getLoadbalancerRule();
+            IO.insertToEnd(file, rule);
         }
     }
 
