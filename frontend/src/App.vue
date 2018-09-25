@@ -11,15 +11,15 @@
 
 <script>
 
-  import MyHeader from './components/MyHeader'
+import MyHeader from './components/config/MyHeader'
 
-  export default {
-    // 组件名称
-    name: 'app',
-    components: {
-      'my-header': MyHeader
-    }
+export default {
+  // 组件名称
+  name: 'app',
+  components: {
+    'my-header': MyHeader
   }
+}
 
 </script>
 
@@ -30,4 +30,3 @@
     line-height: 60px;
   }
 </style>
-

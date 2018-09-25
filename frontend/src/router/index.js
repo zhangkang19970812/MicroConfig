@@ -5,32 +5,23 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-import LoginComponent from '@/components/LoginComponent'
-import ConfigComponent from '@/components/ConfigComponent'
+import LoginComponent from '../page/loginPage/index'
+import ConfigComponent from '../page/config/index'
 
 // 1. 定义（路由）组件。
 // 也可以从其他文件 import 进来
-import AddBusinessCode from '@/components/AddBusinessCode'
-import Config from '@/components/config/Config'
+import AddBusinessCode from '../page/config/addService/index'
 
 // 5个微服务组件
-import EurekaServer from '@/components/microservic_components/EurekaServer'
-import EurekaClient from '@/components/microservic_components/EurekaClient'
-import RibbonComponent from '@/components/microservic_components/RibbonComponent'
-import HystrixComponent from '@/components/microservic_components/HystrixComponent'
-import ZuulComponent from '@/components/microservic_components/ZuulComponent'
+import EurekaServer from '../page/config/eurekaServer/index'
+import EurekaClient from '../page/config/eurekaClient/index'
+import RibbonComponent from '../page/config/ribbon/index'
+import HystrixComponent from '../page/config/hystrix/index'
+import ZuulComponent from '../page/config/zuul/index'
 
-// docker compose
-import ComposeComponent from '@/components/ComposeComponent'
+import ConfigResults from '../page/config/configResults/index'
 
-
-// mysql
-import MysqlComponent from '@/components/mysql/MysqlComponent'
-
-import ConfigResults from '@/components/ConfigResults'
-import ContainerComponent from '@/components/ContainerComponent'
-import store from "../store";
-import {STEPS_SET} from "../store/mutations";
+import store from "../../src/store";
 
 // 2. 定义路由
 // 每个路由应该映射一个组件。 其中"component" 可以是
@@ -58,7 +49,7 @@ const routes = [
         component: AddBusinessCode,
         beforeEnter: (to, from, next) => {
           console.log("active step: " + 0);
-          store.commit(STEPS_SET, 0);
+          store.commit("setStep", 0);
           next();
         },
       },
@@ -68,7 +59,7 @@ const routes = [
         component: EurekaServer,
         beforeEnter: (to, from, next) => {
           console.log("active step: " + 1);
-          store.commit(STEPS_SET, 1);
+          store.commit("setStep", 1);
           next();
         },
       },
@@ -78,7 +69,7 @@ const routes = [
         component: EurekaClient,
         beforeEnter: (to, from, next) => {
           console.log("active step: " + 2);
-          store.commit(STEPS_SET, 2);
+          store.commit("setStep", 2);
           next();
         },
       },
@@ -88,7 +79,7 @@ const routes = [
         component: RibbonComponent,
         beforeEnter: (to, from, next) => {
           console.log("active step: " + 3);
-          store.commit(STEPS_SET, 3);
+          store.commit("setStep", 3);
           next();
         },
       },
@@ -98,7 +89,7 @@ const routes = [
         component: HystrixComponent,
         beforeEnter: (to, from, next) => {
           console.log("active step: " + 4);
-          store.commit(STEPS_SET, 4);
+          store.commit("setStep", 4);
           next();
         },
       },
@@ -108,37 +99,17 @@ const routes = [
         component: ZuulComponent,
         beforeEnter: (to, from, next) => {
           console.log("active step: " + 5);
-          store.commit(STEPS_SET, 5);
+          store.commit("setStep", 5);
           next();
         },
       },
       {
         path: '7',
         name: 'Step 7',
-        component: Config,
-        beforeEnter: (to, from, next) => {
-          console.log("active step: " + 6);
-          store.commit(STEPS_SET, 6);
-          next();
-        },
-      },
-      {
-        path: '8',
-        name: 'Step 8',
-        component: MysqlComponent,
-        beforeEnter: (to, from, next) => {
-          console.log("active step: " + 7);
-          store.commit(STEPS_SET, 7);
-          next();
-        },
-      },
-      {
-        path: '9',
-        name: 'Step 9',
         component: ConfigResults,
         beforeEnter: (to, from, next) => {
-          console.log("active step: " + 8);
-          store.commit(STEPS_SET, 8);
+          console.log("active step: " + 6);
+          store.commit("setStep", 6);
           next();
         },
       }
